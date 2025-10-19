@@ -98,10 +98,8 @@ body {
     margin-bottom: 30px;
     border: 1px solid rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 90%;
+    max-width: 750px;  /* Your custom width */
+    width: 95%;
 }
 
 .form-container {
