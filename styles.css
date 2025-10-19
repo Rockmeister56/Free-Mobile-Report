@@ -183,6 +183,313 @@ body {
 }
 
 /* =================================================== */
+/* CALCULATOR PAGE STYLES */
+/* =================================================== */
+
+.calculator-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Header Branding */
+.calculator-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.brand-logo {
+    max-width: 80px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.calculator-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+/* Hero Section */
+.hero-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero-section h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.social-proof {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 12px 20px;
+    border-radius: 25px;
+    color: white;
+    display: inline-block;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Calculator Form */
+.calculator-form {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.input-group {
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #e1e5e9;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input-hint {
+    display: block;
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.calculate-btn {
+    width: 100%;
+    padding: 18px 30px;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.calculate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(231, 76, 60, 0.3);
+}
+
+/* Results Section */
+.results-section {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.results-card h3 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 1.5rem;
+}
+
+.result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border-left: 5px solid #bdc3c7;
+}
+
+.result-row.current {
+    background: #f8f9fa;
+    border-left-color: #3498db;
+}
+
+.result-row.potential {
+    background: #e8f4f8;
+    border-left-color: #2ecc71;
+}
+
+.result-row.difference {
+    background: #e8f6f3;
+    border-left-color: #27ae60;
+    font-weight: 700;
+}
+
+.ai-badge {
+    background: #2ecc71;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.result-label {
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.result-value {
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+.result-row.current .result-value {
+    color: #3498db;
+}
+
+.result-row.potential .result-value {
+    color: #2ecc71;
+}
+
+.result-row.difference .result-value {
+    color: #27ae60;
+    font-size: 1.5rem;
+}
+
+/* CTA Section */
+.cta-section {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 2px solid #ecf0f1;
+}
+
+.cta-text {
+    font-size: 1.3rem;
+    color: #e74c3c;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.demo-btn {
+    width: 100%;
+    padding: 18px 30px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.demo-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+.podcast-invite {
+    color: #666;
+    font-size: 1rem;
+}
+
+/* Demo Popup */
+.demo-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.popup-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.popup-content h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.popup-content p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.popup-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.start-demo-btn {
+    padding: 15px 25px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.schedule-btn {
+    padding: 15px 25px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.start-demo-btn:hover, .schedule-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* =================================================== */
 /* ANALYSIS PAGE STYLES */
 /* =================================================== */
 
@@ -387,7 +694,7 @@ body {
 }
 
 /* =================================================== */
-/* RESPONSIVE DESIGN (Both Pages) */
+/* RESPONSIVE DESIGN (All Pages) */
 /* =================================================== */
 
 @media (max-width: 768px) {
@@ -420,6 +727,33 @@ body {
     .stats {
         font-size: 1rem;
         padding: 12px 20px;
+    }
+    
+    /* Calculator Page Mobile */
+    .calculator-container {
+        padding: 20px 15px;
+    }
+    
+    .calculator-header h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .calculator-form, .results-section {
+        padding: 30px 20px;
+    }
+    
+    .result-row {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .popup-actions {
+        flex-direction: column;
     }
     
     /* Analysis Page Mobile */
@@ -459,6 +793,15 @@ body {
         padding: 30px 15px;
     }
     
+    /* Calculator Page Mobile Small */
+    .calculator-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .hero-section h2 {
+        font-size: 1.6rem;
+    }
+    
     /* Analysis Page Mobile Small */
     .analyzing-header h1 {
         font-size: 1.8rem;
@@ -466,7 +809,7 @@ body {
 }
 
 /* =================================================== */
-/* UTILITY STYLES (Both Pages) */
+/* UTILITY STYLES (All Pages) */
 /* =================================================== */
 
 /* Loading State */
