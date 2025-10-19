@@ -1,92 +1,19 @@
-/* Reset and Base Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+/* Replace the body background in styles.css */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0062cc 0%, #0096ff 100%);
     min-height: 100vh;
     color: #333;
 }
 
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 40px 20px;
-}
-
-/* Hero Section */
-.hero {
-    text-align: center;
-    margin-bottom: 50px;
-}
-
-.hero h1 {
-    font-size: 2.8rem;
-    font-weight: 700;
-    color: white;
-    margin-bottom: 15px;
-    line-height: 1.2;
-}
-
 .highlight {
-    color: #ffd700;
+    color: #00ff88;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.subtitle {
-    font-size: 1.4rem;
-    color: #f0f0f0;
-    margin-bottom: 20px;
-    font-weight: 300;
-}
-
-.stats {
-    background: rgba(255,255,255,0.1);
-    padding: 15px 25px;
-    border-radius: 50px;
-    color: white;
-    font-size: 1.1rem;
-    display: inline-block;
-    backdrop-filter: blur(10px);
-}
-
-/* Audit Form */
-.audit-form {
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-}
-
-.form-container {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.url-input {
-    flex: 1;
-    padding: 18px 20px;
-    border: 2px solid #e1e5e9;
-    border-radius: 12px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.url-input:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .analyze-btn {
     padding: 18px 30px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #0062cc, #0096ff);
     color: white;
     border: none;
     border-radius: 12px;
@@ -95,86 +22,4 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     white-space: nowrap;
-}
-
-.analyze-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-}
-
-.analyze-btn:active {
-    transform: translateY(0);
-}
-
-/* Benefits */
-.benefits {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-}
-
-.benefit {
-    flex: 1;
-    text-align: center;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 10px;
-    font-weight: 500;
-    color: #555;
-}
-
-/* Trust Indicators */
-.trust {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
-}
-
-.trust-item {
-    background: rgba(255,255,255,0.15);
-    padding: 15px 25px;
-    border-radius: 50px;
-    color: white;
-    font-weight: 500;
-    backdrop-filter: blur(10px);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .container {
-        padding: 20px 15px;
-    }
-    
-    .hero h1 {
-        font-size: 2rem;
-    }
-    
-    .subtitle {
-        font-size: 1.1rem;
-    }
-    
-    .form-container {
-        flex-direction: column;
-    }
-    
-    .benefits {
-        flex-direction: column;
-    }
-    
-    .trust {
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-    }
-    
-    .audit-form {
-        padding: 30px 20px;
-    }
-}
-
-/* Loading State */
-.loading {
-    opacity: 0.7;
-    pointer-events: none;
 }
