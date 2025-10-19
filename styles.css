@@ -13,75 +13,91 @@ body {
     line-height: 1.6;
 }
 
+/* Full-width header with your image as background */
+.header-background {
+    background-image: url('https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1760861063523_lp-image.PNG');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    padding: 60px 20px;
+    position: relative;
+}
+
+/* Dark overlay for better text readability */
+.header-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4); /* Dark overlay */
+    z-index: 1;
+}
+
 .container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px 20px 40px;
+    padding: 0 20px 40px;
     text-align: center;
 }
 
-/* Logo Container - FULL WIDTH */
-.logo-container {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    margin-right: calc(-50vw + 50%);
-    background: white;
-    padding: 20px 0;
-    margin-bottom: 40px;
-    border-bottom: 1px solid #e1e8ed;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+/* Content that floats on top of the image */
+.header-content {
+    position: relative;
+    z-index: 2; /* Above the overlay */
+    color: white;
 }
 
-.logo {
-    max-width: 100%;
-    height: auto;
-    max-height: 80px;
-    display: block;
-    margin: 0 auto;
-}
-
-/* Hero Section */
+/* Hero Section - Now with white text for contrast */
 .hero {
     margin-bottom: 40px;
 }
 
 .hero h1 {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     font-weight: 700;
-    color: #2c3e50;
+    color: white;
     margin-bottom: 15px;
     line-height: 1.2;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
 .highlight {
-    color: #e74c3c;
+    color: #ffd700; /* Gold for highlights */
+    text-shadow: 0 2px 10px rgba(0,0,0,0.7);
 }
 
 .subtitle {
-    font-size: 1.3rem;
-    color: #34495e;
+    font-size: 1.4rem;
+    color: #f0f0f0;
     margin-bottom: 20px;
     font-weight: 400;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 
 .stats {
-    background: #e8f4f8;
+    background: rgba(255, 255, 255, 0.2);
     padding: 15px 25px;
     border-radius: 10px;
-    color: #2c3e50;
+    color: white;
     font-size: 1.1rem;
     display: inline-block;
-    border-left: 4px solid #3498db;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
-/* Audit Form */
+/* Audit Form - Now transparent on the image */
 .audit-form {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     padding: 30px;
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
     margin-bottom: 30px;
-    border: 1px solid #e1e8ed;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
 }
 
 .form-container {
@@ -123,7 +139,7 @@ body {
 .analyze-btn:hover {
     background: #c0392b;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
 }
 
 .analyze-btn:active {
@@ -147,34 +163,33 @@ body {
     flex: 1;
     text-align: center;
     padding: 15px;
-    background: #2c3e50;
-    color: white;
+    background: rgba(255, 255, 255, 0.9);
+    color: #2c3e50;
     border-radius: 8px;
     font-weight: 500;
     font-size: 0.95rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Main content area below the header */
+.main-content {
+    padding: 40px 20px;
+    background: #f8f9fa;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .container {
-        padding: 0 15px 30px;
-    }
-    
-    .logo-container {
-        padding: 15px 0;
-        margin-bottom: 30px;
-    }
-    
-    .logo {
-        max-height: 60px;
+    .header-background {
+        padding: 40px 15px;
     }
     
     .hero h1 {
-        font-size: 2rem;
+        font-size: 2.2rem;
     }
     
     .subtitle {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
     
     .form-container {
@@ -210,8 +225,8 @@ body {
         padding: 12px 10px;
     }
     
-    .logo {
-        max-height: 50px;
+    .header-background {
+        padding: 30px 15px;
     }
 }
 
