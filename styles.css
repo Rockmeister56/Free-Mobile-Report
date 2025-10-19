@@ -98,7 +98,7 @@ body {
     margin-bottom: 30px;
     border: 1px solid rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
-    max-width: 1100px;  /* ← JUST CHANGE THIS NUMBER */
+    max-width: 1500px;  /* ← JUST CHANGE THIS NUMBER */
     width: 90%;        /* ← KEEP THIS */
     margin: 0 auto;    /* ← THIS KEEPS IT CENTERED */
 }
