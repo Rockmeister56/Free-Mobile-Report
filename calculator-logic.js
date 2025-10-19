@@ -1,107 +1,122 @@
-// Mobile Revenue Calculator with 3X Conversion Boost
-class RevenueCalculator {
-    constructor() {
-        this.calculateBtn = document.getElementById('calculateBtn');
-        this.resultsSection = document.getElementById('resultsSection');
-        this.init();
-    }
+// Calculator Logic - Enhanced Version
+document.addEventListener('DOMContentLoaded', function() {
+    const calculateBtn = document.getElementById('calculateBtn');
+    const seeDemoBtn = document.getElementById('seeDemoBtn');
+    const closePopup = document.getElementById('closePopup');
+    const startDemo = document.getElementById('startDemo');
+    const scheduleCall = document.getElementById('scheduleCall');
+    const demoPopup = document.getElementById('demoPopup');
+    const resultsSection = document.getElementById('resultsSection');
 
-    init() {
-        this.calculateBtn.addEventListener('click', () => this.calculateRevenue());
-        
-        // Add input validation and real-time updates
-        const inputs = ['monthlyVisitors', 'conversionRate', 'averageSale'];
-        inputs.forEach(id => {
-            document.getElementById(id).addEventListener('input', () => this.validateInputs());
-        });
-    }
-
-    validateInputs() {
-        const visitors = document.getElementById('monthlyVisitors').value;
-        const conversion = document.getElementById('conversionRate').value;
-        const saleValue = document.getElementById('averageSale').value;
-        
-        const isValid = visitors && conversion && saleValue;
-        this.calculateBtn.disabled = !isValid;
-        
-        return isValid;
-    }
-
-    calculateRevenue() {
-        if (!this.validateInputs()) return;
-
-        // Get input values
-        const monthlyVisitors = parseInt(document.getElementById('monthlyVisitors').value);
-        const conversionRate = parseFloat(document.getElementById('conversionRate').value) / 100;
+    // Calculate revenue
+    calculateBtn.addEventListener('click', function() {
+        const monthlyVisitors = parseFloat(document.getElementById('monthlyVisitors').value);
+        const conversionRate = parseFloat(document.getElementById('conversionRate').value);
         const averageSale = parseFloat(document.getElementById('averageSale').value);
 
-        // Calculate current revenue
-        const currentRevenue = monthlyVisitors * conversionRate * averageSale;
+        // Validate inputs
+        if (!monthlyVisitors || monthlyVisitors < 100) {
+            alert('Please enter at least 100 monthly visitors');
+            return;
+        }
         
-        // Calculate 3X boosted revenue (Mobile-Wise AI magic!)
-        const boostedConversionRate = conversionRate * 3; // 3X CONVERSION BOOST!
-        const potentialRevenue = monthlyVisitors * boostedConversionRate * averageSale;
+        if (!conversionRate || conversionRate < 0.1 || conversionRate > 100) {
+            alert('Please enter a valid conversion rate between 0.1% and 100%');
+            return;
+        }
+        
+        if (!averageSale || averageSale < 1) {
+            alert('Please enter a valid average sale value of at least $1');
+            return;
+        }
+
+        // Calculate current revenue
+        const currentRevenue = monthlyVisitors * (conversionRate / 100) * averageSale;
+        
+        // Calculate potential revenue (3X boost)
+        const potentialRevenue = monthlyVisitors * ((conversionRate * 3) / 100) * averageSale;
         
         // Calculate additional revenue
         const additionalRevenue = potentialRevenue - currentRevenue;
 
-        // Display results with formatting
-        this.displayResults(currentRevenue, potentialRevenue, additionalRevenue);
-        
-        // Show results section with smooth animation
-        this.showResults();
-    }
-
-    displayResults(current, potential, additional) {
-        // Format currency
-        const formatCurrency = (amount) => {
-            return new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(amount);
+        // Format numbers with commas
+        const formatCurrency = (num) => {
+            return '$' + Math.round(num).toLocaleString();
         };
 
-        // Update DOM elements
-        document.getElementById('currentRevenue').textContent = formatCurrency(current);
-        document.getElementById('potentialRevenue').textContent = formatCurrency(potential);
-        document.getElementById('additionalRevenue').textContent = formatCurrency(additional);
-        document.getElementById('lossAmount').textContent = formatCurrency(additional);
+        // Update results
+        document.getElementById('currentRevenue').textContent = formatCurrency(currentRevenue);
+        document.getElementById('potentialRevenue').textContent = formatCurrency(potentialRevenue);
+        document.getElementById('additionalRevenue').textContent = formatCurrency(additionalRevenue);
+        document.getElementById('lossAmount').textContent = formatCurrency(additionalRevenue);
 
-        // Add some visual flair
-        this.animateResults();
-    }
-
-    showResults() {
-        this.resultsSection.style.display = 'block';
+        // Show results section with animation
+        resultsSection.style.display = 'block';
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
         
-        // Smooth scroll to results
+        // Add some visual feedback
+        calculateBtn.textContent = '✓ CALCULATED!';
+        calculateBtn.style.backgroundColor = '#10b981';
         setTimeout(() => {
-            this.resultsSection.scrollIntoView({ 
-                behavior: 'smooth',
-                block: 'center'
-            });
-        }, 100);
+            calculateBtn.textContent = '🚀 CALCULATE MY REVENUE LOSS';
+            calculateBtn.style.backgroundColor = '';
+        }, 2000);
+    });
+
+    // Show demo popup
+    seeDemoBtn.addEventListener('click', function() {
+        demoPopup.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    });
+
+    // Close popup
+    function closePopupFunc() {
+        demoPopup.style.display = 'none';
+        document.body.style.overflow = ''; // Restore scrolling
     }
 
-    animateResults() {
-        const resultValues = document.querySelectorAll('.result-value');
-        
-        resultValues.forEach((value, index) => {
-            value.style.opacity = '0';
-            value.style.transform = 'translateY(20px)';
+    closePopup.addEventListener('click', closePopupFunc);
+    
+    // Start demo - REPLACE THIS WITH YOUR ACTUAL DEMO URL
+    startDemo.addEventListener('click', function() {
+        // Replace this URL with your actual AI demo page
+        window.open('https://your-actual-demo-url.com', '_blank');
+        closePopupFunc();
+    });
+
+    // Schedule call - REPLACE THIS WITH YOUR ACTUAL CALENDLY/SCHEDULING URL
+    scheduleCall.addEventListener('click', function() {
+        // Replace this URL with your actual scheduling link
+        window.open('https://calendly.com/your-scheduling-link', '_blank');
+        closePopupFunc();
+    });
+
+    // Close popup when clicking outside
+    demoPopup.addEventListener('click', function(e) {
+        if (e.target === demoPopup) {
+            closePopupFunc();
+        }
+    });
+
+    // Close popup with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closePopupFunc();
+        }
+    });
+
+    // Input validation - allow only numbers
+    const inputs = document.querySelectorAll('input[type="number"]');
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            // Remove any non-numeric characters except decimal point
+            this.value = this.value.replace(/[^0-9.]/g, '');
             
-            setTimeout(() => {
-                value.style.transition = 'all 0.6s ease';
-                value.style.opacity = '1';
-                value.style.transform = 'translateY(0)';
-            }, index * 200);
+            // Ensure only one decimal point
+            const decimalCount = (this.value.match(/\./g) || []).length;
+            if (decimalCount > 1) {
+                this.value = this.value.slice(0, -1);
+            }
         });
-    }
-}
-
-// Initialize calculator when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    new RevenueCalculator();
+    });
 });
