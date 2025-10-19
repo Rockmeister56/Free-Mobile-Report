@@ -35,26 +35,14 @@ class MobileAudit {
     }
 
     showError(message) {
-        // Remove any existing error
         this.removeError();
         
-        // Create error element
         const errorEl = document.createElement('div');
         errorEl.className = 'error-message';
         errorEl.textContent = message;
-        errorEl.style.cssText = `
-            color: #e74c3c;
-            background: #fdf2f2;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            border: 1px solid #fbb;
-            text-align: center;
-        `;
         
         this.websiteUrl.parentNode.appendChild(errorEl);
         
-        // Shake animation
         this.websiteUrl.style.animation = 'shake 0.5s ease-in-out';
         setTimeout(() => {
             this.websiteUrl.style.animation = '';
@@ -81,7 +69,6 @@ class MobileAudit {
     }
 
     analyzeSite(url) {
-        // Simulate analysis delay
         setTimeout(() => {
             const score = this.calculateScore(url);
             this.hideLoading();
@@ -90,10 +77,7 @@ class MobileAudit {
     }
 
     calculateScore(url) {
-        // Base score - most sites score poorly intentionally
-        let score = Math.floor(Math.random() * 30) + 25; // 25-55 range
-        
-        // Adjust based on URL characteristics (mock logic)
+        let score = Math.floor(Math.random() * 30) + 25;
         if (url.includes('newclientsinc.com')) score = 28;
         if (url.includes('mortgage') || url.includes('loan')) score -= 5;
         if (url.includes('modern') || url.includes('tech')) score += 10;
@@ -102,16 +86,13 @@ class MobileAudit {
     }
 
     showResults(score, url) {
-        // Store data for next page
         sessionStorage.setItem('auditScore', score);
         sessionStorage.setItem('auditUrl', url);
-        
-        // Redirect to report page
         window.location.href = 'analysis.html';
     }
 }
 
-// Add shake animation to CSS
+// Add shake animation
 const style = document.createElement('style');
 style.textContent = `
     @keyframes shake {
@@ -122,7 +103,7 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Initialize the audit system
+// Initialize
 document.addEventListener('DOMContentLoaded', () => {
     new MobileAudit();
 });

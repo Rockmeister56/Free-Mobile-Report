@@ -1,43 +1,216 @@
-/* Modern Dark Theme */
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: #f8f9fa;
     min-height: 100vh;
-    color: #fff;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* Logo Container */
+.logo-container {
+    margin-bottom: 40px;
+}
+
+.logo {
+    max-width: 300px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Hero Section */
+.hero {
+    margin-bottom: 40px;
 }
 
 .hero h1 {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
     font-weight: 700;
-    color: white;
+    color: #2c3e50;
     margin-bottom: 15px;
     line-height: 1.2;
 }
 
 .highlight {
-    color: #00ff88;
-    text-shadow: 0 2px 4px rgba(0,255,136,0.3);
+    color: #e74c3c;
 }
 
+.subtitle {
+    font-size: 1.3rem;
+    color: #34495e;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.stats {
+    background: #e8f4f8;
+    padding: 15px 25px;
+    border-radius: 10px;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    display: inline-block;
+    border-left: 4px solid #3498db;
+}
+
+/* Audit Form */
 .audit-form {
-    background: rgba(255,255,255,0.05);
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     margin-bottom: 30px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid #e1e8ed;
+}
+
+.form-container {
+    display: flex;
+    gap: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.url-input {
+    flex: 1;
+    padding: 16px 20px;
+    border: 2px solid #dcdfe3;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.url-input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
 
 .analyze-btn {
-    padding: 18px 30px;
-    background: linear-gradient(135deg, #00ff88, #00cc66);
-    color: #1a1a2e;
+    padding: 16px 30px;
+    background: #e74c3c;
+    color: white;
     border: none;
-    border-radius: 12px;
+    border-radius: 10px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     white-space: nowrap;
+}
+
+.analyze-btn:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+}
+
+.analyze-btn:active {
+    transform: translateY(0);
+}
+
+/* Benefits Section */
+.benefits-section {
+    margin-top: 20px;
+}
+
+.benefits {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.benefit {
+    flex: 1;
+    text-align: center;
+    padding: 15px;
+    background: #2c3e50;
+    color: white;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 30px 15px;
+    }
+    
+    .logo {
+        max-width: 250px;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .form-container {
+        flex-direction: column;
+    }
+    
+    .benefits {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .audit-form {
+        padding: 25px 20px;
+    }
+    
+    .stats {
+        font-size: 1rem;
+        padding: 12px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .benefit {
+        font-size: 0.9rem;
+        padding: 12px 10px;
+    }
+}
+
+/* Loading State */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Error Message */
+.error-message {
+    color: #e74c3c;
+    background: #fdf2f2;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 1px solid #fbb;
+    text-align: center;
 }
