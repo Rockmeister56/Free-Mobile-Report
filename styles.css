@@ -13,6 +13,10 @@ body {
     line-height: 1.6;
 }
 
+/* =================================================== */
+/* LANDING PAGE STYLES */
+/* =================================================== */
+
 /* Full-width header with your image as background */
 .header-background {
     background-image: url('https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1760865432662_lp-image2.PNG');
@@ -178,8 +182,216 @@ body {
     background: #f8f9fa;
 }
 
-/* Responsive Design */
+/* =================================================== */
+/* ANALYSIS PAGE STYLES */
+/* =================================================== */
+
+.analysis-page {
+    background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #0c0c0c 100%);
+    color: white;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Blue Bars */
+.top-bar, .bottom-bar {
+    background: linear-gradient(90deg, #0062cc, #0096ff, #0062cc);
+    height: 8px;
+    width: 100%;
+}
+
+.top-bar {
+    box-shadow: 0 2px 20px rgba(0, 150, 255, 0.5);
+}
+
+.bottom-bar {
+    box-shadow: 0 -2px 20px rgba(0, 150, 255, 0.5);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+/* Analysis Container */
+.analysis-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+/* Analyzing Header */
+.analyzing-header {
+    margin-bottom: 50px;
+}
+
+.pulse-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    background: #0096ff;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+.analyzing-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 15px;
+    text-shadow: 0 0 20px rgba(0, 150, 255, 0.7);
+}
+
+.blinking-cursor {
+    animation: blink 1s infinite;
+    color: #0096ff;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.analyzing-header .subtitle {
+    color: #cccccc;
+    font-size: 1.2rem;
+}
+
+/* Progress Section */
+.progress-section {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    backdrop-filter: blur(10px);
+    margin-bottom: 30px;
+}
+
+.progress-bar-container {
+    margin-bottom: 40px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(0, 150, 255, 0.5);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0062cc, #0096ff, #00ccff);
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 20px rgba(0, 150, 255, 0.5);
+}
+
+.progress-text {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    color: #0096ff;
+    font-weight: 600;
+}
+
+/* Analysis Steps */
+.analysis-steps {
+    text-align: left;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.step:last-child {
+    border-bottom: none;
+}
+
+.step-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.step.completed .step-icon {
+    background: #00ff88;
+    color: #1a1a1a;
+}
+
+.step.active .step-icon {
+    background: #0096ff;
+    color: white;
+    animation: spin 2s linear infinite;
+}
+
+.step:not(.completed):not(.active) .step-icon {
+    background: rgba(255, 255, 255, 0.2);
+    color: #666;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.step-text {
+    color: #cccccc;
+    flex: 1;
+}
+
+.step.completed .step-text {
+    color: #00ff88;
+}
+
+.step.active .step-text {
+    color: #0096ff;
+    font-weight: 600;
+}
+
+/* Status Message */
+.status-message {
+    color: #888;
+    font-style: italic;
+    margin-top: 20px;
+}
+
+/* =================================================== */
+/* RESPONSIVE DESIGN (Both Pages) */
+/* =================================================== */
+
 @media (max-width: 768px) {
+    /* Landing Page Mobile */
     .header-background {
         padding: 40px 15px;
     }
@@ -209,9 +421,27 @@ body {
         font-size: 1rem;
         padding: 12px 20px;
     }
+    
+    /* Analysis Page Mobile */
+    .analysis-container {
+        padding: 40px 15px;
+    }
+    
+    .analyzing-header h1 {
+        font-size: 2rem;
+    }
+    
+    .progress-section {
+        padding: 30px 20px;
+    }
+    
+    .analysis-steps {
+        max-width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
+    /* Landing Page Mobile Small */
     .hero h1 {
         font-size: 1.8rem;
     }
@@ -228,7 +458,16 @@ body {
     .header-background {
         padding: 30px 15px;
     }
+    
+    /* Analysis Page Mobile Small */
+    .analyzing-header h1 {
+        font-size: 1.8rem;
+    }
 }
+
+/* =================================================== */
+/* UTILITY STYLES (Both Pages) */
+/* =================================================== */
 
 /* Loading State */
 .loading {
@@ -245,4 +484,11 @@ body {
     margin-top: 10px;
     border: 1px solid #fbb;
     text-align: center;
+}
+
+/* Shake Animation */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
 }
