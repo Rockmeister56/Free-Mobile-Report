@@ -89,7 +89,6 @@ body {
     text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
-/* Audit Form - Now transparent on the image */
 .audit-form {
     background: rgba(255, 255, 255, 0.95);
     padding: 30px;
@@ -98,8 +97,8 @@ body {
     margin-bottom: 30px;
     border: 1px solid rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
-    max-width: 1100px;  /* Your custom width */
-    width: 125%;
+    width: 1100px;  /* ← Fixed pixel width */
+    margin: 0 auto 30px auto;  /* ← This centers it */
 }
 
 .form-container {
