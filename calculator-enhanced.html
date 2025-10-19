@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Revenue Calculator - See How Much You're Losing | Mobile-Wise AI</title>
+    <link rel="stylesheet" href="calculator-styles.css">
+</head>
+<body>
+    <div class="calculator-container">
+        <!-- Header with Your Branding -->
+        <header class="calculator-header">
+            <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1758507868460_logo.png" 
+                 alt="Mobile-Wise AI" 
+                 class="brand-logo">
+            <h1>Mobile-Wise AI</h1>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h2>Discover How Much Revenue Your Mobile Site is <span class="highlight">COSTING You</span></h2>
+            <p class="subtitle">Most businesses lose 70% of mobile visitors - calculate your exact revenue loss and see how AI can 3X your conversions</p>
+            
+            <div class="social-proof">
+                <p>🚀 <strong>428+ businesses</strong> discovered their mobile gaps this week</p>
+            </div>
+        </section>
+
+        <!-- Calculator Form -->
+        <section class="calculator-form">
+            <div class="input-group">
+                <label for="monthlyVisitors">Monthly Website Visitors</label>
+                <input type="number" id="monthlyVisitors" placeholder="e.g., 10000" min="100">
+                <span class="input-hint">How many people visit your site monthly?</span>
+            </div>
+
+            <div class="input-group">
+                <label for="conversionRate">Current Conversion Rate (%)</label>
+                <input type="number" id="conversionRate" placeholder="e.g., 2" step="0.1" min="0.1" max="100">
+                <span class="input-hint">What % of visitors become customers?</span>
+            </div>
+
+            <div class="input-group">
+                <label for="averageSale">Average Sale Value ($)</label>
+                <input type="number" id="averageSale" placeholder="e.g., 100" min="1">
+                <span class="input-hint">How much is the average customer worth?</span>
+            </div>
+
+            <button id="calculateBtn" class="calculate-btn">
+                🚀 CALCULATE MY REVENUE LOSS
+            </button>
+        </section>
+
+        <!-- Results Section -->
+        <section id="resultsSection" class="results-section" style="display: none;">
+            <div class="results-card">
+                <h3>💰 YOUR MOBILE REVENUE ANALYSIS</h3>
+                
+                <div class="result-row current">
+                    <div class="result-label">Current Monthly Revenue:</div>
+                    <div class="result-value" id="currentRevenue">$0</div>
+                </div>
+                
+                <div class="result-row potential">
+                    <div class="result-label">
+                        <span class="ai-badge">MOBILE-WISE AI 3X BOOST</span><br>
+                        Potential Monthly Revenue:
+                    </div>
+                    <div class="result-value" id="potentialRevenue">$0</div>
+                </div>
+                
+                <div class="result-row difference">
+                    <div class="result-label">Additional Monthly Revenue:</div>
+                    <div class="result-value" id="additionalRevenue">$0</div>
+                </div>
+
+                <div class="cta-section">
+                    <p class="cta-text">"You're leaving <strong id="lossAmount">$0</strong> on the table every month due to mobile conversion issues!"</p>
+                    
+                    <button id="seeDemoBtn" class="demo-btn">
+                        🎬 SEE HOW MOBILE-WISE AI SOLVES THIS
+                    </button>
+                    
+                    <p class="podcast-invite">
+                        🎧 Join our <strong>"Ask AI For Business"</strong> podcast to learn how others 3X'd their conversions
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Demo Pop-up (Hidden until triggered) -->
+        <div id="demoPopup" class="demo-popup" style="display: none;">
+            <div class="popup-content">
+                <button id="closePopup" class="close-btn">×</button>
+                <h3>🚀 Experience Mobile-Wise AI in Action!</h3>
+                <p>See exactly how our AI assistant converts your mobile visitors into customers</p>
+                <div class="popup-actions">
+                    <button id="startDemo" class="start-demo-btn">START AI DEMO</button>
+                    <button id="scheduleCall" class="schedule-btn">SCHEDULE CALL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="calculator-logic.js"></script>
+    <script src="ai-demo-integration.js"></script>
+</body>
+</html>
