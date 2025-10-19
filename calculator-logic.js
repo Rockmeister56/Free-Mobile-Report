@@ -5,8 +5,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const closePopup = document.getElementById('closePopup');
     const startDemo = document.getElementById('startDemo');
     const scheduleCall = document.getElementById('scheduleCall');
+    const voiceAIBtn = document.getElementById('voiceAIBtn');
     const demoPopup = document.getElementById('demoPopup');
     const resultsSection = document.getElementById('resultsSection');
+
+    // Close popup function
+    function closePopupFunc() {
+        demoPopup.style.display = 'none';
+        document.body.style.overflow = ''; // Restore scrolling
+    }
 
     // Calculate revenue
     calculateBtn.addEventListener('click', function() {
@@ -69,24 +76,23 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'hidden'; // Prevent background scrolling
     });
 
-    // Close popup
-    function closePopupFunc() {
-        demoPopup.style.display = 'none';
-        document.body.style.overflow = ''; // Restore scrolling
-    }
+    // Voice AI Button
+    voiceAIBtn.addEventListener('click', function() {
+        // Replace this URL with your actual Voice AI demo
+        window.open('https://your-voice-ai-demo.com', '_blank');
+    });
 
+    // Close popup
     closePopup.addEventListener('click', closePopupFunc);
     
     // Start demo - REPLACE THIS WITH YOUR ACTUAL DEMO URL
     startDemo.addEventListener('click', function() {
-        // Replace this URL with your actual AI demo page
         window.open('https://your-actual-demo-url.com', '_blank');
         closePopupFunc();
     });
 
     // Schedule call - REPLACE THIS WITH YOUR ACTUAL CALENDLY/SCHEDULING URL
     scheduleCall.addEventListener('click', function() {
-        // Replace this URL with your actual scheduling link
         window.open('https://calendly.com/your-scheduling-link', '_blank');
         closePopupFunc();
     });
