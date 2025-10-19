@@ -90,9 +90,9 @@ class AnalysisProgress {
         this.progressText.textContent = '100% Complete - Analysis Ready!';
         this.progressText.style.color = '#00ff88';
         
-        // Redirect to report page after short delay
+        // Redirect back to calculator instead of report.html
         setTimeout(() => {
-            window.location.href = 'report.html';
+            window.location.href = 'calculator-enhanced.html';  // ← CHANGED TO CALCULATOR
         }, 1500);
     }
 }
