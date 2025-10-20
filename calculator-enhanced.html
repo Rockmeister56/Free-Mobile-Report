@@ -234,5 +234,19 @@
     </div>
 
     <script src="calculator-logic.js"></script>
+    <script>
+// Immediate metrics update after HTML is parsed
+setTimeout(function() {
+    const metrics = {
+        conversionScore: Math.floor(Math.random() * 16) + 15,
+        mobileTraffic: Math.floor(Math.random() * 21) + 30,
+        bounceRate: Math.floor(Math.random() * 16) + 70
+    };
+    
+    document.getElementById('conversionScore').textContent = metrics.conversionScore + '%';
+    document.getElementById('mobileTraffic').textContent = metrics.mobileTraffic + '%';
+    document.getElementById('bounceRate').textContent = metrics.bounceRate + '%';
+}, 100);
+</script>
 </body>
 </html>
