@@ -4,9 +4,211 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analyzing Your Mobile Site - Free Mobile Audit</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add your background image first */
+        body.analysis-page {
+            background-image: url('https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1760935628784_test-page-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Preloader Styles */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .preloader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .preloader-text {
+            color: #2c3e50;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Rest of your existing analysis page styles */
+        .top-bar, .bottom-bar {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            height: 10px;
+            width: 100%;
+        }
+
+        .analysis-container {
+            min-height: calc(100vh - 20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .analysis-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+
+        .analyzing-header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .pulse-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: #3498db;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        .dot:nth-child(2) { animation-delay: 0.5s; }
+        .dot:nth-child(3) { animation-delay: 1s; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .blinking-cursor {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .progress-section {
+            margin: 40px 0;
+        }
+
+        .progress-bar-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .analysis-steps {
+            text-align: left;
+            margin: 30px 0;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            opacity: 0.5;
+            transition: all 0.5s ease;
+        }
+
+        .step.active {
+            opacity: 1;
+        }
+
+        .step.completed {
+            opacity: 1;
+        }
+
+        .step-icon {
+            width: 30px;
+            height: 30px;
+            background: #ecf0f1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .step.completed .step-icon {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .step.active .step-icon {
+            background: #3498db;
+            color: white;
+            animation: spin 2s linear infinite;
+        }
+
+        .status-message {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body class="analysis-page">
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="preloader-spinner"></div>
+        <div class="preloader-text">Initializing Mobile Analysis...</div>
+    </div>
+
     <!-- Blue Top Bar -->
     <div class="top-bar"></div>
 
@@ -32,29 +234,29 @@
                     <div class="progress-text" id="progressText">0% Complete</div>
                 </div>
 
-                <!-- Analysis Steps -->
+                <!-- Analysis Steps - ALL START INCOMPLETE -->
                 <div class="analysis-steps">
-                    <div class="step completed">
-                        <span class="step-icon">✓</span>
+                    <div class="step" id="step1">
+                        <span class="step-icon">○</span>
                         <span class="step-text">Loading website content</span>
                     </div>
-                    <div class="step completed">
-                        <span class="step-icon">✓</span>
+                    <div class="step" id="step2">
+                        <span class="step-icon">○</span>
                         <span class="step-text">Simulating mobile experience</span>
                     </div>
-                    <div class="step active">
-                        <span class="step-icon">⟳</span>
+                    <div class="step" id="step3">
+                        <span class="step-icon">○</span>
                         <span class="step-text">Checking conversion elements</span>
                     </div>
-                    <div class="step">
+                    <div class="step" id="step4">
                         <span class="step-icon">○</span>
                         <span class="step-text">Scanning for AI assistants</span>
                     </div>
-                    <div class="step">
+                    <div class="step" id="step5">
                         <span class="step-icon">○</span>
                         <span class="step-text">Analyzing call-to-action buttons</span>
                     </div>
-                    <div class="step">
+                    <div class="step" id="step6">
                         <span class="step-icon">○</span>
                         <span class="step-text">Generating conversion score</span>
                     </div>
@@ -71,6 +273,125 @@
     <!-- Blue Bottom Bar -->
     <div class="bottom-bar"></div>
 
-    <script src="analysis.js"></script>
+    <script>
+        // Preloader - Show for 2 seconds then start analysis
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.getElementById('preloader').style.display = 'none';
+                // Start the analysis progress after preloader
+                new AnalysisProgress();
+            }, 2000);
+        });
+
+        // Updated Analysis Progress System - ALL STEPS START FRESH
+        class AnalysisProgress {
+            constructor() {
+                this.progressFill = document.getElementById('progressFill');
+                this.progressText = document.getElementById('progressText');
+                this.steps = document.querySelectorAll('.step');
+                this.currentStep = 0; // Start from the VERY beginning
+                this.progress = 0;
+                this.init();
+            }
+
+            init() {
+                // Start all steps as incomplete
+                this.resetAllSteps();
+                // Start progress after a brief delay
+                setTimeout(() => {
+                    this.startProgress();
+                }, 500);
+            }
+
+            resetAllSteps() {
+                // Reset all steps to incomplete state
+                this.steps.forEach((step, index) => {
+                    step.classList.remove('completed', 'active');
+                    const icon = step.querySelector('.step-icon');
+                    icon.textContent = '○';
+                    icon.style.animation = 'none';
+                });
+            }
+
+            startProgress() {
+                const duration = 25000; // 25 seconds total
+                const interval = 100; // Update every 100ms
+                const increment = (interval / duration) * 100;
+                
+                const progressInterval = setInterval(() => {
+                    this.progress += increment;
+                    
+                    if (this.progress >= 100) {
+                        this.progress = 100;
+                        clearInterval(progressInterval);
+                        this.completeAnalysis();
+                    }
+                    
+                    this.updateProgress();
+                }, interval);
+            }
+
+            updateProgress() {
+                this.progressFill.style.width = `${this.progress}%`;
+                this.progressText.textContent = `${Math.round(this.progress)}% Complete`;
+                
+                // Update steps based on progress - ALL STEPS START FRESH
+                if (this.progress >= 5 && this.currentStep === 0) {
+                    this.completeStep(0);
+                    this.activateStep(1);
+                    this.currentStep = 1;
+                } else if (this.progress >= 20 && this.currentStep === 1) {
+                    this.completeStep(1);
+                    this.activateStep(2);
+                    this.currentStep = 2;
+                } else if (this.progress >= 35 && this.currentStep === 2) {
+                    this.completeStep(2);
+                    this.activateStep(3);
+                    this.currentStep = 3;
+                } else if (this.progress >= 55 && this.currentStep === 3) {
+                    this.completeStep(3);
+                    this.activateStep(4);
+                    this.currentStep = 4;
+                } else if (this.progress >= 75 && this.currentStep === 4) {
+                    this.completeStep(4);
+                    this.activateStep(5);
+                    this.currentStep = 5;
+                } else if (this.progress >= 90 && this.currentStep === 5) {
+                    this.completeStep(5);
+                }
+            }
+
+            completeStep(stepIndex) {
+                const step = this.steps[stepIndex];
+                step.classList.remove('active');
+                step.classList.add('completed');
+                
+                const icon = step.querySelector('.step-icon');
+                icon.textContent = '✓';
+                icon.style.animation = 'none';
+            }
+
+            activateStep(stepIndex) {
+                const step = this.steps[stepIndex];
+                step.classList.add('active');
+                
+                const icon = step.querySelector('.step-icon');
+                icon.textContent = '⟳';
+                icon.style.animation = 'spin 2s linear infinite';
+            }
+
+            completeAnalysis() {
+                // Final completion animation
+                this.progressFill.style.background = 'linear-gradient(90deg, #00cc66, #00ff88)';
+                this.progressText.textContent = '100% Complete - Analysis Ready!';
+                this.progressText.style.color = '#00ff88';
+                
+                // Redirect to calculator page after short delay
+                setTimeout(() => {
+                    window.location.href = 'calculator-enhanced.html';
+                }, 1500);
+            }
+        }
+    </script>
 </body>
 </html>
