@@ -780,6 +780,39 @@ body {
     }
 }
 
+.teaser-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Remove margin-bottom since we're using spacer */
+    margin-bottom: 0;
+}
+
+.teaser-title {
+    color: #1e3c72;
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.teaser-spacer {
+    height: 30px; /* This creates the visual space you want */
+    width: 100%;
+}
+
+/* Or if you prefer, you can use padding on the teaser-card */
+.teaser-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    border-left: 4px solid #667eea;
+    transition: transform 0.3s ease;
+    min-height: 120px; /* Force minimum height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* This spreads content evenly */
+}
+
 .boost-btn {
     background: rgba(255,255,255,0.2);
     color: white;
