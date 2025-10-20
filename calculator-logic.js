@@ -73,27 +73,28 @@ function generateSmartMetrics() {
     };
 }
 
-// Function to update the report metrics
+// Smart metric generator - creates unique but realistic combinations
+function generateSmartMetrics() {
+    const conversionRange = { min: 15, max: 30 };
+    const mobileTrafficRange = { min: 30, max: 50 };
+    const bounceRateRange = { min: 70, max: 85 };
+    
+    const conversionScore = Math.floor(Math.random() * (conversionRange.max - conversionRange.min + 1)) + conversionRange.min;
+    const mobileTraffic = Math.floor(Math.random() * (mobileTrafficRange.max - mobileTrafficRange.min + 1)) + mobileTrafficRange.min;
+    const bounceRate = Math.floor(Math.random() * (bounceRateRange.max - bounceRateRange.min + 1)) + bounceRateRange.min;
+    
+    return { conversionScore, mobileTraffic, bounceRate };
+}
+
 function updateReportMetrics() {
     const metrics = generateSmartMetrics();
-    
     document.getElementById('conversionScore').textContent = metrics.conversionScore + '%';
     document.getElementById('mobileTraffic').textContent = metrics.mobileTraffic + '%';
     document.getElementById('bounceRate').textContent = metrics.bounceRate + '%';
-}
-
-// Update metrics when the page loads and on each calculation
-document.addEventListener('DOMContentLoaded', function() {
-    updateReportMetrics();
     
-    const calculateBtn = document.getElementById('calculateBtn');
-    if (calculateBtn) {
-        calculateBtn.addEventListener('click', function() {
-            // Always update metrics when calculator is used (fresh report each time)
-            updateReportMetrics();
-        });
-    }
-});
+    // Update the summary text with the new metrics
+    updateSummaryText(metrics);
+}
 
 // Optional: Update the summary text based on the metrics
 function updateSummaryText(metrics) {
@@ -102,6 +103,31 @@ function updateSummaryText(metrics) {
         summaryElement.innerHTML = `Based on our analysis, your mobile site has <strong>critical performance issues</strong> (scoring only ${metrics.conversionScore}%) that are costing you significant revenue. With ${metrics.mobileTraffic}% of your traffic coming from mobile and a ${metrics.bounceRate}% bounce rate, immediate optimization could increase conversions by up to <strong>3X</strong>.`;
     }
 }
+
+// SINGLE DOMContentLoaded event listener - no duplicates!
+document.addEventListener('DOMContentLoaded', function() {
+    updateReportMetrics();
+    
+    const calculateBtn = document.getElementById('calculateBtn');
+    if (calculateBtn) {
+        calculateBtn.addEventListener('click', function() {
+            // Update metrics when calculator is used (fresh report each time)
+            updateReportMetrics();
+        });
+    }
+    
+    // Your existing calculator logic continues here...
+    const seeDemoBtn = document.getElementById('seeDemoBtn');
+    const closePopup = document.getElementById('closePopup');
+    const startDemo = document.getElementById('startDemo');
+    const scheduleCall = document.getElementById('scheduleCall');
+    const boostBtn = document.getElementById('boostBtn');
+    const demoPopup = document.getElementById('demoPopup');
+    const resultsSection = document.getElementById('resultsSection');
+    const videoPlaceholder = document.querySelector('.video-placeholder');
+
+    // ... rest of your existing calculator code
+});
 
 function updateReportMetrics() {
     const metrics = generateSmartMetrics();
