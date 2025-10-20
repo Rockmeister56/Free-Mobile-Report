@@ -76,20 +76,17 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'hidden'; // Prevent background scrolling
     });
 
-    // Voice AI Button
-    voiceAIBtn.addEventListener('click', function() {
-        // Replace this URL with your actual Voice AI demo
-        window.open('https://your-voice-ai-demo.com', '_blank');
-    });
-
     // Close popup
     closePopup.addEventListener('click', closePopupFunc);
-    
-    // Start demo - REPLACE THIS WITH YOUR ACTUAL DEMO URL
-    startDemo.addEventListener('click', function() {
-        window.open('https://your-actual-demo-url.com', '_blank');
-        closePopupFunc();
-    });
+
+    // Video Teaser Functionality
+const boostBtn = document.querySelector('.boost-btn');
+const videoPlaceholder = document.querySelector('.video-placeholder');
+
+boostBtn.addEventListener('click', function() {
+    // Replace with your actual video URL or demo page
+    window.open('https://your-video-demo-url.com', '_blank');
+});
 
     // Schedule call - REPLACE THIS WITH YOUR ACTUAL CALENDLY/SCHEDULING URL
     scheduleCall.addEventListener('click', function() {
@@ -117,19 +114,20 @@ const reportSuccess = document.getElementById('reportSuccess');
 const closeReportSuccess = document.getElementById('closeReportSuccess');
 const closeSuccessBtn = document.getElementById('closeSuccessBtn');
 
+// Update the report form submission in calculator-logic.js
 reportForm.addEventListener('submit', function(e) {
     e.preventDefault();
     
+    const userFirstName = document.getElementById('userFirstName').value;
     const userEmail = document.getElementById('userEmail').value;
     
-    if (!userEmail) {
-        alert('Please enter your email address');
+    if (!userFirstName || !userEmail) {
+        alert('Please enter both your first name and email address');
         return;
     }
     
-    // Here you would typically send the email to your backend
-    // For now, we'll just show the success message
-    console.log('Email captured:', userEmail);
+    // Here you would send this data to your backend/email service
+    console.log('User details:', { firstName: userFirstName, email: userEmail });
     
     // Show success popup
     reportSuccess.style.display = 'flex';
