@@ -87,46 +87,50 @@ function generateSmartMetrics() {
 }
 
 function updateReportMetrics() {
-    const metrics = generateSmartMetrics();
-    document.getElementById('conversionScore').textContent = metrics.conversionScore + '%';
-    document.getElementById('mobileTraffic').textContent = metrics.mobileTraffic + '%';
-    document.getElementById('bounceRate').textContent = metrics.bounceRate + '%';
-    
-    // Update the summary text with the new metrics
-    updateSummaryText(metrics);
+    // Add a small delay to ensure DOM is ready
+    setTimeout(() => {
+        const conversionScoreEl = document.getElementById('conversionScore');
+        const mobileTrafficEl = document.getElementById('mobileTraffic');
+        const bounceRateEl = document.getElementById('bounceRate');
+        
+        if (conversionScoreEl && mobileTrafficEl && bounceRateEl) {
+            const metrics = generateSmartMetrics();
+            conversionScoreEl.textContent = metrics.conversionScore + '%';
+            mobileTrafficEl.textContent = metrics.mobileTraffic + '%';
+            bounceRateEl.textContent = metrics.bounceRate + '%';
+            
+            updateSummaryText(metrics);
+        } else {
+            console.log('Metrics elements not found yet, retrying...');
+            // Retry after another short delay
+            setTimeout(updateReportMetrics, 100);
+        }
+    }, 100);
 }
 
-// Optional: Update the summary text based on the metrics
+// Update the summary text based on the metrics
 function updateSummaryText(metrics) {
     const summaryElement = document.querySelector('.report-section-card p');
-    if (summaryElement && metrics.conversionScore < 25) {
+    if (summaryElement) {
         summaryElement.innerHTML = `Based on our analysis, your mobile site has <strong>critical performance issues</strong> (scoring only ${metrics.conversionScore}%) that are costing you significant revenue. With ${metrics.mobileTraffic}% of your traffic coming from mobile and a ${metrics.bounceRate}% bounce rate, immediate optimization could increase conversions by up to <strong>3X</strong>.`;
     }
 }
 
-// SINGLE DOMContentLoaded event listener - no duplicates!
-document.addEventListener('DOMContentLoaded', function() {
+// Wait for full page load
+window.addEventListener('load', function() {
     updateReportMetrics();
     
     const calculateBtn = document.getElementById('calculateBtn');
     if (calculateBtn) {
         calculateBtn.addEventListener('click', function() {
-            // Update metrics when calculator is used (fresh report each time)
             updateReportMetrics();
         });
     }
-    
-    // Your existing calculator logic continues here...
-    const seeDemoBtn = document.getElementById('seeDemoBtn');
-    const closePopup = document.getElementById('closePopup');
-    const startDemo = document.getElementById('startDemo');
-    const scheduleCall = document.getElementById('scheduleCall');
-    const boostBtn = document.getElementById('boostBtn');
-    const demoPopup = document.getElementById('demoPopup');
-    const resultsSection = document.getElementById('resultsSection');
-    const videoPlaceholder = document.querySelector('.video-placeholder');
+});
 
-    // ... rest of your existing calculator code
+// Also try on DOMContentLoaded as backup
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(updateReportMetrics, 200);
 });
 
 function updateReportMetrics() {
