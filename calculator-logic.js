@@ -111,6 +111,50 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Report Form Submission
+const reportForm = document.getElementById('reportForm');
+const reportSuccess = document.getElementById('reportSuccess');
+const closeReportSuccess = document.getElementById('closeReportSuccess');
+const closeSuccessBtn = document.getElementById('closeSuccessBtn');
+
+reportForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const userEmail = document.getElementById('userEmail').value;
+    
+    if (!userEmail) {
+        alert('Please enter your email address');
+        return;
+    }
+    
+    // Here you would typically send the email to your backend
+    // For now, we'll just show the success message
+    console.log('Email captured:', userEmail);
+    
+    // Show success popup
+    reportSuccess.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    // Clear the form
+    reportForm.reset();
+});
+
+// Close report success popup
+function closeReportSuccessFunc() {
+    reportSuccess.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+closeReportSuccess.addEventListener('click', closeReportSuccessFunc);
+closeSuccessBtn.addEventListener('click', closeReportSuccessFunc);
+
+// Close report success when clicking outside
+reportSuccess.addEventListener('click', function(e) {
+    if (e.target === reportSuccess) {
+        closeReportSuccessFunc();
+    }
+});
+
     // Input validation - allow only numbers
     const inputs = document.querySelectorAll('input[type="number"]');
     inputs.forEach(input => {

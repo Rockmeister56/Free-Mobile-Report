@@ -473,4 +473,155 @@ body {
         gap: 15px;
         text-align: center;
     }
+
+    /* Report Section Cards */
+.report-section-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    border-left: 4px solid #667eea;
+}
+
+.report-section-card.critical {
+    border-left-color: #e74c3c;
+    background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+}
+
+.report-section-card.cta-card {
+    border-left-color: #00cc66;
+    background: linear-gradient(135deg, #f0fff4 0%, #fff 100%);
+}
+
+.report-section-card h3 {
+    color: #1e3c72;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Issues Grid */
+.issues-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.issue-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border-left: 3px solid #e74c3c;
+}
+
+.issue-icon {
+    font-size: 1.5em;
+    flex-shrink: 0;
+}
+
+.issue-content strong {
+    color: #1e3c72;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.issue-content p {
+    color: #64748b;
+    font-size: 0.9em;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Detailed Lists */
+.detailed-list {
+    list-style: none;
+    padding: 0;
+}
+
+.detailed-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+    color: #4a5568;
+    line-height: 1.5;
+}
+
+.detailed-list li:last-child {
+    border-bottom: none;
+}
+
+.detailed-list strong {
+    color: #1e3c72;
+}
+
+/* Email Capture Form */
+.email-capture-form {
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.get-report-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #00cc66 0%, #00a854 100%);
+    color: white;
+    border: none;
+    padding: 18px;
+    font-size: 1.1em;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.get-report-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 204, 102, 0.3);
+}
+
+.benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+}
+
+.benefits-list li {
+    padding: 8px 0;
+    color: #4a5568;
+}
+
+.privacy-note {
+    text-align: center;
+    margin-top: 15px;
+    color: #718096;
+}
+
+/* Success Icon */
+.success-icon {
+    font-size: 4em;
+    text-align: center;
+    margin-bottom: 20px;
+}
 }
