@@ -182,6 +182,52 @@ body {
     background: #000000;
 }
 
+/* Footer Styles */
+.main-footer {
+    background: #000;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.footer-container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.footer-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Ensure the page layout pushes footer to bottom */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1; /* This pushes the footer to the bottom */
+}
+
+/* If you want the footer to always stick to bottom, add this: */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-footer {
+    margin-top: auto;
+}
+
 /* =================================================== */
 /* CALCULATOR PAGE STYLES */
 /* =================================================== */
