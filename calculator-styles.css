@@ -780,37 +780,35 @@ body {
     }
 }
 
-.teaser-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* Remove margin-bottom since we're using spacer */
-    margin-bottom: 0;
+.teaser-header-wrapper {
+    display: block; /* NOT flex - this is key! */
 }
 
-.teaser-title {
+.teaser-header-wrapper h4 {
+    margin: 0 0 15px 0; /* This creates the space below the title */
     color: #1e3c72;
-    font-weight: 600;
     font-size: 1.1em;
 }
 
-.teaser-spacer {
-    height: 30px; /* This creates the visual space you want */
-    width: 100%;
+.issue-count {
+    background: #e74c3c;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 700;
+    display: inline-block;
 }
 
-/* Or if you prefer, you can use padding on the teaser-card */
 .teaser-card {
     background: white;
     padding: 25px;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.08);
     border-left: 4px solid #667eea;
-    transition: transform 0.3s ease;
-    min-height: 120px; /* Force minimum height */
+    min-height: 120px;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* This spreads content evenly */
+    align-items: center; /* This centers everything vertically */
 }
 
 .boost-btn {
