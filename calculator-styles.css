@@ -780,22 +780,6 @@ body {
     }
 }
 
-.teaser-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px; /* Add more space below the header */
-    flex-wrap: wrap; /* Allow wrapping if needed */
-}
-
-/* Or if you want even more control, add this: */
-.teaser-card {
-    min-height: 120px; /* Ensure consistent card height */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
 .boost-btn {
     background: rgba(255,255,255,0.2);
     color: white;
