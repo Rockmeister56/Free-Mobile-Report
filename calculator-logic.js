@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const closePopup = document.getElementById('closePopup');
     const startDemo = document.getElementById('startDemo');
     const scheduleCall = document.getElementById('scheduleCall');
-    const voiceAIBtn = document.getElementById('voiceAIBtn');
     const demoPopup = document.getElementById('demoPopup');
     const resultsSection = document.getElementById('resultsSection');
 
@@ -79,20 +78,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close popup
     closePopup.addEventListener('click', closePopupFunc);
 
-    // Video Teaser Functionality
-const boostBtn = document.querySelector('.boost-btn');
-const videoPlaceholder = document.querySelector('.video-placeholder');
-
-boostBtn.addEventListener('click', function() {
-    // Replace with your actual video URL or demo page
-    window.open('https://your-video-demo-url.com', '_blank');
-});
-
     // Schedule call - REPLACE THIS WITH YOUR ACTUAL CALENDLY/SCHEDULING URL
     scheduleCall.addEventListener('click', function() {
         window.open('https://calendly.com/your-scheduling-link', '_blank');
         closePopupFunc();
     });
+
+    // Boost Header Button functionality
+boostBtn.addEventListener('click', function() {
+    // Replace with your actual demo URL
+    window.open('https://your-demo-url.com', '_blank');
+});
+
+// Video placeholder click
+videoPlaceholder.addEventListener('click', function() {
+    // Replace with your actual video URL
+    window.open('https://your-video-url.com', '_blank');
+});
 
     // Close popup when clicking outside
     demoPopup.addEventListener('click', function(e) {
