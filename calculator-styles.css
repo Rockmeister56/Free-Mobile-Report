@@ -1178,7 +1178,7 @@ body {
     }
 }
 
-/* Enhanced Boost Modal Styles - FIXED VERSION */
+/* Enhanced Boost Modal Styles - FIXED FOR YOUTUBE SHORTS */
 .boost-modal {
     display: none;
     position: fixed;
@@ -1186,10 +1186,10 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 10000; /* Increased z-index */
+    z-index: 10000;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.8); /* Fallback background */
+    background-color: rgba(0, 0, 0, 0.9);
 }
 
 .boost-modal-overlay {
@@ -1199,21 +1199,44 @@ body {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
-    z-index: 1; /* Overlay behind content */
+    z-index: 1;
 }
 
 .boost-modal-content {
     background: white;
-    border-radius: 15px;
+    border-radius: 20px;
     padding: 2rem;
-    max-width: 800px; /* Increased for better video size */
+    max-width: 300px; /* Narrower for vertical video */
     width: 90%;
-    max-height: 90vh; /* Prevent overflow */
+    max-height: 90vh;
     text-align: center;
     position: relative;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    z-index: 2; /* Content above overlay */
-    overflow-y: auto; /* Scroll if content too tall */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    z-index: 2;
+    overflow-y: auto;
+}
+
+/* YOUTUBE SHORTS VIDEO CONTAINER - APPLYING THE MAGIC FORMULA */
+.video-player-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 177.78%; /* 9:16 aspect ratio (16/9 = 1.777) */
+    margin-bottom: 1.5rem;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #000;
+}
+
+.boost-modal-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 12px;
+    object-fit: cover; /* CRITICAL for Shorts format */
 }
 
 .close-boost-modal {
@@ -1231,33 +1254,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
 }
 
 .close-boost-modal:hover {
     color: #ff4444;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 50%;
-}
-
-.video-player-container {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    margin-bottom: 1.5rem;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #000; /* Black background for video loading */
-}
-
-.boost-modal-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-    border-radius: 8px;
+    background: white;
+    transform: scale(1.1);
 }
 
 /* CTA Button Styles */
@@ -1273,7 +1277,7 @@ body {
     margin: 15px 0;
     transition: all 0.3s ease;
     width: 100%;
-    max-width: 300px;
+    max-width: 280px;
 }
 
 .free-zoom-demo-btn:hover {
@@ -1288,19 +1292,17 @@ body {
     font-style: italic;
 }
 
-/* For modern aspect ratio handling */
-.aspect-ratio-16-9 {
-    aspect-ratio: 16 / 9;
-    width: 100%;
-    max-width: 100%;
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .boost-modal-content {
         padding: 1.5rem;
         margin: 20px;
         width: calc(100% - 40px);
+        max-width: 280px;
+    }
+    
+    .video-player-container {
+        padding-bottom: 177.78%; /* Maintain 9:16 ratio */
     }
     
     .free-zoom-demo-btn {
@@ -1318,18 +1320,6 @@ body {
 /* Ensure body doesn't scroll when modal is open */
 body.modal-open {
     overflow: hidden;
-}
-
-/* YouTube video specific fixes */
-.html5-video-player {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-.html5-main-video {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain;
 }
 
 /* High contrast support */
