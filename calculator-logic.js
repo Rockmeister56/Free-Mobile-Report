@@ -1,4 +1,4 @@
-// Calculator Logic - Enhanced Version
+// Calculator Logic - Clean Working Version
 document.addEventListener('DOMContentLoaded', function() {
     const calculateBtn = document.getElementById('calculateBtn');
     const seeDemoBtn = document.getElementById('seeDemoBtn');
@@ -10,18 +10,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const boostBtn = document.getElementById('boostBtn');
     
     // Get report form elements
-    const reportForm = document.getElementById('mainReportForm'); // ✅ CHANGED to mainReportForm
+    const reportForm = document.getElementById('mainReportForm');
     const reportSuccess = document.getElementById('reportSuccess');
     const closeReportSuccess = document.getElementById('closeReportSuccess');
     const closeSuccessBtn = document.getElementById('closeSuccessBtn');
 
+    // ✅ SINGLE PLACE FOR ALL URLS
+    const DEMO_URL = 'https://your-actual-demo-url.com'; // Replace with your real demo URL
+    const SCHEDULING_URL = 'https://calendly.com/your-scheduling-link'; // Replace with your real scheduling URL
+
     // Close popup function
     function closePopupFunc() {
         demoPopup.style.display = 'none';
-        document.body.style.overflow = ''; // Restore scrolling
+        document.body.style.overflow = '';
     }
 
-    // Smart metric generator - creates unique but realistic combinations
+    // Smart metric generator
     function generateSmartMetrics() {
         const conversionRange = { min: 15, max: 30 };
         const mobileTrafficRange = { min: 30, max: 50 };
@@ -43,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateReportMetrics() {
-        // Add a small delay to ensure DOM is ready
         setTimeout(() => {
             const conversionScoreEl = document.getElementById('conversionScore');
             const mobileTrafficEl = document.getElementById('mobileTraffic');
@@ -57,8 +60,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 updateSummaryText(metrics);
             } else {
-                console.log('Metrics elements not found yet, retrying...');
-                // Retry after another short delay
                 setTimeout(updateReportMetrics, 100);
             }
         }, 100);
@@ -88,11 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Calculate current revenue
         const currentRevenue = monthlyVisitors * (conversionRate / 100) * averageSale;
-        
-        // Calculate potential revenue (3X boost)
         const potentialRevenue = monthlyVisitors * ((conversionRate * 3) / 100) * averageSale;
-        
-        // Calculate additional revenue
         const additionalRevenue = potentialRevenue - currentRevenue;
 
         // Format numbers with commas
@@ -125,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Show demo popup
     seeDemoBtn.addEventListener('click', function() {
         demoPopup.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        document.body.style.overflow = 'hidden';
     });
 
     // Close popup
@@ -133,45 +130,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Start Demo button
     startDemo.addEventListener('click', function() {
-        // Replace with your actual demo URL
-        window.open('https://your-demo-url.com', '_blank');
+        // ✅ Uses the single demo URL
+        window.open(DEMO_URL, '_blank');
         closePopupFunc();
     });
 
-    // Schedule call - REPLACE THIS WITH YOUR ACTUAL CALENDLY/SCHEDULING URL
+    // Schedule call
     scheduleCall.addEventListener('click', function() {
-        window.open('https://calendly.com/your-scheduling-link', '_blank');
+        // ✅ Uses the single scheduling URL
+        window.open(SCHEDULING_URL, '_blank');
         closePopupFunc();
     });
 
-    // Boost Header Button functionality
-    if (boostBtn) {
-        document.getElementById('safeBoostBtn').addEventListener('click', function() {
-            // Replace with your actual demo URL
-            window.open('https://your-demo-url.com', '_blank');
-        });
-    }
-
-    // Add this to your calculator-logic.js
-document.addEventListener('DOMContentLoaded', function() {
-    const boostBtn = document.getElementById('boostBtn');
+    // ========== BOOST BUTTON - SIMPLE & WORKING ==========
     if (boostBtn) {
         boostBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            e.stopPropagation();
-            // Your actual intended action
-            window.open('https://your-actual-demo-url.com', '_blank');
+            console.log('Boost button clicked!');
+            
+            // ✅ Uses the same demo URL as other buttons
+            window.open(DEMO_URL, '_blank');
         });
-        
-        // Additional protection
-        boostBtn.onclick = function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            window.open('https://your-actual-demo-url.com', '_blank');
-            return false;
-        };
     }
-});
 
     // Report Form Submission
     if (reportForm) {
@@ -186,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Here you would send this data to your backend/email service
             console.log('User details:', { firstName: userFirstName, email: userEmail });
             
             // Show success popup
@@ -244,10 +223,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputs = document.querySelectorAll('input[type="number"]');
     inputs.forEach(input => {
         input.addEventListener('input', function() {
-            // Remove any non-numeric characters except decimal point
             this.value = this.value.replace(/[^0-9.]/g, '');
             
-            // Ensure only one decimal point
             const decimalCount = (this.value.match(/\./g) || []).length;
             if (decimalCount > 1) {
                 this.value = this.value.slice(0, -1);
