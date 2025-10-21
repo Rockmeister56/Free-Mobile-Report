@@ -303,11 +303,6 @@
             sendMobileReport(userName, userEmail);
         });
 
-        // Function to show modal (call this when scan completes)
-        function showVideoModal() {
-            modal.style.display = 'block';
-        }
-
         // Function to send the report
         function sendMobileReport(userName, userEmail) {
             const templateParams = {
@@ -329,9 +324,10 @@
                 });
         }
         function showVideoModal() {
-    const modal = document.getElementById('videoModal');
-    if (modal) {
-        modal.style.display = 'flex';
+        const modal = document.getElementById('videoModal');
+        if (modal) {
+        modal.style.display = 'flex'; // Use 'flex' for proper centering
+        console.log('Video modal shown'); // Debug line
     }
 }  
     </script>
