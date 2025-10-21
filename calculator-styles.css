@@ -800,61 +800,81 @@ body {
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-/* Modal Styles */
+/* ✅ FIXED MODAL STYLES - Proper Overlay */
 .modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5);
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Dark transparent overlay */
+    z-index: 10000; /* Very high to appear above everything */
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
 .modal-content {
-  background-color: #fefefe;
-  margin: 5% auto;
-  padding: 20px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 600px;
-  position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+/* Smooth fade-in animation */
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .close {
-  position: absolute;
-  right: 15px;
-  top: 10px;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #aaa;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #aaa;
+    background: none;
+    border: none;
+    z-index: 10001;
 }
 
 .close:hover {
-  color: #000;
+    color: #000;
 }
 
-#reportForm input {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
+#videoReportForm input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
 }
 
-#reportForm button {
-  width: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 15px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  font-weight: bold;
+#videoReportForm button {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Ensure modal appears above everything */
+.modal * {
+    box-sizing: border-box;
 }
 
 /* Better spacing for existing elements */
