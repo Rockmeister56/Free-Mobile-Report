@@ -272,7 +272,7 @@
         // ✅ CAPTAIN BRETT'S VIDEO MODAL FUNCTIONALITY
         // Initialize EmailJS with your public key
         (function() {
-            emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // Replace with your actual public key
+            emailjs.init("7-9oxa3UC3uKxtqGM"); // Replace with your actual public key
         })();
 
         // Modal functionality
@@ -318,7 +318,7 @@
                 chatbot_detected: window.lastScanChatbot ? 'AI Chatbot Detected ✅' : 'No AI Chatbot Found ❌'
             };
 
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+            emailjs.send('service_b9bppgb', 'template_f6j78g6', templateParams)
                 .then(function(response) {
                     alert('🎉 Your mobile report is on the way! Check your email.');
                     modal.style.display = 'none';
