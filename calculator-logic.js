@@ -73,13 +73,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Free Zoom Demo Button
-    if (freeZoomDemoBtn) {
-        freeZoomDemoBtn.addEventListener('click', function() {
+   // Free Zoom Demo Button - OPEN IN NEW TAB VERSION
+if (freeZoomDemoBtn) {
+    freeZoomDemoBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        console.log('Free Zoom Demo button clicked');
+        
+        // Close the modal
+        closeBoostModal();
+        
+        // Open scheduling page in new tab
+        setTimeout(() => {
             window.open(SCHEDULING_URL, '_blank');
-            closeBoostModal();
-        });
-    }
+        }, 300);
+    });
+}
 
     // ========== EXISTING FUNCTIONALITY ==========
     function closePopupFunc() {
