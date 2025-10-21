@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mobile Revenue Calculator - See How Much You're Losing | Mobile-Wise AI</title>
     <link rel="stylesheet" href="calculator-styles.css">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Blue Top Header Bar -->
@@ -18,7 +20,7 @@
             </div>
             <div class="header-cta">
                 <span class="boost-text"><h2>Want to Boost Your Mobile Conversion 300%?</h2></span>
-                <button id="boostBtn" class="boost-header-btn">
+                <button id="boostHeaderBtn" class="boost-header-btn">
                     🚀 BOOST HERE
                 </button>
             </div>
@@ -87,7 +89,7 @@
                             <span class="issue-icon">🎯</span>
                             <div class="issue-content">
                                 <strong>Unclear Call-to-Actions</strong>
-                                <p>Visitors don't know what action to take next</p><br>
+                                <p>Visitors don't know what action to take next</p>
                             </div>
                         </div>
                     </div>
@@ -255,30 +257,30 @@
         </div>
     </div>
 
-   <!-- ENHANCED BOOST MODAL -->
-<div class="boost-modal" id="boostModal">
-    <div class="boost-modal-overlay"></div>
-    <div class="boost-modal-content">
-        <span class="close-boost-modal" id="closeBoostModal">×</span>
-        
-        <div class="video-player-container">
-    <iframe class="boost-modal-video" 
-            src="https://www.youtube.com/embed/JbLpXs8mdeo" 
-            title="MobileWise AI Boost Video" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-    </iframe>
-</div>
-        
-        <div class="demo-cta-section">
-            <button id="freeZoomDemoBtn" class="free-zoom-demo-btn">
-                🎯 FREE ZOOM DEMO
-            </button>
-            <p class="cta-subtext">See exactly how we'll 3X your mobile conversions</p>
+    <!-- ENHANCED BOOST MODAL -->
+    <div class="boost-modal" id="boostModal" style="display: none;">
+        <div class="boost-modal-overlay"></div>
+        <div class="boost-modal-content">
+            <span class="close-boost-modal" id="closeBoostModal">×</span>
+            
+            <div class="video-player-container">
+                <iframe class="boost-modal-video" 
+                        src="https://www.youtube.com/embed/JbLpXs8mdeo" 
+                        title="MobileWise AI Boost Video" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
+            </div>
+            
+            <div class="demo-cta-section">
+                <button id="freeZoomDemoBtn" class="free-zoom-demo-btn">
+                    🎯 FREE ZOOM DEMO
+                </button>
+                <p class="cta-subtext">See exactly how we'll 3X your mobile conversions</p>
+            </div>
         </div>
     </div>
-</div>
 
     <script src="calculator-logic.js"></script>
     
@@ -302,7 +304,7 @@
         // ✅ CAPTAIN BRETT'S VIDEO MODAL FUNCTIONALITY
         // Initialize EmailJS with your public key
         (function() {
-            emailjs.init("7-9oxa3UC3uKxtqGM"); // Replace with your actual public key
+            emailjs.init("7-9oxa3UC3uKxtqGM");
         })();
 
         // Modal functionality
@@ -357,41 +359,90 @@
         function showVideoModal() {
             const modal = document.getElementById('videoModal');
             if (modal) {
-                modal.style.display = 'flex'; // Use 'flex' for proper centering
-                console.log('Video modal shown'); // Debug line
+                modal.style.display = 'flex';
+                console.log('Video modal shown');
             }
         }
         
-        // Boost Modal functionality
+        // ✅ BOOST MODAL FUNCTIONALITY - FIXED
         const openBoostModalBtn = document.getElementById('openBoostModal');
+        const boostHeaderBtn = document.getElementById('boostHeaderBtn');
         const closeBoostModalBtn = document.getElementById('closeBoostModal');
         const boostModal = document.getElementById('boostModal');
+        const freeZoomDemoBtn = document.getElementById('freeZoomDemoBtn');
         
+        // Open modal from both buttons
         if (openBoostModalBtn) {
             openBoostModalBtn.addEventListener('click', () => {
+                console.log('Opening boost modal from main button');
                 boostModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
             });
         }
         
+        if (boostHeaderBtn) {
+            boostHeaderBtn.addEventListener('click', () => {
+                console.log('Opening boost modal from header button');
+                boostModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+        }
+        
+        // Close modal
         if (closeBoostModalBtn) {
             closeBoostModalBtn.addEventListener('click', () => {
+                console.log('Closing boost modal');
                 boostModal.style.display = 'none';
-                // Stop video when modal is closed
-                const iframe = document.querySelector('.boost-modal-video');
-                const iframeSrc = iframe.src;
-                iframe.src = iframeSrc;
+                document.body.style.overflow = 'auto';
+                resetVideo();
             });
         }
         
-        window.addEventListener('click', (e) => {
-            if (e.target === boostModal) {
+        // Close modal when clicking overlay
+        if (boostModal) {
+            boostModal.addEventListener('click', (e) => {
+                if (e.target === boostModal || e.target.classList.contains('boost-modal-overlay')) {
+                    boostModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    resetVideo();
+                }
+            });
+        }
+        
+        // Close modal with ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && boostModal.style.display === 'flex') {
                 boostModal.style.display = 'none';
-                // Stop video when modal is closed
-                const iframe = document.querySelector('.boost-modal-video');
-                const iframeSrc = iframe.src;
-                iframe.src = iframeSrc;
+                document.body.style.overflow = 'auto';
+                resetVideo();
             }
         });
+        
+        // Free Zoom Demo button functionality
+        if (freeZoomDemoBtn) {
+            freeZoomDemoBtn.addEventListener('click', () => {
+                alert('🎯 Redirecting to Zoom demo scheduling...');
+                // Add your Zoom scheduling link here
+                // window.location.href = 'your-zoom-scheduling-link';
+            });
+        }
+        
+        // Function to reset video
+        function resetVideo() {
+            const iframe = document.querySelector('.boost-modal-video');
+            if (iframe) {
+                iframe.src = iframe.src; // Reset to stop video
+            }
+        }
+        
+        // Also connect the "See Demo" button in results
+        const seeDemoBtn = document.getElementById('seeDemoBtn');
+        if (seeDemoBtn) {
+            seeDemoBtn.addEventListener('click', () => {
+                boostModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+        }
     </script>
 </body>
 </html>

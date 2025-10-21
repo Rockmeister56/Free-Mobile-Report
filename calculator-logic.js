@@ -1,4 +1,4 @@
-// Calculator Logic - Clean Working Version
+// Calculator Logic - Enhanced Version with Fixed Boost Modal
 document.addEventListener('DOMContentLoaded', function() {
     const calculateBtn = document.getElementById('calculateBtn');
     const seeDemoBtn = document.getElementById('seeDemoBtn');
@@ -7,7 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const scheduleCall = document.getElementById('scheduleCall');
     const demoPopup = document.getElementById('demoPopup');
     const resultsSection = document.getElementById('resultsSection');
-    const boostBtn = document.getElementById('boostBtn');
+    
+    // Boost modal elements - UPDATED IDs
+    const openBoostModalBtn = document.getElementById('openBoostModal');
+    const boostHeaderBtn = document.getElementById('boostHeaderBtn');
     const boostModal = document.getElementById('boostModal');
     const closeBoostModalBtn = document.getElementById('closeBoostModal');
     const freeZoomDemoBtn = document.getElementById('freeZoomDemoBtn');
@@ -19,28 +22,69 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeSuccessBtn = document.getElementById('closeSuccessBtn');
 
     // ✅ SINGLE PLACE FOR ALL URLS
-    const DEMO_URL = 'https://www.youtube.com/embed/JbLpXs8mdeo'; // Replace with your real demo URL
-    const SCHEDULING_URL = 'https://free-mobile-report.netlify.app/zoom-scheduler'; // Replace with your real scheduling URL
+    const DEMO_URL = 'https://www.youtube.com/embed/JbLpXs8mdeo';
+    const SCHEDULING_URL = 'https://free-mobile-report.netlify.app/zoom-scheduler';
 
-    // Helper function to reset video
-    function resetBoostModalVideo() {
-        const iframe = document.querySelector('.boost-modal-video');
-        if (iframe) {
-            const iframeSrc = iframe.src;
-            iframe.src = iframeSrc;
+    // ========== BOOST MODAL FUNCTIONS - ENHANCED ==========
+    function openBoostModal() {
+        console.log('Opening boost modal');
+        if (boostModal) {
+            boostModal.style.display = 'flex';
+            document.body.classList.add('modal-open');
         }
     }
 
-    // Close popup function
+    function closeBoostModal() {
+        console.log('Closing boost modal');
+        if (boostModal) {
+            boostModal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+            resetBoostModalVideo();
+        }
+    }
+
+    function resetBoostModalVideo() {
+        const iframe = document.querySelector('.boost-modal-video');
+        if (iframe) {
+            // Properly reset YouTube video
+            iframe.src = iframe.src.replace('&autoplay=1', '');
+        }
+    }
+
+    // ========== BOOST MODAL EVENT LISTENERS ==========
+    if (openBoostModalBtn) {
+        openBoostModalBtn.addEventListener('click', openBoostModal);
+    }
+
+    if (boostHeaderBtn) {
+        boostHeaderBtn.addEventListener('click', openBoostModal);
+    }
+
+    if (closeBoostModalBtn) {
+        closeBoostModalBtn.addEventListener('click', closeBoostModal);
+    }
+
+    // Close boost modal when clicking overlay
+    if (boostModal) {
+        boostModal.addEventListener('click', (e) => {
+            if (e.target === boostModal || e.target.classList.contains('boost-modal-overlay')) {
+                closeBoostModal();
+            }
+        });
+    }
+
+    // Free Zoom Demo Button
+    if (freeZoomDemoBtn) {
+        freeZoomDemoBtn.addEventListener('click', function() {
+            window.open(SCHEDULING_URL, '_blank');
+            closeBoostModal();
+        });
+    }
+
+    // ========== EXISTING FUNCTIONALITY ==========
     function closePopupFunc() {
         if (demoPopup) demoPopup.style.display = 'none';
         document.body.style.overflow = '';
-    }
-
-    // Close boost modal function
-    function closeBoostModalFunc() {
-        if (boostModal) boostModal.style.display = 'none';
-        resetBoostModalVideo();
     }
 
     // Smart metric generator
@@ -159,7 +203,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Start Demo button
     if (startDemo) {
         startDemo.addEventListener('click', function() {
-            // ✅ Uses the single demo URL
             window.open(DEMO_URL, '_blank');
             closePopupFunc();
         });
@@ -168,41 +211,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Schedule call
     if (scheduleCall) {
         scheduleCall.addEventListener('click', function() {
-            // ✅ Uses the single scheduling URL
             window.open(SCHEDULING_URL, '_blank');
             closePopupFunc();
-        });
-    }
-
-    // ========== BOOST BUTTON - SIMPLE & WORKING ==========
-    if (boostBtn && boostModal) {
-        boostBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Boost button clicked!');
-            boostModal.style.display = 'flex';
-        });
-    }
-
-    // Close boost modal
-    if (closeBoostModalBtn) {
-        closeBoostModalBtn.addEventListener('click', closeBoostModalFunc);
-    }
-
-    // Free Zoom Demo Button
-    if (freeZoomDemoBtn) {
-        freeZoomDemoBtn.addEventListener('click', function() {
-            // ✅ Uses the centralized scheduling URL
-            window.open(SCHEDULING_URL, '_blank');
-            closeBoostModalFunc();
-        });
-    }
-
-    // Close boost modal when clicking outside
-    if (boostModal) {
-        boostModal.addEventListener('click', function(e) {
-            if (e.target === boostModal) {
-                closeBoostModalFunc();
-            }
         });
     }
 
@@ -266,12 +276,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Close popup with Escape key
+    // Close all modals with Escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closePopupFunc();
             closeReportSuccessFunc();
-            closeBoostModalFunc();
+            closeBoostModal();
         }
     });
 
@@ -290,4 +300,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize metrics on page load
     updateReportMetrics();
+
+    // Debug info
+    console.log('Boost modal elements:', {
+        openBoostModalBtn: !!openBoostModalBtn,
+        boostHeaderBtn: !!boostHeaderBtn,
+        boostModal: !!boostModal,
+        closeBoostModalBtn: !!closeBoostModalBtn,
+        freeZoomDemoBtn: !!freeZoomDemoBtn
+    });
 });
