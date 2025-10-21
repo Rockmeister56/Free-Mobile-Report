@@ -1228,14 +1228,41 @@ body {
     color: #ff4444;
 }
 
-.video-container {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-    height: 0;
-    margin-bottom: 1.5rem;
-    border-radius: 10px;
-    overflow: hidden;
+.video-player-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio (9/16 = 0.5625) */
+  overflow: hidden;
+}
+
+.video-player-container iframe,
+.video-player-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* For modern aspect ratio handling */
+.aspect-ratio-16-9 {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Ensure the YouTube player adapts */
+.html5-video-player {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.html5-main-video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
 }
 
 .boost-modal-video {
