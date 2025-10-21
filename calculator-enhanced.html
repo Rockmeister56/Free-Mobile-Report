@@ -51,6 +51,12 @@
                             <div class="stat-label">Bounce Rate</div>
                         </div>
                     </div>
+                    
+                    <!-- NEW BOOST BUTTON -->
+                    <button class="boost-button" id="openBoostModal">
+                        <i class="fas fa-rocket mr-2"></i>
+                        Boost My Conversions Now
+                    </button>
                 </div>
 
                 <!-- Critical Issues -->
@@ -250,6 +256,14 @@
         </div>
     </div>
 
+    <!-- NEW BOOST MODAL -->
+    <div class="boost-modal" id="boostModal">
+        <div class="boost-modal-content">
+            <span class="close-boost-modal" id="closeBoostModal">×</span>
+            <iframe class="boost-modal-video" src="https://www.youtube.com/embed/JbLpXs8mdeo" title="MobileWise AI Boost Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+
     <script src="calculator-logic.js"></script>
     
     <!-- ✅ EMAILJS SDK -->
@@ -323,13 +337,45 @@
                     console.error('EmailJS error:', error);
                 });
         }
+        
         function showVideoModal() {
-        const modal = document.getElementById('videoModal');
-        if (modal) {
-        modal.style.display = 'flex'; // Use 'flex' for proper centering
-        console.log('Video modal shown'); // Debug line
-    }
-}  
+            const modal = document.getElementById('videoModal');
+            if (modal) {
+                modal.style.display = 'flex'; // Use 'flex' for proper centering
+                console.log('Video modal shown'); // Debug line
+            }
+        }
+        
+        // Boost Modal functionality
+        const openBoostModalBtn = document.getElementById('openBoostModal');
+        const closeBoostModalBtn = document.getElementById('closeBoostModal');
+        const boostModal = document.getElementById('boostModal');
+        
+        if (openBoostModalBtn) {
+            openBoostModalBtn.addEventListener('click', () => {
+                boostModal.style.display = 'flex';
+            });
+        }
+        
+        if (closeBoostModalBtn) {
+            closeBoostModalBtn.addEventListener('click', () => {
+                boostModal.style.display = 'none';
+                // Stop video when modal is closed
+                const iframe = document.querySelector('.boost-modal-video');
+                const iframeSrc = iframe.src;
+                iframe.src = iframeSrc;
+            });
+        }
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === boostModal) {
+                boostModal.style.display = 'none';
+                // Stop video when modal is closed
+                const iframe = document.querySelector('.boost-modal-video');
+                const iframeSrc = iframe.src;
+                iframe.src = iframeSrc;
+            }
+        });
     </script>
 </body>
 </html>
