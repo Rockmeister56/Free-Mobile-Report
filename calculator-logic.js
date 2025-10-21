@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeSuccessBtn = document.getElementById('closeSuccessBtn');
 
     // ✅ SINGLE PLACE FOR ALL URLS
-    const DEMO_URL = 'https://your-actual-demo-url.com'; // Replace with your real demo URL
-    const SCHEDULING_URL = 'https://calendly.com/your-scheduling-link'; // Replace with your real scheduling URL
+    const DEMO_URL = 'https://www.youtube.com/embed/JbLpXs8mdeo'; // Replace with your real demo URL
+    const SCHEDULING_URL = 'https://free-mobile-report.netlify.app/zoom-scheduler'; // Replace with your real scheduling URL
 
     // Close popup function
     function closePopupFunc() {
