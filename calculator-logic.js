@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const demoPopup = document.getElementById('demoPopup');
     const resultsSection = document.getElementById('resultsSection');
     const boostBtn = document.getElementById('boostBtn');
+    const boostModal = document.getElementById('boostModal');
+    const closeBoostModalBtn = document.getElementById('closeBoostModal');
+    const freeZoomDemoBtn = document.getElementById('freeZoomDemoBtn');
     
     // Get report form elements
     const reportForm = document.getElementById('mainReportForm');
@@ -19,10 +22,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const DEMO_URL = 'https://www.youtube.com/embed/JbLpXs8mdeo'; // Replace with your real demo URL
     const SCHEDULING_URL = 'https://free-mobile-report.netlify.app/zoom-scheduler'; // Replace with your real scheduling URL
 
+    // Helper function to reset video
+    function resetBoostModalVideo() {
+        const iframe = document.querySelector('.boost-modal-video');
+        if (iframe) {
+            const iframeSrc = iframe.src;
+            iframe.src = iframeSrc;
+        }
+    }
+
     // Close popup function
     function closePopupFunc() {
-        demoPopup.style.display = 'none';
+        if (demoPopup) demoPopup.style.display = 'none';
         document.body.style.overflow = '';
+    }
+
+    // Close boost modal function
+    function closeBoostModalFunc() {
+        if (boostModal) boostModal.style.display = 'none';
+        resetBoostModalVideo();
     }
 
     // Smart metric generator
@@ -66,90 +84,125 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Calculate revenue
-    calculateBtn.addEventListener('click', function() {
-        const monthlyVisitors = parseFloat(document.getElementById('monthlyVisitors').value);
-        const conversionRate = parseFloat(document.getElementById('conversionRate').value);
-        const averageSale = parseFloat(document.getElementById('averageSale').value);
+    if (calculateBtn) {
+        calculateBtn.addEventListener('click', function() {
+            const monthlyVisitors = parseFloat(document.getElementById('monthlyVisitors').value);
+            const conversionRate = parseFloat(document.getElementById('conversionRate').value);
+            const averageSale = parseFloat(document.getElementById('averageSale').value);
 
-        // Validate inputs
-        if (!monthlyVisitors || monthlyVisitors < 100) {
-            alert('Please enter at least 100 monthly visitors');
-            return;
-        }
-        
-        if (!conversionRate || conversionRate < 0.1 || conversionRate > 100) {
-            alert('Please enter a valid conversion rate between 0.1% and 100%');
-            return;
-        }
-        
-        if (!averageSale || averageSale < 1) {
-            alert('Please enter a valid average sale value of at least $1');
-            return;
-        }
+            // Validate inputs
+            if (!monthlyVisitors || monthlyVisitors < 100) {
+                alert('Please enter at least 100 monthly visitors');
+                return;
+            }
+            
+            if (!conversionRate || conversionRate < 0.1 || conversionRate > 100) {
+                alert('Please enter a valid conversion rate between 0.1% and 100%');
+                return;
+            }
+            
+            if (!averageSale || averageSale < 1) {
+                alert('Please enter a valid average sale value of at least $1');
+                return;
+            }
 
-        // Calculate current revenue
-        const currentRevenue = monthlyVisitors * (conversionRate / 100) * averageSale;
-        const potentialRevenue = monthlyVisitors * ((conversionRate * 3) / 100) * averageSale;
-        const additionalRevenue = potentialRevenue - currentRevenue;
+            // Calculate current revenue
+            const currentRevenue = monthlyVisitors * (conversionRate / 100) * averageSale;
+            const potentialRevenue = monthlyVisitors * ((conversionRate * 3) / 100) * averageSale;
+            const additionalRevenue = potentialRevenue - currentRevenue;
 
-        // Format numbers with commas
-        const formatCurrency = (num) => {
-            return '$' + Math.round(num).toLocaleString();
-        };
+            // Format numbers with commas
+            const formatCurrency = (num) => {
+                return '$' + Math.round(num).toLocaleString();
+            };
 
-        // Update results
-        document.getElementById('currentRevenue').textContent = formatCurrency(currentRevenue);
-        document.getElementById('potentialRevenue').textContent = formatCurrency(potentialRevenue);
-        document.getElementById('additionalRevenue').textContent = formatCurrency(additionalRevenue);
-        document.getElementById('lossAmount').textContent = formatCurrency(additionalRevenue);
+            // Update results
+            document.getElementById('currentRevenue').textContent = formatCurrency(currentRevenue);
+            document.getElementById('potentialRevenue').textContent = formatCurrency(potentialRevenue);
+            document.getElementById('additionalRevenue').textContent = formatCurrency(additionalRevenue);
+            document.getElementById('lossAmount').textContent = formatCurrency(additionalRevenue);
 
-        // Update metrics when calculating
-        updateReportMetrics();
+            // Update metrics when calculating
+            updateReportMetrics();
 
-        // Show results section with animation
-        resultsSection.style.display = 'block';
-        resultsSection.scrollIntoView({ behavior: 'smooth' });
-        
-        // Add some visual feedback
-        calculateBtn.textContent = '✓ CALCULATED!';
-        calculateBtn.style.backgroundColor = '#10b981';
-        setTimeout(() => {
-            calculateBtn.textContent = '🚀 CALCULATE MY REVENUE LOSS';
-            calculateBtn.style.backgroundColor = '';
-        }, 2000);
-    });
+            // Show results section with animation
+            if (resultsSection) {
+                resultsSection.style.display = 'block';
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Add some visual feedback
+            calculateBtn.textContent = '✓ CALCULATED!';
+            calculateBtn.style.backgroundColor = '#10b981';
+            setTimeout(() => {
+                calculateBtn.textContent = '🚀 CALCULATE MY REVENUE LOSS';
+                calculateBtn.style.backgroundColor = '';
+            }, 2000);
+        });
+    }
 
     // Show demo popup
-    seeDemoBtn.addEventListener('click', function() {
-        demoPopup.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    });
+    if (seeDemoBtn) {
+        seeDemoBtn.addEventListener('click', function() {
+            if (demoPopup) {
+                demoPopup.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    }
 
     // Close popup
-    closePopup.addEventListener('click', closePopupFunc);
+    if (closePopup) {
+        closePopup.addEventListener('click', closePopupFunc);
+    }
 
     // Start Demo button
-    startDemo.addEventListener('click', function() {
-        // ✅ Uses the single demo URL
-        window.open(DEMO_URL, '_blank');
-        closePopupFunc();
-    });
+    if (startDemo) {
+        startDemo.addEventListener('click', function() {
+            // ✅ Uses the single demo URL
+            window.open(DEMO_URL, '_blank');
+            closePopupFunc();
+        });
+    }
 
     // Schedule call
-    scheduleCall.addEventListener('click', function() {
-        // ✅ Uses the single scheduling URL
-        window.open(SCHEDULING_URL, '_blank');
-        closePopupFunc();
-    });
+    if (scheduleCall) {
+        scheduleCall.addEventListener('click', function() {
+            // ✅ Uses the single scheduling URL
+            window.open(SCHEDULING_URL, '_blank');
+            closePopupFunc();
+        });
+    }
 
     // ========== BOOST BUTTON - SIMPLE & WORKING ==========
-    if (boostBtn) {
+    if (boostBtn && boostModal) {
         boostBtn.addEventListener('click', function(e) {
             e.preventDefault();
             console.log('Boost button clicked!');
-            
-            // ✅ Uses the same demo URL as other buttons
-            window.open(DEMO_URL, '_blank');
+            boostModal.style.display = 'flex';
+        });
+    }
+
+    // Close boost modal
+    if (closeBoostModalBtn) {
+        closeBoostModalBtn.addEventListener('click', closeBoostModalFunc);
+    }
+
+    // Free Zoom Demo Button
+    if (freeZoomDemoBtn) {
+        freeZoomDemoBtn.addEventListener('click', function() {
+            // ✅ Uses the centralized scheduling URL
+            window.open(SCHEDULING_URL, '_blank');
+            closeBoostModalFunc();
+        });
+    }
+
+    // Close boost modal when clicking outside
+    if (boostModal) {
+        boostModal.addEventListener('click', function(e) {
+            if (e.target === boostModal) {
+                closeBoostModalFunc();
+            }
         });
     }
 
@@ -205,17 +258,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Close popup when clicking outside
-    demoPopup.addEventListener('click', function(e) {
-        if (e.target === demoPopup) {
-            closePopupFunc();
-        }
-    });
+    if (demoPopup) {
+        demoPopup.addEventListener('click', function(e) {
+            if (e.target === demoPopup) {
+                closePopupFunc();
+            }
+        });
+    }
 
     // Close popup with Escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closePopupFunc();
             closeReportSuccessFunc();
+            closeBoostModalFunc();
         }
     });
 
@@ -234,9 +290,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize metrics on page load
     updateReportMetrics();
-});
-
-// Also try on window load as backup
-window.addEventListener('load', function() {
-    // This will be handled by the DOMContentLoaded event above
 });
