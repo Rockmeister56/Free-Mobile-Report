@@ -1178,7 +1178,7 @@ body {
     }
 }
 
-/* Enhanced Boost Modal Styles - FIXED FOR YOUTUBE SHORTS */
+/* Enhanced Boost Modal Styles - SCALED UP 20% */
 .boost-modal {
     display: none;
     position: fixed;
@@ -1204,26 +1204,26 @@ body {
 
 .boost-modal-content {
     background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    max-width: 300px; /* Narrower for vertical video */
+    border-radius: 24px; /* +20% */
+    padding: 2.4rem; /* +20% */
+    max-width: 360px; /* +20% from 300px */
     width: 90%;
     max-height: 90vh;
     text-align: center;
     position: relative;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4); /* +20% */
     z-index: 2;
     overflow-y: auto;
 }
 
-/* YOUTUBE SHORTS VIDEO CONTAINER - APPLYING THE MAGIC FORMULA */
+/* YOUTUBE SHORTS VIDEO CONTAINER - 20% LARGER */
 .video-player-container {
     position: relative;
     width: 100%;
     height: 0;
-    padding-bottom: 177.78%; /* 9:16 aspect ratio (16/9 = 1.777) */
-    margin-bottom: 1.5rem;
-    border-radius: 15px;
+    padding-bottom: 177.78%; /* 9:16 aspect ratio maintained */
+    margin-bottom: 1.8rem; /* +20% */
+    border-radius: 18px; /* +20% */
     overflow: hidden;
     background: #000;
 }
@@ -1235,22 +1235,22 @@ body {
     width: 100%;
     height: 100%;
     border: none;
-    border-radius: 12px;
-    object-fit: cover; /* CRITICAL for Shorts format */
+    border-radius: 14.4px; /* +20% */
+    object-fit: cover;
 }
 
 .close-boost-modal {
     position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 28px;
+    top: 18px; /* +20% */
+    right: 24px; /* +20% */
+    font-size: 33.6px; /* +20% */
     color: #666;
     cursor: pointer;
     background: none;
     border: none;
     z-index: 10;
-    width: 30px;
-    height: 30px;
+    width: 36px; /* +20% */
+    height: 36px; /* +20% */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1264,56 +1264,58 @@ body {
     transform: scale(1.1);
 }
 
-/* CTA Button Styles */
+/* CTA Button Styles - 20% LARGER */
 .free-zoom-demo-btn {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
-    padding: 15px 30px;
-    border-radius: 50px;
-    font-size: 18px;
+    padding: 18px 36px; /* +20% */
+    border-radius: 60px; /* +20% */
+    font-size: 21.6px; /* +20% */
     font-weight: bold;
     cursor: pointer;
-    margin: 15px 0;
+    margin: 18px 0; /* +20% */
     transition: all 0.3s ease;
     width: 100%;
-    max-width: 280px;
+    max-width: 336px; /* +20% */
 }
 
 .free-zoom-demo-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 9.6px 24px rgba(102, 126, 234, 0.4); /* +20% */
 }
 
 .cta-subtext {
     color: #666;
-    font-size: 14px;
-    margin-top: 10px;
+    font-size: 16.8px; /* +20% */
+    margin-top: 12px; /* +20% */
     font-style: italic;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .boost-modal-content {
-        padding: 1.5rem;
-        margin: 20px;
-        width: calc(100% - 40px);
-        max-width: 280px;
+        padding: 1.8rem; /* +20% */
+        margin: 24px; /* +20% */
+        width: calc(100% - 48px); /* +20% */
+        max-width: 336px; /* +20% */
     }
     
     .video-player-container {
         padding-bottom: 177.78%; /* Maintain 9:16 ratio */
+        margin-bottom: 1.8rem; /* +20% */
     }
     
     .free-zoom-demo-btn {
-        padding: 12px 24px;
-        font-size: 16px;
+        padding: 14.4px 28.8px; /* +20% */
+        font-size: 19.2px; /* +20% */
+        max-width: 300px; /* Adjusted for mobile */
     }
     
     .close-boost-modal {
-        top: 10px;
-        right: 15px;
-        font-size: 24px;
+        top: 12px; /* +20% */
+        right: 18px; /* +20% */
+        font-size: 28.8px; /* +20% */
     }
 }
 
