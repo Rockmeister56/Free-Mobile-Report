@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mobile Revenue Calculator - See How Much You're Losing | Mobile-Wise AI</title>
     <link rel="stylesheet" href="calculator-styles.css">
+    <!-- ✅ REMOVED duplicate modal styles since they're in calculator-styles.css -->
 </head>
 <body>
     <!-- Blue Top Header Bar -->
@@ -37,17 +38,17 @@
                     <p>Based on our analysis, your mobile site has significant opportunities for improvement that could increase conversions by up to <strong>3X</strong>. Here are your key metrics:</p>
                     
                     <div class="report-stats">
-    <div class="stat-card">
-        <div class="stat-value" id="conversionScore">--%</div>
-        <div class="stat-label">Conversion Score</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-value" id="mobileTraffic">--%</div>
-        <div class="stat-label">Mobile Traffic</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-value" id="bounceRate">--%</div>
-        <div class="stat-label">Bounce Rate</div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="conversionScore">--%</div>
+                            <div class="stat-label">Conversion Score</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="mobileTraffic">--%</div>
+                            <div class="stat-label">Mobile Traffic</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="bounceRate">--%</div>
+                            <div class="stat-label">Bounce Rate</div>
                         </div>
                     </div>
                 </div>
@@ -99,7 +100,7 @@
                         <li>✅ AI-powered conversion optimization strategies</li>
                     </ul>
                     
-                    <form class="email-capture-form" id="reportForm">
+                    <form class="email-capture-form" id="mainReportForm">
                         <div class="form-group double-fields">
                             <div class="field-group">
                                 <input type="text" id="userFirstName" placeholder="First Name" required>
@@ -125,10 +126,9 @@
         <!-- Right Column: Calculator -->
         <section class="calculator-section">
             <div class="calculator-container">
-                <!-- Video Teaser Section (Updated) -->
+                <!-- Video Teaser Section -->
                 <div class="video-teaser-section">
-        
-                    </div>
+                    <!-- Video content can go here -->
                 </div>
 
                 <!-- Hero Section -->
@@ -206,7 +206,7 @@
         </section>
     </div>
 
-    <!-- AI Demo Pop-up (Hidden until triggered) -->
+    <!-- AI Demo Pop-up -->
     <div id="demoPopup" class="demo-popup" style="display: none;">
         <div class="popup-content">
             <button id="closePopup" class="close-btn">×</button>
@@ -233,20 +233,101 @@
         </div>
     </div>
 
+    <!-- ✅ CAPTAIN BRETT'S VIDEO POPUP MODAL -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 style="text-align: center; margin-bottom: 15px;">Quick Tip to Boost Your Mobile Conversions</h3>
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/JbLpXs8mdeo" frameborder="0" allowfullscreen></iframe>
+            <form id="videoReportForm">
+                <input type="text" id="userName" placeholder="Your Name" required>
+                <input type="email" id="userEmail" placeholder="Your Email" required>
+                <button type="submit">📧 Send My Free Mobile Report</button>
+            </form>
+            <p style="text-align: center; margin-top: 10px; font-size: 12px; color: #666;">
+                We'll email your detailed analysis immediately
+            </p>
+        </div>
+    </div>
+
     <script src="calculator-logic.js"></script>
-    <script>
-// Immediate metrics update after HTML is parsed
-setTimeout(function() {
-    const metrics = {
-        conversionScore: Math.floor(Math.random() * 16) + 15,
-        mobileTraffic: Math.floor(Math.random() * 21) + 30,
-        bounceRate: Math.floor(Math.random() * 16) + 70
-    };
     
-    document.getElementById('conversionScore').textContent = metrics.conversionScore + '%';
-    document.getElementById('mobileTraffic').textContent = metrics.mobileTraffic + '%';
-    document.getElementById('bounceRate').textContent = metrics.bounceRate + '%';
-}, 100);
-</script>
+    <!-- ✅ EMAILJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script>
+        // Immediate metrics update after HTML is parsed
+        setTimeout(function() {
+            const metrics = {
+                conversionScore: Math.floor(Math.random() * 16) + 15,
+                mobileTraffic: Math.floor(Math.random() * 21) + 30,
+                bounceRate: Math.floor(Math.random() * 16) + 70
+            };
+            
+            document.getElementById('conversionScore').textContent = metrics.conversionScore + '%';
+            document.getElementById('mobileTraffic').textContent = metrics.mobileTraffic + '%';
+            document.getElementById('bounceRate').textContent = metrics.bounceRate + '%';
+        }, 100);
+
+        // ✅ CAPTAIN BRETT'S VIDEO MODAL FUNCTIONALITY
+        // Initialize EmailJS with your public key
+        (function() {
+            emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // Replace with your actual public key
+        })();
+
+        // Modal functionality
+        const modal = document.getElementById('videoModal');
+        const closeBtn = document.querySelector('.close');
+        const videoReportForm = document.getElementById('videoReportForm');
+
+        // Close modal when X is clicked
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside content
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Form submission
+        videoReportForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userName = document.getElementById('userName').value;
+            const userEmail = document.getElementById('userEmail').value;
+            
+            // Send the email with scan results
+            sendMobileReport(userName, userEmail);
+        });
+
+        // Function to show modal (call this when scan completes)
+        function showVideoModal() {
+            modal.style.display = 'block';
+        }
+
+        // Function to send the report
+        function sendMobileReport(userName, userEmail) {
+            const templateParams = {
+                user_name: userName,
+                user_email: userEmail,
+                website_url: window.lastScannedUrl || 'Unknown URL',
+                mobile_score: window.lastScanScore || 'Not available',
+                chatbot_detected: window.lastScanChatbot ? 'AI Chatbot Detected ✅' : 'No AI Chatbot Found ❌'
+            };
+
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+                .then(function(response) {
+                    alert('🎉 Your mobile report is on the way! Check your email.');
+                    modal.style.display = 'none';
+                    videoReportForm.reset();
+                }, function(error) {
+                    alert('❌ Something went wrong. Please try again.');
+                    console.error('EmailJS error:', error);
+                });
+        }
+    </script>
 </body>
 </html>

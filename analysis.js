@@ -6,6 +6,11 @@ class AnalysisProgress {
         this.steps = document.querySelectorAll('.step');
         this.currentStep = 2; // Start from step 3 (0-indexed)
         this.progress = 0;
+        
+        // ✅ CAPTAIN BRETT'S ADDITION - Store the scanned URL
+        this.scannedUrl = getCurrentScannedUrl();
+        localStorage.setItem('lastScannedUrl', this.scannedUrl);
+        
         this.init();
     }
 
@@ -90,11 +95,38 @@ class AnalysisProgress {
         this.progressText.textContent = '100% Complete - Analysis Ready!';
         this.progressText.style.color = '#00ff88';
         
-        // Redirect back to calculator instead of report.html
+        // ✅ CAPTAIN BRETT'S VIDEO POPUP TRIGGER
+        // Store scan results for the email report
+        window.lastScannedUrl = this.scannedUrl;
+        window.lastScanScore = Math.floor(Math.random() * 30) + 70; // Random score 70-100 for demo
+        window.lastScanChatbot = Math.random() > 0.5; // Random true/false for demo
+        
+        // Show video popup instead of redirecting immediately
         setTimeout(() => {
-            window.location.href = 'calculator-enhanced.html';  // ← CHANGED TO CALCULATOR
-        }, 1500);
+            // Show the modal after analysis completes
+            if (typeof showVideoModal === 'function') {
+                showVideoModal();
+            } else {
+                // Fallback - redirect to calculator if modal function isn't available
+                console.log('Modal function not found, redirecting to calculator...');
+                window.location.href = 'calculator-enhanced.html';
+            }
+        }, 2000); // Show after 2 seconds
     }
+}
+
+// ✅ CAPTAIN BRETT'S ADDITION - Function to get the URL that was scanned
+function getCurrentScannedUrl() {
+    // Try to get from URL parameters first
+    const urlParams = new URLSearchParams(window.location.search);
+    const scannedUrl = urlParams.get('url');
+    
+    if (scannedUrl) {
+        return scannedUrl;
+    }
+    
+    // Fallback - get from localStorage or session
+    return localStorage.getItem('lastScannedUrl') || 'example.com';
 }
 
 // Initialize when page loads
