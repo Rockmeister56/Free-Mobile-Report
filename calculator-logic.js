@@ -146,11 +146,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Boost Header Button functionality
     if (boostBtn) {
-        boostBtn.addEventListener('click', function() {
+        document.getElementById('safeBoostBtn').addEventListener('click', function() {
             // Replace with your actual demo URL
             window.open('https://your-demo-url.com', '_blank');
         });
     }
+
+    // Add this to your calculator-logic.js
+document.addEventListener('DOMContentLoaded', function() {
+    const boostBtn = document.getElementById('boostBtn');
+    if (boostBtn) {
+        boostBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            // Your actual intended action
+            window.open('https://your-actual-demo-url.com', '_blank');
+        });
+        
+        // Additional protection
+        boostBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.open('https://your-actual-demo-url.com', '_blank');
+            return false;
+        };
+    }
+});
 
     // Report Form Submission
     if (reportForm) {
