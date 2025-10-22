@@ -453,7 +453,7 @@ if (mainReportForm) {
                 
                // ✅ FIXED: ALSO send lead notification to YOUR EMAIL - WITH CORRECT TEMPLATE
 const leadNotificationParams = {
-    user_name: `📊 REPORT REQUEST: ${userFirstName}`,
+    user_name: `${userFirstName}`,
     user_email: userEmail,
     website_url: `Email: ${userEmail} | Time: ${new Date().toLocaleString()}`,
     mobile_score: '15-Page Report Requested',
