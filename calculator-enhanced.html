@@ -371,17 +371,20 @@ function sendMobileReport(userName, userEmail) {
         .then(function(response) {
             console.log('✅ User report sent!');
             
-            // ALSO send notification to Brett - FIXED VERSION
-            const brettNotificationParams = {
-                user_name: `🚨 NEW LEAD: ${userName}`,
-                user_email: userEmail, // User's email
-                to_email: 'consumerawarenessfoundation@gmail.com', // Brett's email as recipient
-                website_url: `Email: ${userEmail} | Time: ${new Date().toLocaleString()}`,
-                mobile_score: 'IMMEDIATE FOLLOW-UP NEEDED',
-                chatbot_detected: 'Mobile Report Request',
-                revenue_opportunity: `Potential: $${userReportParams.revenue_opportunity}`,
-                conversion_rate: 'Hot Lead - Contact Today!'
-            };
+            // Send to BRETT AND YOU - using template_lhlonjg (Lead Notification Template)
+    const leadNotificationParams = {
+        user_name: userName,
+        user_email: userEmail,
+        lead_source: 'Video Modal Form',
+        revenue_opportunity: revenueOpportunity,
+        conversion_score: document.getElementById('conversionScore')?.textContent || '35%',
+        mobile_traffic: document.getElementById('mobileTraffic')?.textContent || '45%',
+        bounce_rate: document.getElementById('bounceRate')?.textContent || '75%',
+        timestamp: new Date().toLocaleString(),
+        website_analyzed: window.location.hostname,
+        // ADD YOUR EMAIL HERE TO RECEIVE COPIES:
+        to_email: 'consumerawarenessfoundation@gmail.com, mobilewise.ai@gmail.com' // ← ADD YOUR EMAIL HERE
+    };
             
             return emailjs.send('service_b9bppgb', 'template_lhlonjg', brettNotificationParams);
         })
