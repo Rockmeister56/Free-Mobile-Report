@@ -288,55 +288,70 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <script>
-    // Immediate metrics update after HTML is parsed
-    setTimeout(function() {
-        const metrics = {
-            conversionScore: Math.floor(Math.random() * 16) + 15,
-            mobileTraffic: Math.floor(Math.random() * 21) + 30,
-            bounceRate: Math.floor(Math.random() * 16) + 70
-        };
-        
-        document.getElementById('conversionScore').textContent = metrics.conversionScore + '%';
-        document.getElementById('mobileTraffic').textContent = metrics.mobileTraffic + '%';
-        document.getElementById('bounceRate').textContent = metrics.bounceRate + '%';
-    }, 100);
+// Immediate metrics update after HTML is parsed
+setTimeout(function() {
+    const metrics = {
+        conversionScore: Math.floor(Math.random() * 16) + 15,
+        mobileTraffic: Math.floor(Math.random() * 21) + 30,
+        bounceRate: Math.floor(Math.random() * 16) + 70
+    };
+    
+    document.getElementById('conversionScore').textContent = metrics.conversionScore + '%';
+    document.getElementById('mobileTraffic').textContent = metrics.mobileTraffic + '%';
+    document.getElementById('bounceRate').textContent = metrics.bounceRate + '%';
+}, 100);
 
-    // ✅ CAPTAIN BRETT'S VIDEO MODAL FUNCTIONALITY
-    // Initialize EmailJS with your public key
-    (function() {
-        emailjs.init("7-9oxa3UC3uKxtqGM");
-    })();
+// ✅ EMAILJS INITIALIZATION WITH DEBUGGING
+console.log('Initializing EmailJS...');
+emailjs.init("7-9oxa3UC3uKxtqGM")
+    .then(function() {
+        console.log('✅ EmailJS initialized successfully');
+    })
+    .catch(function(error) {
+        console.error('❌ EmailJS initialization failed:', error);
+    });
 
-    // Modal functionality
-    const modal = document.getElementById('videoModal');
-    const closeBtn = document.querySelector('.close');
-    const videoReportForm = document.getElementById('videoReportForm');
+// ✅ CAPTAIN BRETT'S VIDEO MODAL FUNCTIONALITY
+const modal = document.getElementById('videoModal');
+const closeBtn = document.querySelector('.close');
+const videoReportForm = document.getElementById('videoReportForm');
 
-    // Close modal when X is clicked
+// Close modal when X is clicked
+if (closeBtn) {
     closeBtn.onclick = function() {
         modal.style.display = 'none';
     }
+}
 
-    // Close modal when clicking outside content
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
+// Close modal when clicking outside content
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = 'none';
     }
+}
 
-    // Form submission for VIDEO MODAL form
+// Form submission for VIDEO MODAL form
+if (videoReportForm) {
     videoReportForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
         const userName = document.getElementById('userName').value;
         const userEmail = document.getElementById('videoUserEmail').value;
         
-        // Send the email with scan results - USING YOUR FREE MOBILE REPORT TEMPLATE
+        if (!userName || !userEmail) {
+            alert('Please enter both your name and email address');
+            return;
+        }
+        
+        console.log('Video modal form submitted:', { name: userName, email: userEmail });
         sendMobileReport(userName, userEmail);
     });
+}
 
-    // Enhanced function with dual sending
+// Enhanced function with dual sending and better error handling
 function sendMobileReport(userName, userEmail) {
+    console.log('Starting sendMobileReport function...');
+    
     // Calculate dynamic values for the report
     function calculateRevenueOpportunity() {
         try {
@@ -348,6 +363,7 @@ function sendMobileReport(userName, userEmail) {
             const additionalRevenue = currentRevenue * 2; // 3X potential
             return Math.round(additionalRevenue).toLocaleString();
         } catch (error) {
+            console.log('Using default revenue opportunity');
             return '5,000';
         }
     }
@@ -358,216 +374,255 @@ function sendMobileReport(userName, userEmail) {
         website_url: window.location.href,
         mobile_score: document.getElementById('conversionScore')?.textContent || '35%',
         chatbot_detected: 'AI Analysis Complete',
-        revenue_opportunity: calculateRevenueOpportunity(),
-        conversion_rate: document.getElementById('conversionRate')?.value || 'Not calculated',
+        revenue_opportunity: '$' + calculateRevenueOpportunity(),
+        conversion_rate: (document.getElementById('conversionRate')?.value || 'Not calculated') + '%',
         critical_issues_count: '5',
-        mobile_score_class: 'fair'
+        mobile_score_class: 'fair',
+        timestamp: new Date().toLocaleString()
     };
 
-    console.log('Sending report to user:', userEmail);
+    console.log('Sending user report with params:', userReportParams);
 
     // Send to user
     emailjs.send('service_b9bppgb', 'template_f6j78g6', userReportParams)
         .then(function(response) {
-            console.log('✅ User report sent!');
+            console.log('✅ User report sent successfully!', response);
             
             // ALSO send notification to Brett
             const brettNotificationParams = {
                 user_name: `🚨 NEW LEAD: ${userName}`,
-                user_email: 'mobilewise.ai@gmail.com', // ← YOUR EMAIL HERE
-                website_url: `Email: ${userEmail} | Time: ${new Date().toLocaleString()}`,
+                user_email: userEmail,
+                website_url: window.location.href,
                 mobile_score: 'IMMEDIATE FOLLOW-UP NEEDED',
                 chatbot_detected: 'Mobile Report Request',
-                revenue_opportunity: `Potential: $${userReportParams.revenue_opportunity}`,
-                conversion_rate: 'Hot Lead - Contact Today!'
+                revenue_opportunity: `Potential: $${calculateRevenueOpportunity()}`,
+                conversion_rate: 'Hot Lead - Contact Today!',
+                timestamp: new Date().toLocaleString(),
+                source: 'Video Modal Form'
             };
             
+            console.log('Sending Brett notification:', brettNotificationParams);
             return emailjs.send('service_b9bppgb', 'template_lhlonjg', brettNotificationParams);
         })
-        .then(function() {
-            console.log('✅ Brett notified!');
+        .then(function(response) {
+            console.log('✅ Brett notification sent successfully!', response);
+            // Show success message
             alert('🎉 Your FREE Mobile Report is on the way! Check your email in 2-3 minutes.');
             if (modal) modal.style.display = 'none';
             if (videoReportForm) videoReportForm.reset();
         })
         .catch(function(error) {
-            console.error('Email error:', error);
-            alert('❌ Failed to send report. Please try again.');
+            console.error('❌ Email sending failed:', error);
+            alert('❌ Failed to send report. Please check the console for details and try again.');
         });
 }
 
-    // ✅ ALSO FIX THE MAIN REPORT FORM (the one in the left column)
-    const mainReportForm = document.getElementById('mainReportForm');
-    if (mainReportForm) {
-        mainReportForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const userFirstName = document.getElementById('userFirstName').value;
-            const userEmail = document.getElementById('userEmail').value;
-            
-            if (!userFirstName || !userEmail) {
-                alert('Please enter both your first name and email address');
-                return;
-            }
-            
-            console.log('Main report form submitted:', { firstName: userFirstName, email: userEmail });
-            
-            // Send email for main report form too
-            const mainReportParams = {
-                user_name: userFirstName,
-                user_email: userEmail,
-                conversion_score: document.getElementById('conversionScore').textContent,
-                mobile_traffic: document.getElementById('mobileTraffic').textContent,
-                bounce_rate: document.getElementById('bounceRate').textContent,
-                date_sent: new Date().toLocaleDateString(),
-                website_url: window.location.href,
-                mobile_score: document.getElementById('conversionScore').textContent.replace('%', ''),
-                report_type: '15-Page Detailed Mobile Report'
-            };
-
-            emailjs.send('service_b9bppgb', 'template_f6j78g6', mainReportParams)
-                .then(function(response) {
-                    console.log('✅ MAIN REPORT FORM EMAIL SENT!', response);
-                    // Show success popup
-                    if (reportSuccess) {
-                        reportSuccess.style.display = 'flex';
-                        document.body.style.overflow = 'hidden';
-                    }
-                    // Clear the form
-                    mainReportForm.reset();
-                }, function(error) {
-                    console.error('❌ Main form EmailJS error:', error);
-                    alert('❌ Failed to send report. Please try again.');
-                });
-        });
-    }
-    
-    function showVideoModal() {
-        const modal = document.getElementById('videoModal');
-        if (modal) {
-            modal.style.display = 'flex';
-            console.log('Video modal shown');
+// ✅ MAIN REPORT FORM (left column) - FIXED VERSION
+const mainReportForm = document.getElementById('mainReportForm');
+if (mainReportForm) {
+    mainReportForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const userFirstName = document.getElementById('userFirstName').value;
+        const userEmail = document.getElementById('userEmail').value;
+        
+        if (!userFirstName || !userEmail) {
+            alert('Please enter both your first name and email address');
+            return;
         }
-    }
-    
-    // ✅ BOOST MODAL FUNCTIONALITY - FIXED
-    const openBoostModalBtn = document.getElementById('openBoostModal');
-    const boostHeaderBtn = document.getElementById('boostHeaderBtn');
-    const closeBoostModalBtn = document.getElementById('closeBoostModal');
-    const boostModal = document.getElementById('boostModal');
-    const freeZoomDemoBtn = document.getElementById('freeZoomDemoBtn');
-    
-    // Open modal from both buttons
-    if (openBoostModalBtn) {
-        openBoostModalBtn.addEventListener('click', () => {
-            console.log('Opening boost modal from main button');
-            boostModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-    }
-    
-    if (boostHeaderBtn) {
-        boostHeaderBtn.addEventListener('click', () => {
-            console.log('Opening boost modal from header button');
-            boostModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-    }
-    
-    // Close modal
-    if (closeBoostModalBtn) {
-        closeBoostModalBtn.addEventListener('click', () => {
-            console.log('Closing boost modal');
-            boostModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            resetVideo();
-        });
-    }
-    
-    // Close modal when clicking overlay
-    if (boostModal) {
-        boostModal.addEventListener('click', (e) => {
-            if (e.target === boostModal || e.target.classList.contains('boost-modal-overlay')) {
-                boostModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-                resetVideo();
+        
+        console.log('Main report form submitted:', { firstName: userFirstName, email: userEmail });
+        
+        // Calculate revenue opportunity for main form too
+        function calculateMainRevenueOpportunity() {
+            try {
+                const monthlyVisitors = parseFloat(document.getElementById('monthlyVisitors')?.value) || 10000;
+                const conversionRate = parseFloat(document.getElementById('conversionRate')?.value) || 2;
+                const averageSale = parseFloat(document.getElementById('averageSale')?.value) || 100;
+                
+                const currentRevenue = monthlyVisitors * (conversionRate / 100) * averageSale;
+                const additionalRevenue = currentRevenue * 2;
+                return Math.round(additionalRevenue).toLocaleString();
+            } catch (error) {
+                return '5,000';
             }
-        });
-    }
-    
-    // Close modal with ESC key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && boostModal.style.display === 'flex') {
+        }
+
+        // Send email for main report form
+        const mainReportParams = {
+            user_name: userFirstName,
+            user_email: userEmail,
+            website_url: window.location.href,
+            conversion_score: document.getElementById('conversionScore')?.textContent || '35%',
+            mobile_traffic: document.getElementById('mobileTraffic')?.textContent || '50%',
+            bounce_rate: document.getElementById('bounceRate')?.textContent || '75%',
+            date_sent: new Date().toLocaleDateString(),
+            revenue_opportunity: '$' + calculateMainRevenueOpportunity(),
+            report_type: '15-Page Detailed Mobile Report',
+            timestamp: new Date().toLocaleString(),
+            source: 'Main Report Form'
+        };
+
+        console.log('Sending main report with params:', mainReportParams);
+
+        emailjs.send('service_b9bppgb', 'template_f6j78g6', mainReportParams)
+            .then(function(response) {
+                console.log('✅ MAIN REPORT FORM EMAIL SENT!', response);
+                
+                // Send notification to Brett for main form too
+                const brettMainNotificationParams = {
+                    user_name: `📊 REPORT REQUEST: ${userFirstName}`,
+                    user_email: userEmail,
+                    website_url: window.location.href,
+                    mobile_score: '15-Page Report Requested',
+                    chatbot_detected: 'Detailed Report Download',
+                    revenue_opportunity: `Potential: $${calculateMainRevenueOpportunity()}`,
+                    conversion_rate: 'Report Lead - Follow Up',
+                    timestamp: new Date().toLocaleString(),
+                    source: 'Main Report Form'
+                };
+                
+                return emailjs.send('service_b9bppgb', 'template_lhlonjg', brettMainNotificationParams);
+            })
+            .then(function(response) {
+                console.log('✅ Brett main form notification sent!', response);
+                // Show success popup
+                const reportSuccess = document.getElementById('reportSuccess');
+                if (reportSuccess) {
+                    reportSuccess.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+                // Clear the form
+                mainReportForm.reset();
+            })
+            .catch(function(error) {
+                console.error('❌ Main form EmailJS error:', error);
+                alert('❌ Failed to send report. Please check console and try again.');
+            });
+    });
+}
+
+// ✅ BOOST MODAL FUNCTIONALITY
+const openBoostModalBtn = document.getElementById('openBoostModal');
+const boostHeaderBtn = document.getElementById('boostHeaderBtn');
+const closeBoostModalBtn = document.getElementById('closeBoostModal');
+const boostModal = document.getElementById('boostModal');
+const freeZoomDemoBtn = document.getElementById('freeZoomDemoBtn');
+
+// Open modal from both buttons
+if (openBoostModalBtn) {
+    openBoostModalBtn.addEventListener('click', () => {
+        console.log('Opening boost modal from main button');
+        boostModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    });
+}
+
+if (boostHeaderBtn) {
+    boostHeaderBtn.addEventListener('click', () => {
+        console.log('Opening boost modal from header button');
+        boostModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    });
+}
+
+// Close modal
+if (closeBoostModalBtn) {
+    closeBoostModalBtn.addEventListener('click', () => {
+        console.log('Closing boost modal');
+        boostModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        resetVideo();
+    });
+}
+
+// Close modal when clicking overlay
+if (boostModal) {
+    boostModal.addEventListener('click', (e) => {
+        if (e.target === boostModal || e.target.classList.contains('boost-modal-overlay')) {
             boostModal.style.display = 'none';
             document.body.style.overflow = 'auto';
             resetVideo();
         }
     });
-    
-    // Free Zoom Demo button functionality - FIXED VERSION
-    if (freeZoomDemoBtn) {
-        freeZoomDemoBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            console.log('Free Zoom Demo button clicked');
-            
-            // Close the modal first
-            boostModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            resetVideo();
-            
-            // Then redirect to the scheduling page in new tab
-            setTimeout(() => {
-                window.open('https://free-mobile-report.netlify.app/zoom-scheduler', '_blank');
-            }, 300);
-        });
-    }
-    
-    // Function to reset video
-    function resetVideo() {
-        const iframe = document.querySelector('.boost-modal-video');
-        if (iframe) {
-            iframe.src = iframe.src; // Reset to stop video
-        }
-    }
-    
-    // Also connect the "See Demo" button in results
-    const seeDemoBtn = document.getElementById('seeDemoBtn');
-    if (seeDemoBtn) {
-        seeDemoBtn.addEventListener('click', () => {
-            boostModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-    }
+}
 
-    // Report Success Popup elements
-    const reportSuccess = document.getElementById('reportSuccess');
-    const closeReportSuccess = document.getElementById('closeReportSuccess');
-    const closeSuccessBtn = document.getElementById('closeSuccessBtn');
-
-    // Close report success popup
-    function closeReportSuccessFunc() {
-        if (reportSuccess) {
-            reportSuccess.style.display = 'none';
-            document.body.style.overflow = '';
-        }
+// Close modal with ESC key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && boostModal.style.display === 'flex') {
+        boostModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        resetVideo();
     }
+});
 
-    if (closeReportSuccess) {
-        closeReportSuccess.addEventListener('click', closeReportSuccessFunc);
-    }
-    
-    if (closeSuccessBtn) {
-        closeSuccessBtn.addEventListener('click', closeReportSuccessFunc);
-    }
+// Free Zoom Demo button functionality
+if (freeZoomDemoBtn) {
+    freeZoomDemoBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Free Zoom Demo button clicked');
+        
+        // Close the modal first
+        boostModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        resetVideo();
+        
+        // Then redirect to the scheduling page in new tab
+        setTimeout(() => {
+            window.open('https://free-mobile-report.netlify.app/zoom-scheduler', '_blank');
+        }, 300);
+    });
+}
 
-    // Close report success when clicking outside
+// Function to reset video
+function resetVideo() {
+    const iframe = document.querySelector('.boost-modal-video');
+    if (iframe) {
+        iframe.src = iframe.src; // Reset to stop video
+    }
+}
+
+// Also connect the "See Demo" button in results
+const seeDemoBtn = document.getElementById('seeDemoBtn');
+if (seeDemoBtn) {
+    seeDemoBtn.addEventListener('click', () => {
+        boostModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    });
+}
+
+// Report Success Popup elements
+const reportSuccess = document.getElementById('reportSuccess');
+const closeReportSuccess = document.getElementById('closeReportSuccess');
+const closeSuccessBtn = document.getElementById('closeSuccessBtn');
+
+// Close report success popup
+function closeReportSuccessFunc() {
     if (reportSuccess) {
-        reportSuccess.addEventListener('click', function(e) {
-            if (e.target === reportSuccess) {
-                closeReportSuccessFunc();
-            }
-        });
+        reportSuccess.style.display = 'none';
+        document.body.style.overflow = '';
     }
+}
+
+if (closeReportSuccess) {
+    closeReportSuccess.addEventListener('click', closeReportSuccessFunc);
+}
+
+if (closeSuccessBtn) {
+    closeSuccessBtn.addEventListener('click', closeReportSuccessFunc);
+}
+
+// Close report success when clicking outside
+if (reportSuccess) {
+    reportSuccess.addEventListener('click', function(e) {
+        if (e.target === reportSuccess) {
+            closeReportSuccessFunc();
+        }
+    });
+}
+
+// Test EmailJS connection
+console.log('EmailJS test: Service should be initialized');
 </script>
 </body>
 </html>
