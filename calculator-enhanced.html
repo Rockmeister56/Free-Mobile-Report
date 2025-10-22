@@ -466,7 +466,9 @@ const leadNotificationParams = {
                 console.log('Sending main form lead notification to mobilewise.ai@gmail.com');
                 // ✅ FIXED: Using correct template for lead notification
                 return emailjs.send('service_b9bppgb', 'template_lhlonjg', leadNotificationParams);
-                          
+            })
+            .then(function() {
+                console.log('✅ Main form lead notification sent to mobilewise.ai@gmail.com');
                 // Show success popup
                 if (reportSuccess) {
                     reportSuccess.style.display = 'flex';
