@@ -63,7 +63,7 @@ class MobileAudit {
     }
 
     hideLoading() {
-        this.analyzeBtn.textContent = '🔍 ANALYZE MY SITE';
+        this.analyzeBtn.textContent = '🔍 ANALYZE MOBILE ISSUES';
         this.analyzeBtn.classList.remove('loading');
         this.analyzeBtn.disabled = false;
     }
