@@ -460,8 +460,18 @@ const leadNotificationParams = {
     chatbot_detected: 'Detailed Report Download',
     revenue_opportunity: `Potential: $${revenueOpportunity}`,
     conversion_rate: 'Report Lead - Follow Up',
+    to_email: 'mobilewise.ai@gmail.com' // ← THIS WAS MISSING
 };
-                      
+                
+                console.log('Sending main form lead notification to mobilewise.ai@gmail.com');
+                // ✅ FIXED: Using correct template for lead notification
+                return emailjs.send('service_b9bppgb', 'template_lhlonjg', leadNotificationParams);
+                          
+                // Show success popup
+                if (reportSuccess) {
+                    reportSuccess.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
                 // Clear the form
                 mainReportForm.reset();
             })
