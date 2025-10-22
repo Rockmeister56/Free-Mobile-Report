@@ -335,9 +335,9 @@
         sendMobileReport(userName, userEmail);
     });
 
-    // Function to send the report + notification to Brett
+    // Enhanced function with dual sending
 function sendMobileReport(userName, userEmail) {
-    // Calculate revenue opportunity for the report
+    // Calculate dynamic values for the report
     function calculateRevenueOpportunity() {
         try {
             const monthlyVisitors = parseFloat(document.getElementById('monthlyVisitors')?.value) || 10000;
@@ -345,93 +345,56 @@ function sendMobileReport(userName, userEmail) {
             const averageSale = parseFloat(document.getElementById('averageSale')?.value) || 100;
             
             const currentRevenue = monthlyVisitors * (conversionRate / 100) * averageSale;
-            const potentialRevenue = monthlyVisitors * ((conversionRate * 3) / 100) * averageSale;
-            const additionalRevenue = potentialRevenue - currentRevenue;
-            
+            const additionalRevenue = currentRevenue * 2; // 3X potential
             return Math.round(additionalRevenue).toLocaleString();
         } catch (error) {
-            return '5,000'; // Fallback amount
+            return '5,000';
         }
     }
 
-    const templateParams = {
+    const userReportParams = {
         user_name: userName,
         user_email: userEmail,
         website_url: window.location.href,
-        mobile_score: document.getElementById('conversionScore')?.textContent || '--%',
-        chatbot_detected: 'AI Chatbot Analysis Complete',
+        mobile_score: document.getElementById('conversionScore')?.textContent || '35%',
+        chatbot_detected: 'AI Analysis Complete',
         revenue_opportunity: calculateRevenueOpportunity(),
         conversion_rate: document.getElementById('conversionRate')?.value || 'Not calculated',
         critical_issues_count: '5',
         mobile_score_class: 'fair'
     };
 
-    console.log('📧 Sending mobile report to:', userEmail);
+    console.log('Sending report to user:', userEmail);
 
-    // ✅ STEP 1: Send the main report to the user
-    emailjs.send('service_b9bppgb', 'template_f6j78g6', templateParams)
+    // Send to user
+    emailjs.send('service_b9bppgb', 'template_f6j78g6', userReportParams)
         .then(function(response) {
-            console.log('✅ FREE MOBILE REPORT SENT TO USER!', response);
+            console.log('✅ User report sent!');
             
-            // ✅ STEP 2: Send notification to Brett
-            const notificationParams = {
-                to_name: 'Brett',
-                to_email: 'mobilewise.ai@gmail.com', // ← CHANGE TO YOUR EMAIL
-                user_name: userName,
-                user_email: userEmail, 
-                user_phone: 'Not provided', // You could add phone field later
-                timestamp: new Date().toLocaleString('en-US', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }),
-                website_analyzed: templateParams.website_url,
-                mobile_score: templateParams.mobile_score,
-                revenue_opportunity: templateParams.revenue_opportunity,
-                conversion_rate: templateParams.conversion_rate,
-                source: 'Mobile Report Request'
+            // ALSO send notification to Brett
+            const brettNotificationParams = {
+                user_name: `🚨 NEW LEAD: ${userName}`,
+                user_email: 'mobilewise.ai@gmail.com', // ← YOUR EMAIL HERE
+                website_url: `Email: ${userEmail} | Time: ${new Date().toLocaleString()}`,
+                mobile_score: 'IMMEDIATE FOLLOW-UP NEEDED',
+                chatbot_detected: 'Mobile Report Request',
+                revenue_opportunity: `Potential: $${userReportParams.revenue_opportunity}`,
+                conversion_rate: 'Hot Lead - Contact Today!'
             };
             
-            console.log('🚨 Sending notification to Brett:', notificationParams);
-            
-            // Send notification using the SAME service but different template
-            return emailjs.send('service_b9bppgb', 'template_f6j78g6', notificationParams); 
-            // Note: You'll want to create a separate template for notifications
-            // For now using same template, but you should create "template_lead_notification"
+            return emailjs.send('service_b9bppgb', 'template_f6j78g6', brettNotificationParams);
         })
-        .then(function(notificationResponse) {
-            console.log('✅ NOTIFICATION SENT TO BRETT!', notificationResponse);
-            
-            // Show success to user
+        .then(function() {
+            console.log('✅ Brett notified!');
             alert('🎉 Your FREE Mobile Report is on the way! Check your email in 2-3 minutes.');
-            
-            // Close modal and reset form
             if (modal) modal.style.display = 'none';
             if (videoReportForm) videoReportForm.reset();
         })
         .catch(function(error) {
-            console.error('❌ Email error:', error);
-            alert('❌ Failed to send report. Please check your connection and try again.');
+            console.error('Email error:', error);
+            alert('❌ Failed to send report. Please try again.');
         });
 }
-
-        console.log('Sending email with params:', templateParams);
-
-        // ✅ USING YOUR FREE MOBILE REPORT TEMPLATE (template_f6j78g6)
-        emailjs.send('service_b9bppgb', 'template_f6j78g6', templateParams)
-            .then(function(response) {
-                console.log('✅ FREE MOBILE REPORT EMAIL SENT!', response);
-                alert('🎉 Your FREE Mobile Report is on the way! Check your email in 2-3 minutes.');
-                modal.style.display = 'none';
-                videoReportForm.reset();
-            }, function(error) {
-                console.error('❌ EmailJS error:', error);
-                alert('❌ Failed to send report. Please check your connection and try again.');
-            });
-    }
 
     // ✅ ALSO FIX THE MAIN REPORT FORM (the one in the left column)
     const mainReportForm = document.getElementById('mainReportForm');
