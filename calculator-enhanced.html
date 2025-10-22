@@ -401,7 +401,7 @@ function sendMobileReport(userName, userEmail) {
 
 // ✅ FIXED: MAIN REPORT FORM with lead notification
 const mainReportForm = document.getElementById('mainReportForm');
-const reportSuccess = document.getElementById('reportSuccess'); // ✅ ADDED THIS LINE
+const reportSuccess = document.getElementById('reportSuccess');
 
 if (mainReportForm) {
     mainReportForm.addEventListener('submit', function(e) {
@@ -451,7 +451,7 @@ if (mainReportForm) {
             .then(function(response) {
                 console.log('✅ MAIN REPORT FORM EMAIL SENT!', response);
                 
-                // ✅ FIXED: ALSO send lead notification to YOUR EMAIL
+                // ✅ FIXED: ALSO send lead notification to YOUR EMAIL - WITH CORRECT TEMPLATE
                 const leadNotificationParams = {
                     user_name: `📊 REPORT REQUEST: ${userFirstName}`,
                     user_email: userEmail,
@@ -459,11 +459,11 @@ if (mainReportForm) {
                     mobile_score: '15-Page Report Requested',
                     chatbot_detected: 'Detailed Report Download',
                     revenue_opportunity: `Potential: $${revenueOpportunity}`,
-                    conversion_rate: 'Report Lead - Follow Up',
-                    to_email: 'mobilewise.ai@gmail.com' // ✅ YOUR EMAIL ADDED HERE
+                    conversion_rate: 'Report Lead - Follow Up'
                 };
                 
                 console.log('Sending main form lead notification to mobilewise.ai@gmail.com');
+                // ✅ FIXED: Using correct template for lead notification
                 return emailjs.send('service_b9bppgb', 'template_lhlonjg', leadNotificationParams);
             })
             .then(function() {
