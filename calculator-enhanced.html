@@ -381,14 +381,14 @@ function sendMobileReport(userName, userEmail) {
                 chatbot_detected: 'Mobile Report Request',
                 revenue_opportunity: `Potential: $${revenueOpportunity}`,
                 conversion_rate: 'Hot Lead - Contact Today!',
-                to_email: 'pocketwise.aitrading@gmail.com' // ✅ YOUR EMAIL ADDED HERE
+                to_email: 'mobilewise.ai@gmail.com' // ✅ YOUR EMAIL ADDED HERE
             };
             
             console.log('Sending lead notification to mobilewise.ai@gmail.com');
             return emailjs.send('service_b9bppgb', 'template_lhlonjg', leadNotificationParams);
         })
         .then(function() {
-            console.log('✅ Lead notification sent to mobilewise.ai@gmail.com!');
+            console.log('✅ Lead notification sent to mobilewise.ai@gmail.com');
             alert('🎉 Your FREE Mobile Report is on the way! Check your email in 2-3 minutes.');
             if (modal) modal.style.display = 'none';
             if (videoReportForm) videoReportForm.reset();
@@ -460,7 +460,7 @@ const leadNotificationParams = {
     chatbot_detected: 'Detailed Report Download',
     revenue_opportunity: `Potential: $${revenueOpportunity}`,
     conversion_rate: 'Report Lead - Follow Up',
-    to_email: 'pocketwise.aitrading@gmail.com' // ← THIS WAS MISSING
+    to_email: 'mobilewise.ai@gmail.com' // ← THIS WAS MISSING
 };
                 
                 console.log('Sending main form lead notification to mobilewise.ai@gmail.com');
@@ -468,7 +468,7 @@ const leadNotificationParams = {
                 return emailjs.send('service_b9bppgb', 'template_lhlonjg', leadNotificationParams);
             })
             .then(function() {
-                console.log('✅ Main form lead notification sent to mobilewise.ai@gmail.com!');
+                console.log('✅ Main form lead notification sent to mobilewise.ai@gmail.com');
                 // Show success popup
                 if (reportSuccess) {
                     reportSuccess.style.display = 'flex';
