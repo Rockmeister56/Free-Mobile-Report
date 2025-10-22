@@ -451,11 +451,17 @@ if (mainReportForm) {
             .then(function(response) {
                 console.log('✅ MAIN REPORT FORM EMAIL SENT!', response);
                 
-                // Show success popup
-                if (reportSuccess) {
-                    reportSuccess.style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                }
+               // ✅ FIXED: ALSO send lead notification to YOUR EMAIL - WITH CORRECT TEMPLATE
+const leadNotificationParams = {
+    user_name: `📊 REPORT REQUEST: ${userFirstName}`,
+    user_email: userEmail,
+    website_url: `Email: ${userEmail} | Time: ${new Date().toLocaleString()}`,
+    mobile_score: '15-Page Report Requested',
+    chatbot_detected: 'Detailed Report Download',
+    revenue_opportunity: `Potential: $${revenueOpportunity}`,
+    conversion_rate: 'Report Lead - Follow Up',
+};
+                      
                 // Clear the form
                 mainReportForm.reset();
             })
