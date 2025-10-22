@@ -15,8 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeBoostModalBtn = document.getElementById('closeBoostModal');
     const freeZoomDemoBtn = document.getElementById('freeZoomDemoBtn');
     
-    // Get report form elements
-    const reportForm = document.getElementById('mainReportForm');
+    // Get report form elements (BUT DON'T HANDLE SUBMISSION HERE - let HTML/EmailJS handle it)
     const reportSuccess = document.getElementById('reportSuccess');
     const closeReportSuccess = document.getElementById('closeReportSuccess');
     const closeSuccessBtn = document.getElementById('closeSuccessBtn');
@@ -73,21 +72,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-   // Free Zoom Demo Button - OPEN IN NEW TAB VERSION
-if (freeZoomDemoBtn) {
-    freeZoomDemoBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        console.log('Free Zoom Demo button clicked');
-        
-        // Close the modal
-        closeBoostModal();
-        
-        // Open scheduling page in new tab
-        setTimeout(() => {
-            window.open(SCHEDULING_URL, '_blank');
-        }, 300);
-    });
-}
+    // Free Zoom Demo Button - OPEN IN NEW TAB VERSION
+    if (freeZoomDemoBtn) {
+        freeZoomDemoBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Free Zoom Demo button clicked');
+            
+            // Close the modal
+            closeBoostModal();
+            
+            // Open scheduling page in new tab
+            setTimeout(() => {
+                window.open(SCHEDULING_URL, '_blank');
+            }, 300);
+        });
+    }
 
     // ========== EXISTING FUNCTIONALITY ==========
     function closePopupFunc() {
@@ -224,31 +223,7 @@ if (freeZoomDemoBtn) {
         });
     }
 
-    // Report Form Submission
-    if (reportForm) {
-        reportForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const userFirstName = document.getElementById('userFirstName').value;
-            const userEmail = document.getElementById('userEmail').value;
-            
-            if (!userFirstName || !userEmail) {
-                alert('Please enter both your first name and email address');
-                return;
-            }
-            
-            console.log('User details:', { firstName: userFirstName, email: userEmail });
-            
-            // Show success popup
-            if (reportSuccess) {
-                reportSuccess.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
-            
-            // Clear the form
-            reportForm.reset();
-        });
-    }
+    // REMOVED: The duplicate form submission handler that was causing the issue
 
     // Close report success popup
     function closeReportSuccessFunc() {

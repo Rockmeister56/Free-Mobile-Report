@@ -371,10 +371,11 @@ function sendMobileReport(userName, userEmail) {
         .then(function(response) {
             console.log('✅ User report sent!');
             
-            // ALSO send notification to Brett
+            // ALSO send notification to Brett - FIXED VERSION
             const brettNotificationParams = {
                 user_name: `🚨 NEW LEAD: ${userName}`,
-                user_email: 'mobilewise.ai@gmail.com', // ← YOUR EMAIL HERE
+                user_email: userEmail, // User's email
+                to_email: 'mobilewise.ai@gmail.com', // Brett's email as recipient
                 website_url: `Email: ${userEmail} | Time: ${new Date().toLocaleString()}`,
                 mobile_score: 'IMMEDIATE FOLLOW-UP NEEDED',
                 chatbot_detected: 'Mobile Report Request',
