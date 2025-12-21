@@ -64,24 +64,41 @@
     </footer>
 
     <script src="app.js"></script>
-    <!-- MOBILEWISE AI IFRAME INTEGRATION - FIXED -->
-<iframe src="mobilewise-ai-interface.html" 
-        id="mobilewiseAIIframe"
-        style="position: fixed; 
-               bottom: 20px; 
-               right: 20px; 
-               width: 320px; /* SMALLER - easier to see */
-               height: 400px; /* SMALLER - easier to see */
-               border: none; 
-               border-radius: 20px; 
-               box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-               z-index: 10000; /* HIGHER z-index */
-               display: none;
-               background: white; /* SOLID BACKGROUND */
-               overflow: hidden;">
-</iframe>
+    <!-- COMPLETE MOBILEWISE AI IN SINGLE FILE -->
+<div id="mobilewiseAIWidget" style="position: fixed; bottom: -600px; right: 20px; width: 320px; height: 500px; z-index: 10000; transition: bottom 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+    <!-- Main Container -->
+    <div style="width: 100%; height: 100%; position: relative; background: transparent;">
+        <!-- Video Window -->
+        <div style="position: absolute; top: 120px; left: 20px; width: 280px; height: 200px; border-radius: 12px; overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.5);">
+            <video autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+                <source src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/video-avatars/video_avatar_1764286430873.mp4" type="video/mp4">
+            </video>
+        </div>
+        
+        <!-- Text Area -->
+        <div style="position: absolute; bottom: 180px; left: 20px; right: 20px; text-align: center;">
+            <div id="aiMessageWidget" style="background: rgba(0,0,0,0.85); color: white; padding: 14px; border-radius: 12px; font-size: 15px; min-height: 70px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,0.4);">
+                Loading AI Assistant...
+            </div>
+        </div>
+        
+        <!-- Buttons -->
+        <div style="position: absolute; bottom: 85px; left: 20px; right: 20px; display: flex; flex-direction: column; gap: 8px;">
+            <button id="getAssistanceWidget" style="padding: 15px; background: linear-gradient(135deg, #002fff 0%, #060a1c 100%); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 6px 20px rgba(0,47,255,0.3);">
+                Get AI Assistance ▶
+            </button>
+            <button id="justBrowsingWidget" style="padding: 15px; background: white; color: #333; border: 2px solid #002fff; border-radius: 12px; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                Just Browsing 👉
+            </button>
+        </div>
+        
+        <!-- Overlay Image -->
+        <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1764359060407_player3.png" 
+             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; border-radius: 20px;">
+    </div>
+</div>
 
-<!-- OVERLAY CONTAINERS (in parent window) -->
+<!-- Keep your existing overlay containers -->
 <div id="mobilewiseParentOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9998; display: none; backdrop-filter: blur(5px);"></div>
 
 <div id="mobilewiseParentInterface" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; max-width: 900px; height: 80vh; background: white; border-radius: 20px; z-index: 9999; display: none; box-shadow: 0 25px 60px rgba(0,0,0,0.4);">
@@ -90,41 +107,74 @@
 </div>
 
 <script>
-    // Show AI interface after delay
+    // Show widget with animation
     setTimeout(() => {
-        const iframe = document.getElementById('mobilewiseAIIframe');
-        iframe.style.display = 'block';
+        const widget = document.getElementById('mobilewiseAIWidget');
+        widget.style.bottom = '20px'; // Slide up
+        console.log('Widget should be sliding up now');
         
-        // Add border and opacity for visibility during testing
-        iframe.style.border = '3px solid #002fff';
-        iframe.style.opacity = '1';
-        
-        console.log('MobileWise AI Interface should now be visible');
-    }, 2000); // Show after 2 seconds
+        // Type text
+        typeText('aiMessageWidget', "Hi! I'm your MobileWise AI Assistant. Need help with your mobile site or audit?");
+    }, 2000);
     
-    // Listen for messages from the iframe
-    window.addEventListener('message', function(event) {
-        console.log('Message received from iframe:', event.data);
+    // Text typing function
+    function typeText(elementId, text, speed = 50) {
+        const element = document.getElementById(elementId);
+        element.innerHTML = '';
+        let i = 0;
         
-        if (event.data.type === 'OPEN_MOBILEWISE_OVERLAY') {
-            console.log('Opening overlay with URL:', event.data.url);
+        function type() {
+            if (i < text.length) {
+                element.innerHTML = text.substring(0, i + 1) + '<span style="display:inline-block;width:2px;height:1em;background:white;margin-left:2px;animation:blink 1s infinite">|</span>';
+                i++;
+                setTimeout(type, speed);
+            } else {
+                element.innerHTML = text;
+            }
+        }
+        type();
+    }
+    
+    // Get AI Assistance Button
+    document.getElementById('getAssistanceWidget').addEventListener('click', async function() {
+        const originalText = this.innerHTML;
+        this.innerHTML = '🎤 Opening...';
+        this.disabled = true;
+        
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getTracks().forEach(track => track.stop());
             
-            // Show overlay and voice chat
+            const voiceChatUrl = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?autoStartVoice=true&mobilewiseMode=true&timestamp=${Date.now()}`;
+            
+            // Show overlay
             document.getElementById('mobilewiseParentOverlay').style.display = 'block';
             document.getElementById('mobilewiseParentInterface').style.display = 'block';
-            document.getElementById('mobilewiseParentChatIframe').src = event.data.url;
+            document.getElementById('mobilewiseParentChatIframe').src = voiceChatUrl;
             
-            // Hide the floating AI button
-            document.getElementById('mobilewiseAIIframe').style.display = 'none';
-        }
-        
-        if (event.data.type === 'HIDE_MOBILEWISE_IFRAME') {
-            console.log('Hiding AI interface');
-            document.getElementById('mobilewiseAIIframe').style.display = 'none';
+            // Hide widget
+            document.getElementById('mobilewiseAIWidget').style.bottom = '-600px';
+            
+        } catch (error) {
+            console.error("Microphone error:", error);
+            
+            const voiceChatUrl = `https://smartaivoicebot.netlify.app/voice-chat-fusion-instant?mobilewiseMode=true`;
+            
+            document.getElementById('mobilewiseParentOverlay').style.display = 'block';
+            document.getElementById('mobilewiseParentInterface').style.display = 'block';
+            document.getElementById('mobilewiseParentChatIframe').src = voiceChatUrl;
+            
+            document.getElementById('mobilewiseAIWidget').style.bottom = '-600px';
         }
     });
     
-    // Close overlay functionality
+    // Just Browsing Button
+    document.getElementById('justBrowsingWidget').addEventListener('click', function() {
+        const widget = document.getElementById('mobilewiseAIWidget');
+        widget.style.bottom = '-600px';
+    });
+    
+    // Close overlay functionality (same as before)
     document.getElementById('mobilewiseParentCloseBtn').addEventListener('click', closeMobilewiseOverlay);
     document.getElementById('mobilewiseParentOverlay').addEventListener('click', closeMobilewiseOverlay);
     
@@ -133,9 +183,9 @@
         document.getElementById('mobilewiseParentInterface').style.display = 'none';
         document.getElementById('mobilewiseParentChatIframe').src = '';
         
-        // Show the floating AI button again after a delay
+        // Show widget again after delay
         setTimeout(() => {
-            document.getElementById('mobilewiseAIIframe').style.display = 'block';
+            document.getElementById('mobilewiseAIWidget').style.bottom = '20px';
         }, 1000);
     }
     
@@ -145,9 +195,6 @@
             closeMobilewiseOverlay();
         }
     });
-    
-    // Debug: Log when page loads
-    console.log('MobileWise AI Integration loaded');
 </script>
 </body>
 </html>
