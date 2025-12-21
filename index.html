@@ -64,24 +64,25 @@
     </footer>
 
     <script src="app.js"></script>
-    <!-- MOBILEWISE AI IFRAME INTEGRATION -->
+    <!-- MOBILEWISE AI IFRAME INTEGRATION - FIXED -->
 <iframe src="mobilewise-ai-interface.html" 
         id="mobilewiseAIIframe"
         style="position: fixed; 
                bottom: 20px; 
                right: 20px; 
-               width: 497px; 
-               height: 533px; 
+               width: 320px; /* SMALLER - easier to see */
+               height: 400px; /* SMALLER - easier to see */
                border: none; 
                border-radius: 20px; 
-               box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-               z-index: 9999;
-               display: none; /* Hidden initially */
+               box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+               z-index: 10000; /* HIGHER z-index */
+               display: none;
+               background: white; /* SOLID BACKGROUND */
                overflow: hidden;">
 </iframe>
 
 <!-- OVERLAY CONTAINERS (in parent window) -->
-<div id="mobilewiseParentOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9998; display: none; backdrop-filter: blur(5px);"></div>
+<div id="mobilewiseParentOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9998; display: none; backdrop-filter: blur(5px);"></div>
 
 <div id="mobilewiseParentInterface" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; max-width: 900px; height: 80vh; background: white; border-radius: 20px; z-index: 9999; display: none; box-shadow: 0 25px 60px rgba(0,0,0,0.4);">
     <button id="mobilewiseParentCloseBtn" style="position: absolute; top: 20px; right: 20px; background: #002fff; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 10000; font-size: 24px;">×</button>
@@ -91,12 +92,23 @@
 <script>
     // Show AI interface after delay
     setTimeout(() => {
-        document.getElementById('mobilewiseAIIframe').style.display = 'block';
+        const iframe = document.getElementById('mobilewiseAIIframe');
+        iframe.style.display = 'block';
+        
+        // Add border and opacity for visibility during testing
+        iframe.style.border = '3px solid #002fff';
+        iframe.style.opacity = '1';
+        
+        console.log('MobileWise AI Interface should now be visible');
     }, 2000); // Show after 2 seconds
     
     // Listen for messages from the iframe
     window.addEventListener('message', function(event) {
+        console.log('Message received from iframe:', event.data);
+        
         if (event.data.type === 'OPEN_MOBILEWISE_OVERLAY') {
+            console.log('Opening overlay with URL:', event.data.url);
+            
             // Show overlay and voice chat
             document.getElementById('mobilewiseParentOverlay').style.display = 'block';
             document.getElementById('mobilewiseParentInterface').style.display = 'block';
@@ -107,7 +119,7 @@
         }
         
         if (event.data.type === 'HIDE_MOBILEWISE_IFRAME') {
-            // Hide the floating AI button
+            console.log('Hiding AI interface');
             document.getElementById('mobilewiseAIIframe').style.display = 'none';
         }
     });
@@ -133,6 +145,9 @@
             closeMobilewiseOverlay();
         }
     });
+    
+    // Debug: Log when page loads
+    console.log('MobileWise AI Integration loaded');
 </script>
 </body>
 </html>
