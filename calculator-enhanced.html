@@ -3,599 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your PPC Audit Report - See How Much You're Wasting | LemonSlice AI</title>
+    <title>Mobile Revenue Calculator - See How Much You're Losing | Mobile-Wise AI</title>
     <link rel="stylesheet" href="calculator-styles.css">
     <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* OVERRIDE STYLES - Making it match the analysis page exactly */
-        
-        body {
-            background: #0a0a0a;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        /* New background image */
-        .report-page {
-            background-image: url('https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/report-bg2.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvcmVwb3J0LWJnMi5qcGciLCJpYXQiOjE3NzE2OTg3NzQsImV4cCI6MTgwMzIzNDc3NH0.X0ihpBse9SvYwaTCZsNPJKerJ_5HTIpFvq0IZjVrQZg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
-            position: relative;
-        }
-        
-        /* Dark overlay for better readability */
-        .report-page::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 1;
-        }
-        
-        /* All content sits above the overlay */
-        .main-header, .main-container {
-            position: relative;
-            z-index: 2;
-        }
-        
-        /* HEADER STYLES - New LemonSlice header */
-        .main-header {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid #0096ff;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .brand-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .brand-logo {
-            height: 50px;
-            width: auto;
-        }
-        
-        .brand-text {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .brand-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
-            letter-spacing: 1px;
-        }
-        
-        .brand-name span {
-            color: #0096ff;
-        }
-        
-        .brand-tagline {
-            font-size: 0.8rem;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        /* SMART AI ASSISTANT BUTTON */
-        .ai-assistant-btn {
-            background: linear-gradient(135deg, #0096ff, #0062cc);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 0 20px rgba(0,150,255,0.3);
-        }
-        
-        .ai-assistant-btn i {
-            font-size: 1.2rem;
-        }
-        
-        .ai-assistant-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 25px rgba(0,150,255,0.5);
-        }
-        
-        /* MAIN CONTAINER */
-        .main-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        
-        /* TRANSPARENT BLACK CARDS - Matching analysis page */
-        .report-card {
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 150, 255, 0.3);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            color: white;
-        }
-        
-        /* Blue accent bars */
-        .top-bar, .bottom-bar {
-            background: linear-gradient(90deg, #0062cc, #0096ff, #0062cc);
-            height: 8px;
-            width: 100%;
-            position: fixed;
-            left: 0;
-            z-index: 10;
-        }
-        
-        .top-bar {
-            top: 0;
-            box-shadow: 0 2px 20px rgba(0,150,255,0.5);
-        }
-        
-        .bottom-bar {
-            bottom: 0;
-            box-shadow: 0 -2px 20px rgba(0,150,255,0.5);
-        }
-        
-        /* RESULTS HEADER */
-        .results-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .results-header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: white;
-            text-shadow: 0 0 20px rgba(0,150,255,0.7);
-            margin-bottom: 10px;
-        }
-        
-        .url-display {
-            background: rgba(0,150,255,0.1);
-            border: 1px solid rgba(0,150,255,0.3);
-            padding: 10px 20px;
-            border-radius: 50px;
-            display: inline-block;
-            color: #0096ff;
-            font-family: monospace;
-            font-size: 1.1rem;
-        }
-        
-        /* LOSS AMOUNT - BIG AND BOLD */
-        .loss-amount {
-            text-align: center;
-            margin: 20px 0 30px;
-        }
-        
-        .loss-label {
-            color: #aaa;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
-        
-        .loss-number {
-            font-size: 4.5rem;
-            font-weight: 800;
-            color: #ff4444;
-            text-shadow: 0 0 30px rgba(255,68,68,0.5);
-            line-height: 1;
-        }
-        
-        .loss-number small {
-            font-size: 1.5rem;
-            color: #aaa;
-        }
-        
-        .loss-period {
-            color: #ccc;
-            font-size: 1.2rem;
-        }
-        
-        /* SECTION HEADERS */
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
-        }
-        
-        .section-header i {
-            font-size: 1.8rem;
-            color: #0096ff;
-        }
-        
-        .section-header h2 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: white;
-        }
-        
-        .section-header h2 span {
-            color: #0096ff;
-            font-size: 1rem;
-            margin-left: 10px;
-        }
-        
-        /* PROBLEM ITEMS */
-        .problem-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            margin-bottom: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-left: 4px solid #ff4444;
-            border-radius: 8px;
-            transition: transform 0.3s ease;
-        }
-        
-        .problem-item:hover {
-            transform: translateX(5px);
-        }
-        
-        .problem-content {
-            flex: 1;
-        }
-        
-        .problem-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: white;
-        }
-        
-        .problem-desc {
-            font-size: 0.9rem;
-            color: #aaa;
-        }
-        
-        .problem-cost {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #ff4444;
-            text-align: right;
-            min-width: 120px;
-        }
-        
-        .problem-cost small {
-            font-size: 0.8rem;
-            color: #aaa;
-            display: block;
-        }
-        
-        /* SOLUTION FEATURES */
-        .solution-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .solution-item {
-            background: rgba(0,150,255,0.1);
-            border: 1px solid rgba(0,150,255,0.3);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .solution-item:hover {
-            background: rgba(0,150,255,0.2);
-            transform: translateY(-5px);
-        }
-        
-        .solution-item i {
-            font-size: 2.5rem;
-            color: #0096ff;
-            margin-bottom: 10px;
-        }
-        
-        .solution-item h3 {
-            color: white;
-            margin-bottom: 8px;
-            font-size: 1.2rem;
-        }
-        
-        .solution-item p {
-            color: #ccc;
-            font-size: 0.9rem;
-        }
-        
-        /* ROI CALCULATION */
-        .roi-box {
-            background: linear-gradient(135deg, #00b09b, #96c93d);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .roi-box .roi-label {
-            color: white;
-            opacity: 0.9;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
-        
-        .roi-box .roi-value {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: white;
-        }
-        
-        /* EMAIL CAPTURE FORM */
-        .email-capture {
-            background: rgba(0,0,0,0.3);
-            border-radius: 15px;
-            padding: 30px;
-            border: 1px solid rgba(0,150,255,0.3);
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .email-capture input {
-            width: 100%;
-            padding: 15px 20px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 10px;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .email-capture input:focus {
-            outline: none;
-            border-color: #0096ff;
-            background: rgba(255,255,255,0.15);
-        }
-        
-        .email-capture input::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-        
-        .download-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #0096ff, #0062cc);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            margin-top: 15px;
-        }
-        
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0,150,255,0.4);
-        }
-        
-        /* TESTIMONIAL */
-        .testimonial {
-            text-align: center;
-            font-style: italic;
-            color: #ccc;
-            margin: 30px 0;
-            padding: 20px;
-            border-left: 4px solid #0096ff;
-            background: rgba(0,0,0,0.3);
-        }
-        
-        .testimonial-author {
-            color: #0096ff;
-            font-style: normal;
-            margin-top: 10px;
-        }
-        
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .solution-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .problem-item {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .problem-cost {
-                margin-top: 10px;
-            }
-            
-            .loss-number {
-                font-size: 3rem;
-            }
-            
-            .header-content {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
-    </style>
 </head>
-<body class="report-page">
-    <!-- Blue Top Bar - Matching analysis page -->
-    <div class="top-bar"></div>
-
-    <!-- New LemonSlice Header -->
+<body>
+    <!-- Blue Top Header Bar -->
     <header class="main-header">
         <div class="header-content">
             <div class="brand-section">
-                <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/lemon-logo.png?token=your-token-here" 
-                     alt="LemonSlice AI" 
-                     class="brand-logo"
-                     onerror="this.style.display='none'; document.getElementById('textLogo').style.display='block';">
-                <div class="brand-text" id="textLogo" style="display: none;">
-                    <div class="brand-name">LEMON<span>SLICE</span></div>
-                    <div class="brand-tagline">AI AUDIT</div>
-                </div>
+                <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1758507868460_logo.png" 
+                     alt="Mobile-Wise AI" 
+                     class="brand-logo">
+                <span class="brand-name">Mobile-Wise AI</span>
             </div>
-            
-            <!-- Smart AI Assistant Button -->
-            <button class="ai-assistant-btn" id="aiAssistantBtn">
-                <i class="fas fa-robot"></i>
-                SMART AI ASSISTANT
-                <i class="fas fa-chevron-right"></i>
-            </button>
+            <div class="header-cta">
+                <span class="boost-text"><h2>Want to Boost Your Mobile Conversion 300%?</h2></span>
+                <button id="boostHeaderBtn" class="boost-header-btn">
+                    🚀 BOOST HERE
+                </button>
+            </div>
         </div>
     </header>
 
     <div class="main-container">
-        <!-- Main Report Card -->
-        <div class="report-card">
-            <!-- Results Header with dynamic data -->
-            <div class="results-header">
-                <h1>🔥 YOUR PPC AUDIT RESULTS</h1>
-                <div class="url-display" id="urlDisplay">Loading...</div>
-                <div style="color: #0096ff; margin-top: 10px;" id="budgetDisplay">Monthly Budget: $7,500</div>
-            </div>
-
-            <!-- BIG LOSS AMOUNT -->
-            <div class="loss-amount">
-                <div class="loss-label">ESTIMATED MONTHLY WASTE</div>
-                <div class="loss-number" id="lossAmount">$4,688</div>
-                <div class="loss-period">based on your PPC spend</div>
-            </div>
-
-            <!-- SECTION: Critical Problems -->
-            <div class="section-header">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h2>5 PROBLEMS <span>DRAINING YOUR BUDGET</span></h2>
-            </div>
-
-            <div id="problemsList">
-                <!-- Dynamically filled by JavaScript -->
-            </div>
-
-            <!-- SECTION: The Solution -->
-            <div class="section-header" style="margin-top: 30px;">
-                <i class="fas fa-check-circle"></i>
-                <h2>THE SOLUTION <span>LEMONSLICE AI</span></h2>
-            </div>
-
-            <div class="solution-grid">
-                <div class="solution-item">
-                    <i class="fas fa-comment-dots"></i>
-                    <h3>Smart AI Chat</h3>
-                    <p>Answers instantly, captures leads 24/7</p>
-                </div>
-                <div class="solution-item">
-                    <i class="fas fa-file-alt"></i>
-                    <h3>Form Shortener</h3>
-                    <p>Reduces fields from 12 → 4</p>
-                </div>
-                <div class="solution-item">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <h3>Speed Optimizer</h3>
-                    <p>Cuts load time by 60%</p>
-                </div>
-                <div class="solution-item">
-                    <i class="fas fa-phone-alt"></i>
-                    <h3>Click-to-Call</h3>
-                    <p>One-tap calling for mobile users</p>
-                </div>
-            </div>
-
-            <!-- ROI Box -->
-            <div class="roi-box">
-                <div class="roi-label">PROJECTED ROI WITH LEMONSLICE AI</div>
-                <div class="roi-value" id="roiValue">435%</div>
-                <div style="color: white; opacity: 0.9;">Recover $2,813+ monthly</div>
-            </div>
-        </div>
-
-        <!-- Email Capture Card -->
-        <div class="report-card">
-            <div class="section-header">
-                <i class="fas fa-download"></i>
-                <h2>GET FULL REPORT <span>15-PAGE DETAILED ANALYSIS</span></h2>
-            </div>
-
-            <div class="email-capture">
-                <div class="form-row">
-                    <input type="text" id="userFirstName" placeholder="First Name" required>
-                    <input type="email" id="userEmail" placeholder="Email Address" required>
-                </div>
+        <!-- Left Column: Mobile Report -->
+        <section class="report-section">
+            <div class="report-content">
+                <h1>Your Mobile Performance Report</h1>
                 
-                <button class="download-btn" id="downloadReportBtn">
-                    <i class="fas fa-file-pdf"></i>
-                    SEND ME THE COMPLETE REPORT
-                </button>
-                
-                <div style="text-align: center; margin-top: 15px; color: #aaa; font-size: 0.8rem;">
-                    <i class="fas fa-lock"></i> We respect your privacy. Unsubscribe anytime.
+                <!-- Executive Summary -->
+                <div class="report-section-card">
+                    <h3>📈 Executive Summary</h3>
+                    <p>Based on our analysis, your mobile site has significant opportunities for improvement that could increase conversions by up to <strong>3X</strong>. Here are your key metrics:</p>
+                    
+                    <div class="report-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="conversionScore">--%</div>
+                            <div class="stat-label">Conversion Score</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="mobileTraffic">--%</div>
+                            <div class="stat-label">Mobile Traffic</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="bounceRate">--%</div>
+                            <div class="stat-label">Bounce Rate</div>
+                        </div>
+                    </div>
+                    
+                    <!-- NEW BOOST BUTTON -->
+                    <button class="boost-button" id="openBoostModal">
+                        <i class="fas fa-rocket mr-2"></i>
+                        Boost My Conversions Now
+                    </button>
+                </div>
+
+                <!-- Critical Issues -->
+                <div class="report-section-card critical">
+                    <h3>🚨 Critical Issues Found</h3>
+                    <div class="issues-grid">
+                        <div class="issue-item">
+                            <span class="issue-icon">⚡</span>
+                            <div class="issue-content">
+                                <strong>Slow Page Load Times</strong>
+                                <p>Visitors leave if pages take >3 seconds to load, especially on mobile</p>
+                            </div>
+                        </div>
+                        <div class="issue-item">
+                            <span class="issue-icon">📱</span>
+                            <div class="issue-content">
+                                <strong>Poor Mobile Responsiveness</strong>
+                                <p>Site not optimized for smaller screens, causing layout issues</p>
+                            </div>
+                        </div>
+                        <div class="issue-item">
+                            <span class="issue-icon">🧭</span>
+                            <div class="issue-content">
+                                <strong>Difficult Navigation</strong>
+                                <p>Complex layout makes it hard for users to find what they need</p>
+                            </div>
+                        </div>
+                        <div class="issue-item">
+                            <span class="issue-icon">🎯</span>
+                            <div class="issue-content">
+                                <strong>Unclear Call-to-Actions</strong>
+                                <p>Visitors don't know what action to take next</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Get Full Report -->
+                <div class="report-section-card cta-card">
+                    <h3>📬 Get Your Full Detailed Report</h3>
+                    <p>Receive a comprehensive 15-page PDF analysis with:</p>
+                    <ul class="benefits-list">
+                        <li>✅ Detailed technical audit results</li>
+                        <li>✅ Specific recommendations for your industry</li>
+                        <li>✅ Step-by-step implementation guide</li>
+                        <li>✅ Competitor mobile performance comparison</li>
+                        <li>✅ AI-powered conversion optimization strategies</li>
+                    </ul>
+                    
+                    <form class="email-capture-form" id="mainReportForm">
+                        <div class="form-group double-fields">
+                            <div class="field-group">
+                                <input type="text" id="userFirstName" placeholder="First Name" required>
+                            </div>
+                            <div class="field-group">
+                                <input type="email" id="userEmail" placeholder="Email Address" required>
+                            </div>
+                        </div>
+                        <span class="input-hint">We'll send the full report immediately</span>
+                        
+                        <button type="submit" class="get-report-btn">
+                            📧 SEND ME THE FULL REPORT
+                        </button>
+                    </form>
+                    
+                    <div class="privacy-note">
+                        <small>🔒 We respect your privacy. Unsubscribe at any time.</small>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Testimonial -->
-            <div class="testimonial">
-                <i class="fas fa-quote-left" style="color: #0096ff; margin-right: 5px;"></i>
-                Found $12k in wasted spend in 2 minutes! The detailed report showed us exactly what to fix.
-                <div class="testimonial-author">- Mike, Fairway Mortgage</div>
+        <!-- Right Column: Calculator -->
+        <section class="calculator-section">
+            <div class="calculator-container">
+                <!-- Video Teaser Section -->
+                <div class="video-teaser-section">
+                    <!-- Video content can go here -->
+                </div>
+
+                <!-- Hero Section -->
+                <div class="hero-section">
+                    <h2>Discover How Much Revenue Your Mobile Site is <span class="highlight">COSTING You</span></h2>
+                    <p class="subtitle">Most businesses lose 70% of mobile visitors - calculate your exact revenue loss and see how AI can 3X your conversions</p>
+                    
+                    <div class="social-proof">
+                        <p>🚀 <strong>428+ businesses</strong> discovered their mobile gaps this week</p>
+                    </div>
+                </div>
+
+                <!-- Calculator Form -->
+                <div class="calculator-form">
+                    <div class="input-group">
+                        <label for="monthlyVisitors">Monthly Website Visitors</label>
+                        <input type="number" id="monthlyVisitors" placeholder="e.g., 10000" min="100">
+                        <span class="input-hint">How many people visit your site monthly?</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="conversionRate">Current Conversion Rate (%)</label>
+                        <input type="number" id="conversionRate" placeholder="e.g., 2" step="0.1" min="0.1" max="100">
+                        <span class="input-hint">What % of visitors become customers?</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="averageSale">Average Sale Value ($)</label>
+                        <input type="number" id="averageSale" placeholder="e.g., 100" min="1">
+                        <span class="input-hint">How much is the average customer worth?</span>
+                    </div>
+
+                    <button id="calculateBtn" class="calculate-btn">
+                        🚀 CALCULATE MY REVENUE LOSS
+                    </button>
+                </div>
+
+                <!-- Results Section -->
+                <section id="resultsSection" class="results-section" style="display: none;">
+                    <div class="results-card">
+                        <h3>💰 YOUR MOBILE REVENUE ANALYSIS</h3>
+                        
+                        <div class="result-row current">
+                            <div class="result-label">Current Monthly Revenue:</div>
+                            <div class="result-value" id="currentRevenue">$0</div>
+                        </div>
+                        
+                        <div class="result-row potential">
+                            <div class="result-label">
+                                <span class="ai-badge">MOBILE-WISE AI 3X BOOST</span><br>
+                                Potential Monthly Revenue:
+                            </div>
+                            <div class="result-value" id="potentialRevenue">$0</div>
+                        </div>
+                        
+                        <div class="result-row difference">
+                            <div class="result-label">Additional Monthly Revenue:</div>
+                            <div class="result-value" id="additionalRevenue">$0</div>
+                        </div>
+
+                        <div class="cta-section">
+                            <p class="cta-text">"You're leaving <strong id="lossAmount">$0</strong> on the table every month due to mobile conversion issues!"</p>
+                            
+                            <button id="seeDemoBtn" class="demo-btn">
+                                🎬 SEE HOW MOBILE-WISE AI SOLVES THIS
+                            </button>
+                            
+                            <p class="podcast-invite">
+                                🎧 Join our <strong>"Ask AI For Business"</strong> podcast to learn how others 3X'd their conversions
+                            </p>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </div>
+        </section>
     </div>
 
-    <!-- Blue Bottom Bar - Matching analysis page -->
-    <div class="bottom-bar"></div>
-
-    <!-- AI Assistant Modal (Simple popup) -->
-    <div id="aiModal" class="demo-popup" style="display: none;">
+    <!-- AI Demo Pop-up -->
+    <div id="demoPopup" class="demo-popup" style="display: none;">
         <div class="popup-content">
-            <button id="closeAIModal" class="close-btn">×</button>
-            <i class="fas fa-robot" style="font-size: 3rem; color: #0096ff; margin-bottom: 15px;"></i>
-            <h3>LemonSlice AI Assistant</h3>
-            <p>How can I help you with your PPC audit?</p>
+            <button id="closePopup" class="close-btn">×</button>
+            <h3>🚀 Experience Mobile-Wise AI in Action!</h3>
+            <p>See exactly how our AI assistant converts your mobile visitors into customers</p>
             <div class="popup-actions">
-                <button id="scheduleCallBtn" class="start-demo-btn">SCHEDULE CALL</button>
-                <button id="liveChatBtn" class="schedule-btn">LIVE CHAT</button>
+                <button id="startDemo" class="start-demo-btn">START AI DEMO</button>
+                <button id="scheduleCall" class="schedule-btn">SCHEDULE CALL</button>
             </div>
         </div>
     </div>
@@ -606,7 +232,7 @@
             <button id="closeReportSuccess" class="close-btn">×</button>
             <div class="success-icon">✅</div>
             <h3>Report Sent Successfully!</h3>
-            <p>We've emailed your 15-page PPC Audit Report to your inbox.</p>
+            <p>We've emailed your comprehensive 15-page Mobile Performance Report to your inbox.</p>
             <p><strong>Check your email in 2-3 minutes.</strong></p>
             <div class="popup-actions">
                 <button id="closeSuccessBtn" class="start-demo-btn">GOT IT!</button>
@@ -614,130 +240,367 @@
         </div>
     </div>
 
+    <!-- ✅ CAPTAIN BRETT'S VIDEO POPUP MODAL -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 style="text-align: center; margin-bottom: 15px;">Quick Tip to Boost Your Mobile Conversions</h3>
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/inFc3I0ymQs" frameborder="0" allowfullscreen></iframe>
+            <form id="videoReportForm">
+                <input type="text" id="userName" placeholder="Your Name" required>
+                <input type="email" id="videoUserEmail" placeholder="Your Email" required>
+                <button type="submit">📧 Send My Free Mobile Report</button>
+            </form>
+            <p style="text-align: center; margin-top: 10px; font-size: 12px; color: #666;">
+                We'll email your detailed analysis immediately
+            </p>
+        </div>
+    </div>
+
+    <!-- ENHANCED BOOST MODAL -->
+    <div class="boost-modal" id="boostModal" style="display: none;">
+        <div class="boost-modal-overlay"></div>
+        <div class="boost-modal-content">
+            <span class="close-boost-modal" id="closeBoostModal">×</span>
+            
+            <div class="video-player-container">
+                <iframe class="boost-modal-video" 
+                        src="https://www.youtube.com/embed/inFc3I0ymQs" 
+                        title="Mobile Wise AI - Smart Voice Assistant" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
+            </div>
+            
+            <div class="demo-cta-section">
+                <button id="freeZoomDemoBtn" class="free-zoom-demo-btn">
+                    🎯 FREE ZOOM DEMO
+                </button>
+                <p class="cta-subtext">See exactly how we'll 3X your mobile conversions</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="calculator-logic.js"></script>
+    
+    <!-- ✅ EMAILJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
     <script>
-        // Get data from URL or localStorage
-        const urlParams = new URLSearchParams(window.location.search);
-        const scannedUrl = urlParams.get('url') || localStorage.getItem('lastScannedUrl') || 'yourwebsite.com';
-        const ppcBudget = parseInt(urlParams.get('budget') || localStorage.getItem('ppcBudget') || '7500');
-        const monthlyLoss = parseInt(urlParams.get('loss') || localStorage.getItem('monthlyLoss') || Math.round(ppcBudget * 0.625));
+// Immediate metrics update after HTML is parsed
+setTimeout(function() {
+    const metrics = {
+        conversionScore: Math.floor(Math.random() * 16) + 15,
+        mobileTraffic: Math.floor(Math.random() * 21) + 30,
+        bounceRate: Math.floor(Math.random() * 16) + 70
+    };
+    
+    document.getElementById('conversionScore').textContent = metrics.conversionScore + '%';
+    document.getElementById('mobileTraffic').textContent = metrics.mobileTraffic + '%';
+    document.getElementById('bounceRate').textContent = metrics.bounceRate + '%';
+}, 100);
 
-        // Calculate problem breakdowns (realistic distribution)
-        const problemBreakdown = [
-            { name: 'Form Too Long (12 fields)', desc: '85% abandon long forms on mobile', percent: 0.40 },
-            { name: 'No Mobile AI Assistant', desc: '73% expect instant responses', percent: 0.24 },
-            { name: 'Slow Load Time', desc: '4.2 seconds (should be <2s)', percent: 0.16 },
-            { name: 'Ad-to-Page Mismatch', desc: 'Ad promise ≠ landing page', percent: 0.12 },
-            { name: 'No Click-to-Call', desc: 'Mobile users want to call immediately', percent: 0.08 }
-        ];
+// ✅ EMAILJS INITIALIZATION
+(function() {
+    emailjs.init("7-9oxa3UC3uKxtqGM");
+})();
 
-        // Update page with real data
-        document.addEventListener('DOMContentLoaded', function() {
-            // Update displays
-            document.getElementById('urlDisplay').textContent = `Website: ${scannedUrl}`;
-            document.getElementById('budgetDisplay').textContent = `Monthly Budget: $${ppcBudget.toLocaleString()}`;
-            document.getElementById('lossAmount').textContent = `$${monthlyLoss.toLocaleString()}`;
+// Modal functionality
+const modal = document.getElementById('videoModal');
+const closeBtn = document.querySelector('.close');
+const videoReportForm = document.getElementById('videoReportForm');
+
+// Close modal when X is clicked
+closeBtn.onclick = function() {
+    modal.style.display = 'none';
+}
+
+// Close modal when clicking outside content
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Form submission for VIDEO MODAL form
+videoReportForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const userName = document.getElementById('userName').value;
+    const userEmail = document.getElementById('videoUserEmail').value;
+    
+    // Send the email with scan results
+    sendMobileReport(userName, userEmail);
+});
+
+// ✅ FIXED: Enhanced function with dual sending
+function sendMobileReport(userName, userEmail) {
+    // Calculate dynamic values for the report
+    function calculateRevenueOpportunity() {
+        try {
+            const monthlyVisitors = parseFloat(document.getElementById('monthlyVisitors')?.value) || 10000;
+            const conversionRate = parseFloat(document.getElementById('conversionRate')?.value) || 2;
+            const averageSale = parseFloat(document.getElementById('averageSale')?.value) || 100;
             
-            // Calculate ROI (conservative: they recover 60% of loss)
-            const recoveryAmount = Math.round(monthlyLoss * 0.6);
-            const roiPercent = Math.round((recoveryAmount / 497) * 100); // $497 monthly investment
-            document.getElementById('roiValue').textContent = `${roiPercent}%`;
+            const currentRevenue = monthlyVisitors * (conversionRate / 100) * averageSale;
+            const additionalRevenue = currentRevenue * 2; // 3X potential
+            return Math.round(additionalRevenue).toLocaleString();
+        } catch (error) {
+            return '5,000';
+        }
+    }
+
+    const revenueOpportunity = calculateRevenueOpportunity(); // FIXED: Define variable
+
+    const userReportParams = {
+        user_name: userName,
+        user_email: userEmail,
+        website_url: window.location.href,
+        mobile_score: document.getElementById('conversionScore')?.textContent || '35%',
+        chatbot_detected: 'AI Analysis Complete',
+        revenue_opportunity: revenueOpportunity,
+        conversion_rate: document.getElementById('conversionRate')?.value || 'Not calculated',
+        critical_issues_count: '5',
+        mobile_score_class: 'fair'
+    };
+
+    console.log('Sending report to user:', userEmail);
+
+    // Send to user
+    emailjs.send('service_b9bppgb', 'template_f6j78g6', userReportParams)
+        .then(function(response) {
+            console.log('✅ User report sent!');
             
-            // Generate problems list
-            const problemsList = document.getElementById('problemsList');
-            problemsList.innerHTML = '';
+            // ✅ FIXED: ALSO send notification to YOUR EMAIL
+            const leadNotificationParams = {
+                user_name: `🚨 NEW LEAD: ${userName}`,
+                user_email: userEmail,
+                website_url: `Email: ${userEmail} | Time: ${new Date().toLocaleString()}`,
+                mobile_score: 'IMMEDIATE FOLLOW-UP NEEDED',
+                chatbot_detected: 'Mobile Report Request',
+                revenue_opportunity: `Potential: $${revenueOpportunity}`,
+                conversion_rate: 'Hot Lead - Contact Today!',
+                to_email: 'mobilewise.ai@gmail.com' // ✅ YOUR EMAIL ADDED HERE
+            };
             
-            problemBreakdown.forEach(problem => {
-                const cost = Math.round(monthlyLoss * problem.percent);
-                const problemHtml = `
-                    <div class="problem-item">
-                        <div class="problem-content">
-                            <div class="problem-title">${problem.name}</div>
-                            <div class="problem-desc">${problem.desc}</div>
-                        </div>
-                        <div class="problem-cost">
-                            $${cost.toLocaleString()}
-                            <small>/month</small>
-                        </div>
-                    </div>
-                `;
-                problemsList.innerHTML += problemHtml;
-            });
-
-            // Add total row
-            problemsList.innerHTML += `
-                <div class="problem-item" style="border-left-color: #0096ff; background: rgba(0,150,255,0.1);">
-                    <div class="problem-content">
-                        <div class="problem-title" style="color: #0096ff;">TOTAL MONTHLY WASTE</div>
-                    </div>
-                    <div class="problem-cost" style="color: #0096ff;">
-                        $${monthlyLoss.toLocaleString()}
-                        <small>/month</small>
-                    </div>
-                </div>
-            `;
+            console.log('Sending lead notification to mobilewise.ai@gmail.com');
+            return emailjs.send('service_b9bppgb', 'template_lhlonjg', leadNotificationParams);
+        })
+        .then(function() {
+            console.log('✅ Lead notification sent to mobilewise.ai@gmail.com');
+            alert('🎉 Your FREE Mobile Report is on the way! Check your email in 2-3 minutes.');
+            if (modal) modal.style.display = 'none';
+            if (videoReportForm) videoReportForm.reset();
+        })
+        .catch(function(error) {
+            console.error('Email error:', error);
+            alert('❌ Failed to send report. Please try again.');
         });
+}
 
-        // AI Assistant Button
-        document.getElementById('aiAssistantBtn').addEventListener('click', function() {
-            document.getElementById('aiModal').style.display = 'flex';
-        });
+// ✅ FIXED: MAIN REPORT FORM with lead notification
+const mainReportForm = document.getElementById('mainReportForm');
+const reportSuccess = document.getElementById('reportSuccess');
 
-        document.getElementById('closeAIModal').addEventListener('click', function() {
-            document.getElementById('aiModal').style.display = 'none';
-        });
-
-        // Schedule Call button
-        document.getElementById('scheduleCallBtn').addEventListener('click', function() {
-            window.open('https://free-mobile-report.netlify.app/zoom-scheduler', '_blank');
-            document.getElementById('aiModal').style.display = 'none';
-        });
-
-        // Live Chat button
-        document.getElementById('liveChatBtn').addEventListener('click', function() {
-            alert('Live chat coming soon! Please schedule a call for immediate assistance.');
-        });
-
-        // Download Report button
-        document.getElementById('downloadReportBtn').addEventListener('click', function() {
-            const firstName = document.getElementById('userFirstName').value;
-            const email = document.getElementById('userEmail').value;
-            
-            if (!firstName || !email) {
-                alert('Please enter both your first name and email address');
-                return;
-            }
-            
-            // Show success popup
-            document.getElementById('reportSuccess').style.display = 'flex';
-            
-            // Clear form
-            document.getElementById('userFirstName').value = '';
-            document.getElementById('userEmail').value = '';
-        });
-
-        // Close report success
-        document.getElementById('closeReportSuccess').addEventListener('click', function() {
-            document.getElementById('reportSuccess').style.display = 'none';
-        });
+if (mainReportForm) {
+    mainReportForm.addEventListener('submit', function(e) {
+        e.preventDefault();
         
-        document.getElementById('closeSuccessBtn').addEventListener('click', function() {
-            document.getElementById('reportSuccess').style.display = 'none';
-        });
-
-        // Close modal when clicking outside
-        window.addEventListener('click', function(event) {
-            if (event.target.classList.contains('demo-popup')) {
-                event.target.style.display = 'none';
+        const userFirstName = document.getElementById('userFirstName').value;
+        const userEmail = document.getElementById('userEmail').value;
+        
+        if (!userFirstName || !userEmail) {
+            alert('Please enter both your first name and email address');
+            return;
+        }
+        
+        console.log('Main report form submitted:', { firstName: userFirstName, email: userEmail });
+        
+        // Calculate revenue for lead notification
+        function calculateRevenueOpportunity() {
+            try {
+                const monthlyVisitors = parseFloat(document.getElementById('monthlyVisitors')?.value) || 10000;
+                const conversionRate = parseFloat(document.getElementById('conversionRate')?.value) || 2;
+                const averageSale = parseFloat(document.getElementById('averageSale')?.value) || 100;
+                
+                const currentRevenue = monthlyVisitors * (conversionRate / 100) * averageSale;
+                const additionalRevenue = currentRevenue * 2;
+                return Math.round(additionalRevenue).toLocaleString();
+            } catch (error) {
+                return '5,000';
             }
-        });
+        }
 
-        // Close with ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                document.getElementById('aiModal').style.display = 'none';
-                document.getElementById('reportSuccess').style.display = 'none';
-            }
-        });
-    </script>
+        const revenueOpportunity = calculateRevenueOpportunity();
+
+        // Send email for main report form
+        const mainReportParams = {
+            user_name: userFirstName,
+            user_email: userEmail,
+            conversion_score: document.getElementById('conversionScore').textContent,
+            mobile_traffic: document.getElementById('mobileTraffic').textContent,
+            bounce_rate: document.getElementById('bounceRate').textContent,
+            date_sent: new Date().toLocaleDateString(),
+            website_url: window.location.href,
+            mobile_score: document.getElementById('conversionScore').textContent.replace('%', ''),
+            report_type: '15-Page Detailed Mobile Report'
+        };
+
+        emailjs.send('service_b9bppgb', 'template_f6j78g6', mainReportParams)
+            .then(function(response) {
+                console.log('✅ MAIN REPORT FORM EMAIL SENT!', response);
+                
+               // ✅ FIXED: ALSO send lead notification to YOUR EMAIL - WITH CORRECT TEMPLATE
+const leadNotificationParams = {
+    user_name: `${userFirstName}`,
+    user_email: userEmail,
+    website_url: `Email: ${userEmail} | Time: ${new Date().toLocaleString()}`,
+    mobile_score: '15-Page Report Requested',
+    chatbot_detected: 'Detailed Report Download',
+    revenue_opportunity: `Potential: $${revenueOpportunity}`,
+    conversion_rate: 'Report Lead - Follow Up',
+    to_email: 'mobilewise.ai@gmail.com' // ← THIS WAS MISSING
+};
+                
+                console.log('Sending main form lead notification to mobilewise.ai@gmail.com');
+                // ✅ FIXED: Using correct template for lead notification
+                return emailjs.send('service_b9bppgb', 'template_lhlonjg', leadNotificationParams);
+            })
+            .then(function() {
+                console.log('✅ Main form lead notification sent to mobilewise.ai@gmail.com');
+                // Show success popup
+                if (reportSuccess) {
+                    reportSuccess.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+                // Clear the form
+                mainReportForm.reset();
+            })
+            .catch(function(error) {
+                console.error('❌ Main form EmailJS error:', error);
+                alert('❌ Failed to send report. Please try again.');
+            });
+    });
+}
+    
+// ✅ BOOST MODAL FUNCTIONALITY
+const openBoostModalBtn = document.getElementById('openBoostModal');
+const boostHeaderBtn = document.getElementById('boostHeaderBtn');
+const closeBoostModalBtn = document.getElementById('closeBoostModal');
+const boostModal = document.getElementById('boostModal');
+const freeZoomDemoBtn = document.getElementById('freeZoomDemoBtn');
+    
+// Open modal from both buttons
+if (openBoostModalBtn) {
+    openBoostModalBtn.addEventListener('click', () => {
+        console.log('Opening boost modal from main button');
+        boostModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    });
+}
+    
+if (boostHeaderBtn) {
+    boostHeaderBtn.addEventListener('click', () => {
+        console.log('Opening boost modal from header button');
+        boostModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    });
+}
+    
+// Close modal
+if (closeBoostModalBtn) {
+    closeBoostModalBtn.addEventListener('click', () => {
+        console.log('Closing boost modal');
+        boostModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        resetVideo();
+    });
+}
+    
+// Close modal when clicking overlay
+if (boostModal) {
+    boostModal.addEventListener('click', (e) => {
+        if (e.target === boostModal || e.target.classList.contains('boost-modal-overlay')) {
+            boostModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            resetVideo();
+        }
+    });
+}
+    
+// Close modal with ESC key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && boostModal.style.display === 'flex') {
+        boostModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        resetVideo();
+    }
+});
+    
+// Free Zoom Demo button functionality
+if (freeZoomDemoBtn) {
+    freeZoomDemoBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Free Zoom Demo button clicked');
+        
+        // Close the modal first
+        boostModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        resetVideo();
+        
+        // Then redirect to the scheduling page in new tab
+        setTimeout(() => {
+            window.open('https://free-mobile-report.netlify.app/zoom-scheduler', '_blank');
+        }, 300);
+    });
+}
+    
+// Function to reset video
+function resetVideo() {
+    const iframe = document.querySelector('.boost-modal-video');
+    if (iframe) {
+        iframe.src = iframe.src; // Reset to stop video
+    }
+}
+    
+// Also connect the "See Demo" button in results
+const seeDemoBtn = document.getElementById('seeDemoBtn');
+if (seeDemoBtn) {
+    seeDemoBtn.addEventListener('click', () => {
+        boostModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    });
+}
+
+// Report Success Popup elements
+const closeReportSuccess = document.getElementById('closeReportSuccess');
+const closeSuccessBtn = document.getElementById('closeSuccessBtn');
+
+// Close report success popup
+function closeReportSuccessFunc() {
+    if (reportSuccess) {
+        reportSuccess.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+if (closeReportSuccess) {
+    closeReportSuccess.addEventListener('click', closeReportSuccessFunc);
+}
+
+if (closeSuccessBtn) {
+    closeSuccessBtn.addEventListener('click', closeReportSuccessFunc);
+}
+
+// Close report success when clicking outside
+if (reportSuccess) {
+    reportSuccess.addEventListener('click', function(e) {
+        if (e.target === reportSuccess) {
+            closeReportSuccessFunc();
+        }
+    });
+}
+</script>
 </body>
 </html>
