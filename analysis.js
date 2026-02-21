@@ -1,20 +1,53 @@
-// analysis.js - CLEAN VERSION
+
+// analysis.js - FIXED VERSION
 // Get parameters
 const urlParams = new URLSearchParams(window.location.search);
 const budgetRange = urlParams.get('budget') || localStorage.getItem('ppcBudget') || '10000';
 const scannedUrl = urlParams.get('url') || localStorage.getItem('scannedUrl') || 'your website';
 
-// Convert range to midpoint value
+// Debug - let's see what's coming in
+console.log('Budget range from URL:', budgetRange);
+
+// Convert range to midpoint value - FIXED MAPPING
 function getMidpointFromRange(range) {
+    // Handle if it comes as a string with dash (like "2000-5000")
+    let rangeValue = range;
+    if (range && range.includes('-')) {
+        rangeValue = range.split('-')[0]; // Take the first number
+    }
+    
     const ranges = {
         '2000': 3500,    // $2k-5k = $3,500
         '5000': 7500,    // $5k-10k = $7,500
         '10000': 15000,  // $10k-20k = $15,000
         '20000': 35000,  // $20k-50k = $35,000
-        '50000': 60000   // $50k+ = $60,000 (conservative)
+        '50000': 60000   // $50k+ = $60,000
     };
-    return ranges[range] || parseInt(range) || 7500;
+    
+    // Try direct lookup first
+    if (ranges[rangeValue]) {
+        return ranges[rangeValue];
+    }
+    
+    // Try parsing as number
+    const numValue = parseInt(rangeValue);
+    if (!isNaN(numValue)) {
+        // Find closest range
+        if (numValue <= 3500) return 3500;
+        if (numValue <= 7500) return 7500;
+        if (numValue <= 15000) return 15000;
+        if (numValue <= 35000) return 35000;
+        return 60000;
+    }
+    
+    // Default fallback
+    return 7500;
 }
+
+// Debug output
+console.log('Calculated PPC Budget:', ppcBudget);
+
+// Rest of your code stays exactly the same...
 
 const ppcBudget = getMidpointFromRange(budgetRange);
 
