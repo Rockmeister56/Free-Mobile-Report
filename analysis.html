@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analyzing Your Mobile Site - Free Mobile Audit</title>
+    <title>Analyzing Your PPC Campaign - PPC Audit Report</title>
     <style>
         /* Add your background image first */
         body.analysis-page {
@@ -52,7 +52,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Rest of your existing analysis page styles */
+        /* Top and Bottom Bars */
         .top-bar, .bottom-bar {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             height: 10px;
@@ -73,21 +73,52 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             text-align: center;
-            max-width: 600px;
+            max-width: 700px;
             width: 100%;
             backdrop-filter: blur(10px);
         }
 
+        /* PPC Header Section */
+        .ppc-header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .ppc-badge {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .ppc-amount {
+            font-size: 2.5em;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
         .analyzing-header h1 {
             color: #2c3e50;
-            font-size: 2.5em;
+            font-size: 2.2em;
             margin-bottom: 10px;
         }
 
         .subtitle {
             color: #7f8c8d;
-            font-size: 1.2em;
+            font-size: 1.1em;
             margin-bottom: 30px;
+        }
+
+        .url-display {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 1.1em;
+            color: #2c3e50;
+            margin: 20px 0;
         }
 
         .pulse-dots {
@@ -149,23 +180,65 @@
         .progress-text {
             color: #2c3e50;
             font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        /* Live Pain Metrics */
+        .pain-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-card.warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .metric-card.danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+        }
+
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
         }
 
         .analysis-steps {
             text-align: left;
             margin: 30px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
         }
 
         .step {
             display: flex;
             align-items: center;
-            margin: 20px 0;
+            margin: 15px 0;
             opacity: 0.5;
             transition: all 0.5s ease;
+            padding: 8px;
+            border-radius: 5px;
         }
 
         .step.active {
             opacity: 1;
+            background: rgba(52, 152, 219, 0.1);
         }
 
         .step.completed {
@@ -182,6 +255,7 @@
             justify-content: center;
             margin-right: 15px;
             font-weight: bold;
+            flex-shrink: 0;
         }
 
         .step.completed .step-icon {
@@ -195,10 +269,40 @@
             animation: spin 2s linear infinite;
         }
 
+        .step.ppc-step .step-text {
+            font-weight: 600;
+        }
+
+        .step.ppc-step .step-text small {
+            display: block;
+            font-size: 0.8em;
+            color: #e74c3c;
+            font-weight: normal;
+        }
+
         .status-message {
             color: #7f8c8d;
             font-style: italic;
             margin-top: 30px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .loss-alert {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
     </style>
 </head>
@@ -206,7 +310,7 @@
     <!-- Preloader -->
     <div id="preloader">
         <div class="preloader-spinner"></div>
-        <div class="preloader-text">Initializing Mobile Analysis...</div>
+        <div class="preloader-text" id="preloaderText">Initializing PPC Analysis...</div>
     </div>
 
     <!-- Blue Top Bar -->
@@ -215,14 +319,38 @@
     <div class="analysis-container">
         <!-- Main Analysis Content -->
         <div class="analysis-content">
+            <!-- PPC Header (dynamic) -->
+            <div class="ppc-header" id="ppcHeader">
+                <div class="ppc-badge">💰 ANALYZING YOUR PPC BUDGET</div>
+                <div class="ppc-amount" id="ppcAmount">$10,000</div>
+                <div id="ppcFrequency">per month</div>
+            </div>
+
             <div class="analyzing-header">
                 <div class="pulse-dots">
                     <span class="dot"></span>
                     <span class="dot"></span>
                     <span class="dot"></span>
                 </div>
-                <h1>ANALYZING YOUR MOBILE SITE<span class="blinking-cursor">_</span></h1>
-                <p class="subtitle">Our AI is scanning your website for conversion opportunities</p>
+                <h1>SCANNING FOR PPC LEAKS<span class="blinking-cursor">_</span></h1>
+                <p class="subtitle">Our AI is analyzing your site for mobile conversion killers</p>
+                <div class="url-display" id="urlDisplay">Loading...</div>
+            </div>
+
+            <!-- Live Pain Metrics -->
+            <div class="pain-metrics" id="painMetrics">
+                <div class="metric-card">
+                    <div class="metric-value" id="cpcValue">$20</div>
+                    <div class="metric-label">Avg Cost Per Click</div>
+                </div>
+                <div class="metric-card warning">
+                    <div class="metric-value" id="bounceRate">85%</div>
+                    <div class="metric-label">Mobile Bounce Rate</div>
+                </div>
+                <div class="metric-card danger">
+                    <div class="metric-value" id="monthlyLoss">$0</div>
+                    <div class="metric-label">Est. Monthly Loss</div>
+                </div>
             </div>
 
             <!-- Progress Section -->
@@ -234,38 +362,111 @@
                     <div class="progress-text" id="progressText">0% Complete</div>
                 </div>
 
-                <!-- Analysis Steps - ALL START INCOMPLETE -->
-                <div class="analysis-steps">
+                <!-- Analysis Steps - ALL 12 STEPS -->
+                <div class="analysis-steps" id="analysisSteps">
+                    <!-- Step 1 -->
                     <div class="step" id="step1">
                         <span class="step-icon">○</span>
                         <span class="step-text">Loading website content</span>
                     </div>
+                    
+                    <!-- Step 2 -->
                     <div class="step" id="step2">
                         <span class="step-icon">○</span>
                         <span class="step-text">Simulating mobile experience</span>
                     </div>
+                    
+                    <!-- Step 3 -->
                     <div class="step" id="step3">
                         <span class="step-icon">○</span>
                         <span class="step-text">Checking conversion elements</span>
                     </div>
+                    
+                    <!-- Step 4 -->
                     <div class="step" id="step4">
                         <span class="step-icon">○</span>
                         <span class="step-text">Scanning for AI assistants</span>
                     </div>
-                    <div class="step" id="step5">
+                    
+                    <!-- Step 5 - PPC Step -->
+                    <div class="step ppc-step" id="step5">
                         <span class="step-icon">○</span>
-                        <span class="step-text">Analyzing call-to-action buttons</span>
+                        <span class="step-text">
+                            Calculating PPC wasted spend
+                            <small id="wasteCalc">Based on your $10k budget</small>
+                        </span>
                     </div>
-                    <div class="step" id="step6">
+                    
+                    <!-- Step 6 - PPC Step -->
+                    <div class="step ppc-step" id="step6">
                         <span class="step-icon">○</span>
-                        <span class="step-text">Generating conversion score</span>
+                        <span class="step-text">
+                            Analyzing landing page alignment
+                            <small>Checking ad-to-page match</small>
+                        </span>
+                    </div>
+                    
+                    <!-- Step 7 - PPC Step -->
+                    <div class="step ppc-step" id="step7">
+                        <span class="step-icon">○</span>
+                        <span class="step-text">
+                            Form field friction analysis
+                            <small>Counting fields that kill conversions</small>
+                        </span>
+                    </div>
+                    
+                    <!-- Step 8 - PPC Step -->
+                    <div class="step ppc-step" id="step8">
+                        <span class="step-icon">○</span>
+                        <span class="step-text">
+                            Mobile PPC conversion audit
+                            <small>85% abandonment rate expected</small>
+                        </span>
+                    </div>
+                    
+                    <!-- Step 9 - PPC Step -->
+                    <div class="step ppc-step" id="step9">
+                        <span class="step-icon">○</span>
+                        <span class="step-text">
+                            Quality Score estimation
+                            <small>Can reduce CPC by 43%</small>
+                        </span>
+                    </div>
+                    
+                    <!-- Step 10 - PPC Step -->
+                    <div class="step ppc-step" id="step10">
+                        <span class="step-icon">○</span>
+                        <span class="step-text">
+                            Industry benchmark comparison
+                            <small>vs 8% industry avg conversion</small>
+                        </span>
+                    </div>
+                    
+                    <!-- Step 11 - PPC Step -->
+                    <div class="step ppc-step" id="step11">
+                        <span class="step-icon">○</span>
+                        <span class="step-text">
+                            Monthly loss calculation
+                            <small id="lossCalc">Calculating...</small>
+                        </span>
+                    </div>
+                    
+                    <!-- Step 12 - Final Step -->
+                    <div class="step" id="step12">
+                        <span class="step-icon">○</span>
+                        <span class="step-text">Generating PPC loss report</span>
                     </div>
                 </div>
             </div>
 
+            <!-- Loss Alert (appears later) -->
+            <div class="loss-alert" id="lossAlert" style="display: none;">
+                ⚠️ WARNING: Based on your budget, you could be losing <span id="alertAmount">$6,250</span> monthly!
+            </div>
+
             <!-- Status Message -->
-            <div class="status-message">
-                <p>"This usually takes 25-30 seconds..."</p>
+            <div class="status-message" id="statusMessage">
+                <p>"Analyzing your PPC campaign performance..."</p>
             </div>
         </div>
     </div>
@@ -273,125 +474,6 @@
     <!-- Blue Bottom Bar -->
     <div class="bottom-bar"></div>
 
-    <script>
-        // Preloader - Show for 2 seconds then start analysis
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                document.getElementById('preloader').style.display = 'none';
-                // Start the analysis progress after preloader
-                new AnalysisProgress();
-            }, 2000);
-        });
-
-        // Updated Analysis Progress System - ALL STEPS START FRESH
-        class AnalysisProgress {
-            constructor() {
-                this.progressFill = document.getElementById('progressFill');
-                this.progressText = document.getElementById('progressText');
-                this.steps = document.querySelectorAll('.step');
-                this.currentStep = 0; // Start from the VERY beginning
-                this.progress = 0;
-                this.init();
-            }
-
-            init() {
-                // Start all steps as incomplete
-                this.resetAllSteps();
-                // Start progress after a brief delay
-                setTimeout(() => {
-                    this.startProgress();
-                }, 500);
-            }
-
-            resetAllSteps() {
-                // Reset all steps to incomplete state
-                this.steps.forEach((step, index) => {
-                    step.classList.remove('completed', 'active');
-                    const icon = step.querySelector('.step-icon');
-                    icon.textContent = '○';
-                    icon.style.animation = 'none';
-                });
-            }
-
-            startProgress() {
-                const duration = 25000; // 25 seconds total
-                const interval = 100; // Update every 100ms
-                const increment = (interval / duration) * 100;
-                
-                const progressInterval = setInterval(() => {
-                    this.progress += increment;
-                    
-                    if (this.progress >= 100) {
-                        this.progress = 100;
-                        clearInterval(progressInterval);
-                        this.completeAnalysis();
-                    }
-                    
-                    this.updateProgress();
-                }, interval);
-            }
-
-            updateProgress() {
-                this.progressFill.style.width = `${this.progress}%`;
-                this.progressText.textContent = `${Math.round(this.progress)}% Complete`;
-                
-                // Update steps based on progress - ALL STEPS START FRESH
-                if (this.progress >= 5 && this.currentStep === 0) {
-                    this.completeStep(0);
-                    this.activateStep(1);
-                    this.currentStep = 1;
-                } else if (this.progress >= 20 && this.currentStep === 1) {
-                    this.completeStep(1);
-                    this.activateStep(2);
-                    this.currentStep = 2;
-                } else if (this.progress >= 35 && this.currentStep === 2) {
-                    this.completeStep(2);
-                    this.activateStep(3);
-                    this.currentStep = 3;
-                } else if (this.progress >= 55 && this.currentStep === 3) {
-                    this.completeStep(3);
-                    this.activateStep(4);
-                    this.currentStep = 4;
-                } else if (this.progress >= 75 && this.currentStep === 4) {
-                    this.completeStep(4);
-                    this.activateStep(5);
-                    this.currentStep = 5;
-                } else if (this.progress >= 90 && this.currentStep === 5) {
-                    this.completeStep(5);
-                }
-            }
-
-            completeStep(stepIndex) {
-                const step = this.steps[stepIndex];
-                step.classList.remove('active');
-                step.classList.add('completed');
-                
-                const icon = step.querySelector('.step-icon');
-                icon.textContent = '✓';
-                icon.style.animation = 'none';
-            }
-
-            activateStep(stepIndex) {
-                const step = this.steps[stepIndex];
-                step.classList.add('active');
-                
-                const icon = step.querySelector('.step-icon');
-                icon.textContent = '⟳';
-                icon.style.animation = 'spin 2s linear infinite';
-            }
-
-            completeAnalysis() {
-                // Final completion animation
-                this.progressFill.style.background = 'linear-gradient(90deg, #00cc66, #00ff88)';
-                this.progressText.textContent = '100% Complete - Analysis Ready!';
-                this.progressText.style.color = '#00ff88';
-                
-                // Redirect to calculator page after short delay
-                setTimeout(() => {
-                    window.location.href = 'calculator-enhanced.html';
-                }, 1500);
-            }
-        }
-    </script>
+    <script src="analysis.js"></script>
 </body>
 </html>
