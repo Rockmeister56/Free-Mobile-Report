@@ -186,50 +186,65 @@
     </footer>
 
     <script>
-        // Updated JavaScript to handle PPC budget
-        document.addEventListener('DOMContentLoaded', function() {
-            const analyzeBtn = document.getElementById('analyzeBtn');
-            const websiteUrl = document.getElementById('websiteUrl');
-            const ppcBudget = document.getElementById('ppcBudget');
-            const exactBudget = document.getElementById('exactBudget');
+    document.addEventListener('DOMContentLoaded', function() {
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const websiteUrl = document.getElementById('websiteUrl');
+        const ppcBudget = document.getElementById('ppcBudget');
+        const exactBudget = document.getElementById('exactBudget');
+        
+        // Clear any old data
+        localStorage.removeItem('ppcBudget');
+        localStorage.removeItem('scannedUrl');
+        
+        analyzeBtn.addEventListener('click', function() {
+            // Validate URL
+            let url = websiteUrl.value.trim();
+            if (!url) {
+                alert('Please enter your website URL');
+                return;
+            }
             
-            // Clear any old data
-            localStorage.removeItem('ppcBudget');
-            localStorage.removeItem('scannedUrl');
+            // Format URL if needed
+            if (!url.startsWith('http')) {
+                url = 'https://' + url;
+            }
             
-            analyzeBtn.addEventListener('click', function() {
-                // Validate URL
-                let url = websiteUrl.value.trim();
-                if (!url) {
-                    alert('Please enter your website URL');
-                    return;
-                }
-                
-                // Format URL if needed
-                if (!url.startsWith('http')) {
-                    url = 'https://' + url;
-                }
-                
-                // Get budget (exact input overrides dropdown)
-                let budget = exactBudget.value || ppcBudget.value || '10000';
-                
-                // Store in localStorage for the journey
-                localStorage.setItem('ppcBudget', budget);
-                localStorage.setItem('scannedUrl', url);
-                
-                // Pass both in URL for redundancy
-                const encodedUrl = encodeURIComponent(url);
-                window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
-            });
+            // Get budget - IMPORTANT: exactBudget OVERRIVES dropdown
+            let budget = '';
             
-            // Allow Enter key to submit
-            websiteUrl.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    analyzeBtn.click();
-                }
-            });
+            // First check if they entered an exact amount
+            if (exactBudget && exactBudget.value && exactBudget.value.trim() !== '') {
+                budget = exactBudget.value.trim();
+                console.log('Using exact budget:', budget);
+            } 
+            // Otherwise use dropdown
+            else if (ppcBudget && ppcBudget.value && ppcBudget.value !== '') {
+                budget = ppcBudget.value;
+                console.log('Using dropdown budget:', budget);
+            }
+            // Fallback to default
+            else {
+                budget = '5000'; // Default to $5k-10k range
+                console.log('Using default budget:', budget);
+            }
+            
+            // Store in localStorage for the journey
+            localStorage.setItem('ppcBudget', budget);
+            localStorage.setItem('scannedUrl', url);
+            
+            // Pass in URL for redundancy
+            const encodedUrl = encodeURIComponent(url);
+            window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
         });
-    </script>
+        
+        // Allow Enter key to submit
+        websiteUrl.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                analyzeBtn.click();
+            }
+        });
+    });
+</script>
     <script src="app.js"></script>
 </body>
 </html>
