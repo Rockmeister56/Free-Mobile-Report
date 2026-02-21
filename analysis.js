@@ -1,20 +1,24 @@
+// analysis.js - COMPLETE FIXED VERSION
+// This file powers the PPC Audit analysis page
 
-// analysis.js - FIXED VERSION
-// Get parameters
+// Get parameters from URL or localStorage
 const urlParams = new URLSearchParams(window.location.search);
 const budgetRange = urlParams.get('budget') || localStorage.getItem('ppcBudget') || '10000';
 const scannedUrl = urlParams.get('url') || localStorage.getItem('scannedUrl') || 'your website';
 
-// Debug - let's see what's coming in
-console.log('Budget range from URL:', budgetRange);
+// Debug - see what's coming in (remove after testing)
+console.log('Budget range received:', budgetRange);
 
-// Convert range to midpoint value - FIXED MAPPING
+// Convert range to midpoint value - FIXED version
 function getMidpointFromRange(range) {
     // Handle if it comes as a string with dash (like "2000-5000")
     let rangeValue = range;
     if (range && range.includes('-')) {
         rangeValue = range.split('-')[0]; // Take the first number
     }
+    
+    // Clean the value - remove any non-numeric characters
+    rangeValue = String(rangeValue).replace(/[^0-9]/g, '');
     
     const ranges = {
         '2000': 3500,    // $2k-5k = $3,500
@@ -26,6 +30,7 @@ function getMidpointFromRange(range) {
     
     // Try direct lookup first
     if (ranges[rangeValue]) {
+        console.log('Found in ranges:', ranges[rangeValue]);
         return ranges[rangeValue];
     }
     
@@ -33,23 +38,37 @@ function getMidpointFromRange(range) {
     const numValue = parseInt(rangeValue);
     if (!isNaN(numValue)) {
         // Find closest range
-        if (numValue <= 3500) return 3500;
-        if (numValue <= 7500) return 7500;
-        if (numValue <= 15000) return 15000;
-        if (numValue <= 35000) return 35000;
+        if (numValue <= 3500) {
+            console.log('Closest range: 3500');
+            return 3500;
+        }
+        if (numValue <= 7500) {
+            console.log('Closest range: 7500');
+            return 7500;
+        }
+        if (numValue <= 15000) {
+            console.log('Closest range: 15000');
+            return 15000;
+        }
+        if (numValue <= 35000) {
+            console.log('Closest range: 35000');
+            return 35000;
+        }
+        console.log('Default high range: 60000');
         return 60000;
     }
     
     // Default fallback
+    console.log('Using default: 7500');
     return 7500;
 }
 
-// Debug output
-console.log('Calculated PPC Budget:', ppcBudget);
-
-// Rest of your code stays exactly the same...
-
+// Calculate the budget and loss
 const ppcBudget = getMidpointFromRange(budgetRange);
+const monthlyLoss = Math.round(ppcBudget * 0.625); // 62.5% waste rate
+
+console.log('Final PPC Budget:', ppcBudget);
+console.log('Monthly Loss:', monthlyLoss);
 
 // Mortgage PPC Constants
 const MORTGAGE_METRICS = {
@@ -58,38 +77,61 @@ const MORTGAGE_METRICS = {
     industryConversion: 0.08
 };
 
-// Calculate loss
-const monthlyLoss = Math.round(ppcBudget * 0.625); // 62.5% waste rate
-
-// Preloader
-document.addEventListener('DOMContentLoaded', function() {
-    updateDynamicContent();
-    setTimeout(function() {
-        document.getElementById('preloader').style.display = 'none';
-        new AnalysisProgress();
-    }, 2000);
-});
-
+// Update all dynamic content on the page
 function updateDynamicContent() {
-    document.getElementById('budgetAmount').textContent = `$${ppcBudget.toLocaleString()}`;
-    document.getElementById('urlDisplay').textContent = `Scanning: ${scannedUrl}`;
-    document.getElementById('wasteCalc').textContent = `Based on $${ppcBudget.toLocaleString()} budget`;
-    document.getElementById('lossCalc').textContent = `$${monthlyLoss.toLocaleString()} estimated loss`;
-    document.getElementById('alertAmount').textContent = `$${monthlyLoss.toLocaleString()}`;
-    document.getElementById('preloaderText').textContent = `Analyzing $${ppcBudget.toLocaleString()} PPC Budget...`;
+    // Update budget display
+    const budgetElement = document.getElementById('budgetAmount');
+    if (budgetElement) {
+        budgetElement.textContent = `$${ppcBudget.toLocaleString()}`;
+    }
+    
+    // Update URL display
+    const urlElement = document.getElementById('urlDisplay');
+    if (urlElement) {
+        urlElement.textContent = `Scanning: ${scannedUrl}`;
+    }
+    
+    // Update waste calculation text
+    const wasteCalc = document.getElementById('wasteCalc');
+    if (wasteCalc) {
+        wasteCalc.textContent = `Based on $${ppcBudget.toLocaleString()} budget`;
+    }
+    
+    // Update loss calculation text
+    const lossCalc = document.getElementById('lossCalc');
+    if (lossCalc) {
+        lossCalc.textContent = `$${monthlyLoss.toLocaleString()} estimated loss`;
+    }
+    
+    // Update alert amount
+    const alertAmount = document.getElementById('alertAmount');
+    if (alertAmount) {
+        alertAmount.textContent = `$${monthlyLoss.toLocaleString()}`;
+    }
+    
+    // Update preloader text
+    const preloaderText = document.getElementById('preloaderText');
+    if (preloaderText) {
+        preloaderText.textContent = `Analyzing $${ppcBudget.toLocaleString()} PPC Budget...`;
+    }
 }
 
-// Analysis Progress Class (same as before but cleaner)
+// Analysis Progress Class
 class AnalysisProgress {
     constructor() {
+        console.log('AnalysisProgress started');
+        
+        // Get all the elements we need
         this.progressFill = document.getElementById('progressFill');
         this.progressText = document.getElementById('progressText');
         this.steps = document.querySelectorAll('.step');
         this.statusMessage = document.getElementById('statusMessage');
         this.lossAlert = document.getElementById('lossAlert');
+        
         this.currentStep = 0;
         this.progress = 0;
         
+        // Status messages that change during analysis
         this.statusMessages = [
             "Loading your website...",
             "Checking mobile responsiveness...",
@@ -105,11 +147,17 @@ class AnalysisProgress {
             "Generating your report..."
         ];
         
+        // Start the progress
         this.init();
     }
 
     init() {
+        console.log('Initializing progress');
+        
+        // Reset all steps to incomplete
         this.resetAllSteps();
+        
+        // Start progress after a brief delay
         setTimeout(() => {
             this.startProgress();
         }, 500);
@@ -119,14 +167,18 @@ class AnalysisProgress {
         this.steps.forEach((step) => {
             step.classList.remove('completed', 'active');
             const icon = step.querySelector('.step-icon');
-            icon.textContent = '○';
-            icon.style.animation = 'none';
+            if (icon) {
+                icon.textContent = '○';
+                icon.style.animation = 'none';
+            }
         });
     }
 
     startProgress() {
-        const duration = 25000;
-        const interval = 100;
+        console.log('Starting progress');
+        
+        const duration = 25000; // 25 seconds total
+        const interval = 100; // Update every 100ms
         const increment = (interval / duration) * 100;
         
         const progressInterval = setInterval(() => {
@@ -143,19 +195,29 @@ class AnalysisProgress {
     }
 
     updateProgress() {
-        this.progressFill.style.width = `${this.progress}%`;
-        this.progressText.textContent = `${Math.round(this.progress)}% Complete`;
+        // Update progress bar
+        if (this.progressFill) {
+            this.progressFill.style.width = `${this.progress}%`;
+        }
         
+        if (this.progressText) {
+            this.progressText.textContent = `${Math.round(this.progress)}% Complete`;
+        }
+        
+        // Calculate current step (0-11 for 12 steps)
         const stepIndex = Math.floor((this.progress / 100) * 12);
         
-        if (stepIndex < this.statusMessages.length) {
+        // Update status message
+        if (this.statusMessage && stepIndex < this.statusMessages.length) {
             this.statusMessage.innerHTML = `<p>"${this.statusMessages[stepIndex]}"</p>`;
         }
         
-        if (this.progress >= 50 && this.lossAlert.style.display === 'none') {
+        // Show loss alert at 50% progress
+        if (this.lossAlert && this.progress >= 50 && this.lossAlert.style.display === 'none') {
             this.lossAlert.style.display = 'block';
         }
         
+        // Update steps
         for (let i = 0; i <= stepIndex; i++) {
             if (i < stepIndex) {
                 this.completeStep(i);
@@ -173,8 +235,10 @@ class AnalysisProgress {
         step.classList.add('completed');
         
         const icon = step.querySelector('.step-icon');
-        icon.textContent = '✓';
-        icon.style.animation = 'none';
+        if (icon) {
+            icon.textContent = '✓';
+            icon.style.animation = 'none';
+        }
     }
 
     activateStep(stepIndex) {
@@ -184,25 +248,61 @@ class AnalysisProgress {
         step.classList.add('active');
         
         const icon = step.querySelector('.step-icon');
-        icon.textContent = '⟳';
-        icon.style.animation = 'spin 2s linear infinite';
+        if (icon) {
+            icon.textContent = '⟳';
+            icon.style.animation = 'spin 2s linear infinite';
+        }
     }
 
     completeAnalysis() {
-        this.progressFill.style.background = 'linear-gradient(90deg, #00cc66, #00ff88)';
-        this.progressText.textContent = '100% Complete - Report Ready!';
-        this.progressText.style.color = '#00cc66';
+        console.log('Analysis complete');
         
-        this.statusMessage.innerHTML = '<p>"✅ Analysis complete! Redirecting..."</p>';
-        this.lossAlert.style.display = 'block';
+        // Update progress bar for completion
+        if (this.progressFill) {
+            this.progressFill.style.background = 'linear-gradient(90deg, #00cc66, #00ff88)';
+        }
         
-        // Store data
+        if (this.progressText) {
+            this.progressText.textContent = '100% Complete - Report Ready!';
+            this.progressText.style.color = '#00cc66';
+        }
+        
+        if (this.statusMessage) {
+            this.statusMessage.innerHTML = '<p>"✅ Analysis complete! Redirecting to your PPC audit report..."</p>';
+        }
+        
+        if (this.lossAlert) {
+            this.lossAlert.style.display = 'block';
+        }
+        
+        // Store all data for results page
         localStorage.setItem('lastScannedUrl', scannedUrl);
         localStorage.setItem('ppcBudget', ppcBudget);
         localStorage.setItem('monthlyLoss', monthlyLoss);
         
+        // Redirect to results page
         setTimeout(() => {
             window.location.href = `calculator-enhanced.html?url=${encodeURIComponent(scannedUrl)}&budget=${ppcBudget}&loss=${monthlyLoss}`;
         }, 2000);
     }
 }
+
+// Initialize everything when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Page loaded, updating content');
+    
+    // First update all the dynamic content
+    updateDynamicContent();
+    
+    // Hide preloader and start analysis after 2 seconds
+    setTimeout(function() {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+            preloader.style.display = 'none';
+        }
+        
+        // Start the analysis progress
+        console.log('Starting AnalysisProgress');
+        new AnalysisProgress();
+    }, 2000);
+});
