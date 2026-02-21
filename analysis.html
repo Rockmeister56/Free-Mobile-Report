@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analyzing Your PPC Campaign - PPC Audit Report</title>
     <style>
-        /* Add your background image first */
+        /* Background image */
         body.analysis-page {
             background-image: url('https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1760935628784_test-page-bg.jpg');
             background-size: cover;
@@ -16,14 +16,14 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Preloader Styles */
+        /* Preloader */
         #preloader {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255,255,255,0.95);
+            background: rgba(0,0,0,0.9);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -42,7 +42,7 @@
         }
 
         .preloader-text {
-            color: #2c3e50;
+            color: white;
             font-size: 1.2em;
             font-weight: 600;
         }
@@ -67,65 +67,91 @@
             padding: 40px 20px;
         }
 
+        /* MAIN CHANGE: Black background with 70% transparency */
         .analysis-content {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 50px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             text-align: center;
             max-width: 700px;
             width: 100%;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(5px);
+            color: white;
         }
 
-        /* PPC Header Section */
-        .ppc-header {
-            background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+        /* Budget Banner - Simple black */
+        .budget-banner {
+            background: #000000;
             color: white;
-            padding: 20px;
+            padding: 15px 20px;
             border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+            border-left: 4px solid #3498db;
+        }
+
+        .budget-label {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+
+        .budget-amount {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .budget-amount span {
+            color: #3498db;
+            font-weight: 400;
+            font-size: 0.5em;
+        }
+
+        /* Header Section */
+        .analyzing-header {
             margin-bottom: 30px;
         }
 
-        .ppc-badge {
-            font-size: 1.2em;
-            font-weight: 700;
-            margin-bottom: 10px;
+        .blue-banner {
+            background: #3498db;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
-        .ppc-amount {
-            font-size: 2.5em;
-            font-weight: 800;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .analyzing-header h1 {
-            color: #2c3e50;
-            font-size: 2.2em;
-            margin-bottom: 10px;
+        .blue-banner h1 {
+            margin: 0;
+            font-size: 2em;
+            font-weight: 600;
         }
 
         .subtitle {
-            color: #7f8c8d;
+            color: #ccc;
             font-size: 1.1em;
-            margin-bottom: 30px;
+            margin: 15px 0;
         }
 
         .url-display {
-            background: #f8f9fa;
-            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
             border-radius: 5px;
             font-family: monospace;
             font-size: 1.1em;
-            color: #2c3e50;
-            margin: 20px 0;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+            margin-top: 15px;
         }
 
         .pulse-dots {
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .dot {
@@ -154,17 +180,17 @@
         }
 
         .progress-section {
-            margin: 40px 0;
+            margin: 30px 0;
         }
 
         .progress-bar-container {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .progress-bar {
             width: 100%;
             height: 20px;
-            background: #ecf0f1;
+            background: rgba(255,255,255,0.2);
             border-radius: 10px;
             overflow: hidden;
             margin-bottom: 10px;
@@ -178,46 +204,12 @@
         }
 
         .progress-text {
-            color: #2c3e50;
+            color: white;
             font-weight: 600;
             font-size: 1.1em;
         }
 
-        /* Live Pain Metrics */
-        .pain-metrics {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 30px 0;
-        }
-
-        .metric-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .metric-card.warning {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .metric-card.danger {
-            background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
-        }
-
-        .metric-value {
-            font-size: 1.8em;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .metric-label {
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
-
+        /* Analysis Steps - Clean and readable */
         .analysis-steps {
             text-align: left;
             margin: 30px 0;
@@ -229,16 +221,17 @@
         .step {
             display: flex;
             align-items: center;
-            margin: 15px 0;
+            margin: 12px 0;
             opacity: 0.5;
             transition: all 0.5s ease;
-            padding: 8px;
+            padding: 8px 12px;
             border-radius: 5px;
+            color: #fff;
         }
 
         .step.active {
             opacity: 1;
-            background: rgba(52, 152, 219, 0.1);
+            background: rgba(52, 152, 219, 0.2);
         }
 
         .step.completed {
@@ -248,7 +241,7 @@
         .step-icon {
             width: 30px;
             height: 30px;
-            background: #ecf0f1;
+            background: rgba(255,255,255,0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -256,6 +249,7 @@
             margin-right: 15px;
             font-weight: bold;
             flex-shrink: 0;
+            color: white;
         }
 
         .step.completed .step-icon {
@@ -269,40 +263,36 @@
             animation: spin 2s linear infinite;
         }
 
-        .step.ppc-step .step-text {
-            font-weight: 600;
+        .step-text {
+            color: white;
         }
 
-        .step.ppc-step .step-text small {
+        .step-text small {
             display: block;
             font-size: 0.8em;
-            color: #e74c3c;
+            color: #3498db;
             font-weight: normal;
         }
 
         .status-message {
-            color: #7f8c8d;
+            color: #ccc;
             font-style: italic;
-            margin-top: 30px;
+            margin-top: 20px;
             padding: 15px;
-            background: #f8f9fa;
+            background: rgba(0,0,0,0.3);
             border-radius: 8px;
+            border-left: 4px solid #3498db;
         }
 
         .loss-alert {
-            background: #fff3cd;
-            border: 1px solid #ffeeba;
-            color: #856404;
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+            color: #fff;
             padding: 15px;
             border-radius: 8px;
             margin: 20px 0;
             font-weight: 600;
             animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
         }
     </style>
 </head>
@@ -319,38 +309,19 @@
     <div class="analysis-container">
         <!-- Main Analysis Content -->
         <div class="analysis-content">
-            <!-- PPC Header (dynamic) -->
-            <div class="ppc-header" id="ppcHeader">
-                <div class="ppc-badge">💰 ANALYZING YOUR PPC BUDGET</div>
-                <div class="ppc-amount" id="ppcAmount">$10,000</div>
-                <div id="ppcFrequency">per month</div>
+            <!-- Budget Banner - Simple black with midpoint value -->
+            <div class="budget-banner" id="budgetBanner">
+                <div class="budget-label">💰 MONTHLY PPC BUDGET</div>
+                <div class="budget-amount" id="budgetAmount">$7,500</div>
             </div>
 
+            <!-- Header with Blue Banner -->
             <div class="analyzing-header">
-                <div class="pulse-dots">
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
+                <div class="blue-banner">
+                    <h1>SCANNING FOR PPC LEAKS<span class="blinking-cursor">_</span></h1>
                 </div>
-                <h1>SCANNING FOR PPC LEAKS<span class="blinking-cursor">_</span></h1>
                 <p class="subtitle">Our AI is analyzing your site for mobile conversion killers</p>
                 <div class="url-display" id="urlDisplay">Loading...</div>
-            </div>
-
-            <!-- Live Pain Metrics -->
-            <div class="pain-metrics" id="painMetrics">
-                <div class="metric-card">
-                    <div class="metric-value" id="cpcValue">$20</div>
-                    <div class="metric-label">Avg Cost Per Click</div>
-                </div>
-                <div class="metric-card warning">
-                    <div class="metric-value" id="bounceRate">85%</div>
-                    <div class="metric-label">Mobile Bounce Rate</div>
-                </div>
-                <div class="metric-card danger">
-                    <div class="metric-value" id="monthlyLoss">$0</div>
-                    <div class="metric-label">Est. Monthly Loss</div>
-                </div>
             </div>
 
             <!-- Progress Section -->
@@ -362,7 +333,7 @@
                     <div class="progress-text" id="progressText">0% Complete</div>
                 </div>
 
-                <!-- Analysis Steps - ALL 12 STEPS -->
+                <!-- Analysis Steps - All 12 steps -->
                 <div class="analysis-steps" id="analysisSteps">
                     <!-- Step 1 -->
                     <div class="step" id="step1">
@@ -388,17 +359,17 @@
                         <span class="step-text">Scanning for AI assistants</span>
                     </div>
                     
-                    <!-- Step 5 - PPC Step -->
-                    <div class="step ppc-step" id="step5">
+                    <!-- Step 5 -->
+                    <div class="step" id="step5">
                         <span class="step-icon">○</span>
                         <span class="step-text">
                             Calculating PPC wasted spend
-                            <small id="wasteCalc">Based on your $10k budget</small>
+                            <small id="wasteCalc">Based on your budget</small>
                         </span>
                     </div>
                     
-                    <!-- Step 6 - PPC Step -->
-                    <div class="step ppc-step" id="step6">
+                    <!-- Step 6 -->
+                    <div class="step" id="step6">
                         <span class="step-icon">○</span>
                         <span class="step-text">
                             Analyzing landing page alignment
@@ -406,8 +377,8 @@
                         </span>
                     </div>
                     
-                    <!-- Step 7 - PPC Step -->
-                    <div class="step ppc-step" id="step7">
+                    <!-- Step 7 -->
+                    <div class="step" id="step7">
                         <span class="step-icon">○</span>
                         <span class="step-text">
                             Form field friction analysis
@@ -415,8 +386,8 @@
                         </span>
                     </div>
                     
-                    <!-- Step 8 - PPC Step -->
-                    <div class="step ppc-step" id="step8">
+                    <!-- Step 8 -->
+                    <div class="step" id="step8">
                         <span class="step-icon">○</span>
                         <span class="step-text">
                             Mobile PPC conversion audit
@@ -424,8 +395,8 @@
                         </span>
                     </div>
                     
-                    <!-- Step 9 - PPC Step -->
-                    <div class="step ppc-step" id="step9">
+                    <!-- Step 9 -->
+                    <div class="step" id="step9">
                         <span class="step-icon">○</span>
                         <span class="step-text">
                             Quality Score estimation
@@ -433,8 +404,8 @@
                         </span>
                     </div>
                     
-                    <!-- Step 10 - PPC Step -->
-                    <div class="step ppc-step" id="step10">
+                    <!-- Step 10 -->
+                    <div class="step" id="step10">
                         <span class="step-icon">○</span>
                         <span class="step-text">
                             Industry benchmark comparison
@@ -442,8 +413,8 @@
                         </span>
                     </div>
                     
-                    <!-- Step 11 - PPC Step -->
-                    <div class="step ppc-step" id="step11">
+                    <!-- Step 11 -->
+                    <div class="step" id="step11">
                         <span class="step-icon">○</span>
                         <span class="step-text">
                             Monthly loss calculation
@@ -451,7 +422,7 @@
                         </span>
                     </div>
                     
-                    <!-- Step 12 - Final Step -->
+                    <!-- Step 12 -->
                     <div class="step" id="step12">
                         <span class="step-icon">○</span>
                         <span class="step-text">Generating PPC loss report</span>
@@ -459,9 +430,9 @@
                 </div>
             </div>
 
-            <!-- Loss Alert (appears later) -->
+            <!-- Loss Alert -->
             <div class="loss-alert" id="lossAlert" style="display: none;">
-                ⚠️ WARNING: Based on your budget, you could be losing <span id="alertAmount">$6,250</span> monthly!
+                ⚠️ WARNING: You could be losing <span id="alertAmount">$0</span> monthly!
             </div>
 
             <!-- Status Message -->

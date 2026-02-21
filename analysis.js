@@ -1,66 +1,52 @@
-// analysis.js - PPC AUDIT VERSION
-// This file powers the analysis page with real PPC calculations
-
-// Get parameters from URL or localStorage
+// analysis.js - CLEAN VERSION
+// Get parameters
 const urlParams = new URLSearchParams(window.location.search);
-const ppcBudget = parseInt(urlParams.get('budget') || localStorage.getItem('ppcBudget') || '10000');
+const budgetRange = urlParams.get('budget') || localStorage.getItem('ppcBudget') || '10000';
 const scannedUrl = urlParams.get('url') || localStorage.getItem('scannedUrl') || 'your website';
 
-// Mortgage PPC Constants (based on Gemini data)
+// Convert range to midpoint value
+function getMidpointFromRange(range) {
+    const ranges = {
+        '2000': 3500,    // $2k-5k = $3,500
+        '5000': 7500,    // $5k-10k = $7,500
+        '10000': 15000,  // $10k-20k = $15,000
+        '20000': 35000,  // $20k-50k = $35,000
+        '50000': 60000   // $50k+ = $60,000 (conservative)
+    };
+    return ranges[range] || parseInt(range) || 7500;
+}
+
+const ppcBudget = getMidpointFromRange(budgetRange);
+
+// Mortgage PPC Constants
 const MORTGAGE_METRICS = {
-    cpc: 20,              // Average cost per click
-    highIntentCPC: 35,    // Refinance, etc.
-    abandonmentRate: 0.85, // 85% abandon mobile forms
-    industryConversion: 0.08, // 8% industry avg
-    formFields: 12,       // Average mortgage form fields
-    optimalFields: 4,     // What it should be
-    qualityScoreImpact: 0.43 // 43% CPC reduction possible
+    cpc: 20,
+    abandonmentRate: 0.85,
+    industryConversion: 0.08
 };
 
-// Calculated values
-const monthlyClicks = Math.round(ppcBudget / MORTGAGE_METRICS.cpc);
-const expectedLeads = Math.round(monthlyClicks * MORTGAGE_METRICS.industryConversion);
-const actualLeads = Math.round(expectedLeads * (1 - MORTGAGE_METRICS.abandonmentRate));
-const monthlyLoss = Math.round(ppcBudget * MORTGAGE_METRICS.abandonmentRate * 0.74); // 74% of abandoned spend is recoverable
-const costPerLostLead = Math.round(ppcBudget / (expectedLeads - actualLeads));
+// Calculate loss
+const monthlyLoss = Math.round(ppcBudget * 0.625); // 62.5% waste rate
 
-// Preloader - Show for 2 seconds then start analysis
+// Preloader
 document.addEventListener('DOMContentLoaded', function() {
-    // Update all dynamic content
     updateDynamicContent();
-    
     setTimeout(function() {
         document.getElementById('preloader').style.display = 'none';
-        // Start the analysis progress
         new AnalysisProgress();
     }, 2000);
 });
 
-// Update all the dynamic text on the page
 function updateDynamicContent() {
-    // Update PPC header
-    document.getElementById('ppcAmount').textContent = `$${ppcBudget.toLocaleString()}`;
-    
-    // Update URL display
+    document.getElementById('budgetAmount').textContent = `$${ppcBudget.toLocaleString()}`;
     document.getElementById('urlDisplay').textContent = `Scanning: ${scannedUrl}`;
-    
-    // Update pain metrics
-    document.getElementById('cpcValue').textContent = `$${MORTGAGE_METRICS.cpc}`;
-    document.getElementById('bounceRate').textContent = `${MORTGAGE_METRICS.abandonmentRate * 100}%`;
-    document.getElementById('monthlyLoss').textContent = `$${monthlyLoss.toLocaleString()}`;
-    
-    // Update step details
-    document.getElementById('wasteCalc').textContent = `Based on your $${ppcBudget.toLocaleString()} budget`;
+    document.getElementById('wasteCalc').textContent = `Based on $${ppcBudget.toLocaleString()} budget`;
     document.getElementById('lossCalc').textContent = `$${monthlyLoss.toLocaleString()} estimated loss`;
-    
-    // Update loss alert
     document.getElementById('alertAmount').textContent = `$${monthlyLoss.toLocaleString()}`;
-    
-    // Update preloader text
     document.getElementById('preloaderText').textContent = `Analyzing $${ppcBudget.toLocaleString()} PPC Budget...`;
 }
 
-// Analysis Progress Class
+// Analysis Progress Class (same as before but cleaner)
 class AnalysisProgress {
     constructor() {
         this.progressFill = document.getElementById('progressFill');
@@ -71,7 +57,6 @@ class AnalysisProgress {
         this.currentStep = 0;
         this.progress = 0;
         
-        // Status messages that change during analysis
         this.statusMessages = [
             "Loading your website...",
             "Checking mobile responsiveness...",
@@ -79,28 +64,26 @@ class AnalysisProgress {
             "Looking for AI chat solutions...",
             "Calculating PPC waste on your budget...",
             "Checking if ads match your landing page...",
-            "Counting form fields (this might hurt)...",
+            "Counting form fields...",
             "Auditing mobile PPC performance...",
             "Estimating Quality Score impact...",
             "Comparing to industry benchmarks...",
             "Calculating your monthly losses...",
-            "Almost there! Generating your report..."
+            "Generating your report..."
         ];
         
         this.init();
     }
 
     init() {
-        // Reset all steps
         this.resetAllSteps();
-        // Start progress
         setTimeout(() => {
             this.startProgress();
         }, 500);
     }
 
     resetAllSteps() {
-        this.steps.forEach((step, index) => {
+        this.steps.forEach((step) => {
             step.classList.remove('completed', 'active');
             const icon = step.querySelector('.step-icon');
             icon.textContent = '○';
@@ -109,8 +92,8 @@ class AnalysisProgress {
     }
 
     startProgress() {
-        const duration = 25000; // 25 seconds total
-        const interval = 100; // Update every 100ms
+        const duration = 25000;
+        const interval = 100;
         const increment = (interval / duration) * 100;
         
         const progressInterval = setInterval(() => {
@@ -130,20 +113,16 @@ class AnalysisProgress {
         this.progressFill.style.width = `${this.progress}%`;
         this.progressText.textContent = `${Math.round(this.progress)}% Complete`;
         
-        // Calculate current step based on progress (0-11 for 12 steps)
         const stepIndex = Math.floor((this.progress / 100) * 12);
         
-        // Update status message
         if (stepIndex < this.statusMessages.length) {
             this.statusMessage.innerHTML = `<p>"${this.statusMessages[stepIndex]}"</p>`;
         }
         
-        // Show loss alert at 50% progress
         if (this.progress >= 50 && this.lossAlert.style.display === 'none') {
             this.lossAlert.style.display = 'block';
         }
         
-        // Update steps based on progress
         for (let i = 0; i <= stepIndex; i++) {
             if (i < stepIndex) {
                 this.completeStep(i);
@@ -177,34 +156,20 @@ class AnalysisProgress {
     }
 
     completeAnalysis() {
-        // Final completion animation
         this.progressFill.style.background = 'linear-gradient(90deg, #00cc66, #00ff88)';
         this.progressText.textContent = '100% Complete - Report Ready!';
         this.progressText.style.color = '#00cc66';
         
-        // Update status message
-        this.statusMessage.innerHTML = '<p>"✅ Analysis complete! Redirecting to your PPC audit report..."</p>';
-        
-        // Show loss alert if not already visible
+        this.statusMessage.innerHTML = '<p>"✅ Analysis complete! Redirecting..."</p>';
         this.lossAlert.style.display = 'block';
-        this.lossAlert.style.animation = 'pulse 1s infinite';
         
-        // Store all data for results page
+        // Store data
         localStorage.setItem('lastScannedUrl', scannedUrl);
         localStorage.setItem('ppcBudget', ppcBudget);
         localStorage.setItem('monthlyLoss', monthlyLoss);
-        localStorage.setItem('monthlyClicks', monthlyClicks);
-        localStorage.setItem('expectedLeads', expectedLeads);
-        localStorage.setItem('actualLeads', actualLeads);
         
-        // Redirect to results page
         setTimeout(() => {
             window.location.href = `calculator-enhanced.html?url=${encodeURIComponent(scannedUrl)}&budget=${ppcBudget}&loss=${monthlyLoss}`;
         }, 2000);
     }
-}
-
-// Helper function to format currency
-function formatCurrency(amount) {
-    return '$' + amount.toLocaleString();
 }
