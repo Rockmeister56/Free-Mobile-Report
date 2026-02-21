@@ -3,44 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Mobile Audit - Is Your Mobile Site Costing You Sales?</title>
+    <title>PPC Audit Report - Stop Wasting AdWords Money on Mobile</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional PPC-specific styles */
+        .ppc-section {
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .ppc-label {
+            display: block;
+            font-size: 1.2em;
+            color: white;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .budget-select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+        
+        .manual-entry {
+            margin-top: 15px;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            border: 1px dashed rgba(255,255,255,0.3);
+        }
+        
+        .manual-label {
+            display: block;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+        
+        .budget-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .budget-input::placeholder {
+            color: #999;
+        }
+        
+        .pain-points {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            gap: 15px;
+        }
+        
+        .pain-card {
+            flex: 1;
+            background: rgba(255,68,68,0.1);
+            border: 1px solid rgba(255,68,68,0.3);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            color: white;
+        }
+        
+        .pain-number {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #ff4444;
+            display: block;
+        }
+        
+        .pain-text {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        /* Update existing hero text */
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        
+        .hero .highlight {
+            color: #ffaa00;
+            text-shadow: 0 0 10px rgba(255,170,0,0.5);
+        }
+    </style>
 </head>
 <body>
     <!-- Full-width header with your image as background -->
     <div class="header-background">
         <div class="container">
             <div class="header-content">
-                <!-- Hero Section -->
+                <!-- Hero Section - UPDATED for PPC -->
                 <header class="hero">
-                    <h1>Is your mobile site costing you.. <span class="highlight">SALES LEADS?</span></h1>
-                    <p class="stats">Most businesses lose <strong>70% of mobile visitors</strong> due to poor mobile experience</p><br>
-                   <div>
-                   <br><p class="subtitle"><h2>Get Your FREE Mobile Conversion Score!</p></h2>
-                   </div>
+                    <h1>Is your <span class="highlight">PPC ad spend</span> disappearing on mobile?</h1>
+                    <p class="stats">Mortgage companies waste <strong>$6,250+ monthly</strong> on mobile visitors who never convert</p>
+                    
+                    <!-- NEW: Pain Point Cards -->
+                    <div class="pain-points">
+                        <div class="pain-card">
+                            <span class="pain-number">$20-47</span>
+                            <span class="pain-text">Per Click<br>(Mortgage keywords)</span>
+                        </div>
+                        <div class="pain-card">
+                            <span class="pain-number">85%</span>
+                            <span class="pain-text">Mobile Form<br>Abandonment</span>
+                        </div>
+                        <div class="pain-card">
+                            <span class="pain-number">$80-300</span>
+                            <span class="pain-text">Cost Per Lost<br>Lead</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <br><p class="subtitle"><h2>Get Your FREE PPC Mobile Audit Report</h2></p>
+                    </div>
                 </header>
 
-                <!-- Audit Form -->
+                <!-- NEW: PPC Budget Section -->
+                <section class="ppc-section">
+                    <label class="ppc-label">💰 FIRST, WHAT'S YOUR MONTHLY PPC BUDGET?</label>
+                    
+                    <!-- Dropdown for quick selection -->
+                    <select id="ppcBudget" class="budget-select">
+                        <option value="">-- Select your monthly spend (most accurate) --</option>
+                        <option value="2000">$2,000 - $5,000/month (Getting started)</option>
+                        <option value="5000">$5,000 - $10,000/month (Growing fast)</option>
+                        <option value="10000">$10,000 - $20,000/month (Established player)</option>
+                        <option value="20000">$20,000 - $50,000/month (Market dominator)</option>
+                        <option value="50000">$50,000+/month (Enterprise)</option>
+                    </select>
+                    
+                    <!-- Manual entry option -->
+                    <div class="manual-entry">
+                        <label class="manual-label">Or enter exact monthly budget (for precise calculations):</label>
+                        <div style="display: flex; align-items: center;">
+                            <span style="color: white; font-size: 1.2em; margin-right: 10px;">$</span>
+                            <input type="number" 
+                                   id="exactBudget" 
+                                   class="budget-input" 
+                                   placeholder="e.g., 15000" 
+                                   min="1000" 
+                                   step="1000"
+                                   style="flex: 1;">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Audit Form - UPDATED button text -->
                 <section class="audit-form">
                     <div class="form-container">
                         <input 
                             type="url" 
                             id="websiteUrl" 
-                            placeholder="Enter your website URL (e.g., https://yoursite.com)" 
+                            placeholder="Enter your website URL (e.g., https://yourmortgage site.com)" 
                             class="url-input"
+                            required
                         >
                         <button id="analyzeBtn" class="analyze-btn">
-                            🔍 ANALYZE MOBILE WEBSITE
+                            📊 GENERATE MY PPC AUDIT REPORT
                         </button>
                     </div>
                 </section>
 
-                <!-- Benefits -->
+                <!-- Benefits - UPDATED for PPC -->
                 <section class="benefits-section">
                     <div class="benefits">
-                        <div class="benefit">✓ Results in 30 seconds</div>
-                        <div class="benefit">✓ See what's hurting your conversions</div>
-                        <div class="benefit">✓ Get actionable solutions</div>
+                        <div class="benefit">✓ See EXACTLY how much PPC budget you're wasting</div>
+                        <div class="benefit">✓ Identify mobile conversion killers costing you leads</div>
+                        <div class="benefit">✓ Get personalized fixes to plug the leak</div>
                     </div>
                 </section>
             </div>
@@ -58,11 +204,56 @@
     <footer class="main-footer">
         <div class="footer-container">
             <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/footer5.png" 
-                 alt="Mobile-Wise AI Footer" 
+                 alt="PPC Audit Report" 
                  class="footer-image">
         </div>
     </footer>
 
+    <script>
+        // Updated JavaScript to handle PPC budget
+        document.addEventListener('DOMContentLoaded', function() {
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const websiteUrl = document.getElementById('websiteUrl');
+            const ppcBudget = document.getElementById('ppcBudget');
+            const exactBudget = document.getElementById('exactBudget');
+            
+            // Clear any old data
+            localStorage.removeItem('ppcBudget');
+            localStorage.removeItem('scannedUrl');
+            
+            analyzeBtn.addEventListener('click', function() {
+                // Validate URL
+                let url = websiteUrl.value.trim();
+                if (!url) {
+                    alert('Please enter your website URL');
+                    return;
+                }
+                
+                // Format URL if needed
+                if (!url.startsWith('http')) {
+                    url = 'https://' + url;
+                }
+                
+                // Get budget (exact input overrides dropdown)
+                let budget = exactBudget.value || ppcBudget.value || '10000';
+                
+                // Store in localStorage for the journey
+                localStorage.setItem('ppcBudget', budget);
+                localStorage.setItem('scannedUrl', url);
+                
+                // Pass both in URL for redundancy
+                const encodedUrl = encodeURIComponent(url);
+                window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
+            });
+            
+            // Allow Enter key to submit
+            websiteUrl.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    analyzeBtn.click();
+                }
+            });
+        });
+    </script>
     <script src="app.js"></script>
 </body>
 </html>
