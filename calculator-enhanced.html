@@ -1027,6 +1027,37 @@
             document.getElementById('aiModal').style.display = 'none';
         }
     });
+    // ===== PROGRESS BAR ANIMATION =====
+// This makes all progress bars animate from 0 to their final value
+function animateProgressBars() {
+    // Animate the big problem progress bars
+    const progressFills = document.querySelectorAll('.progress-fill');
+    progressFills.forEach(bar => {
+        const finalWidth = bar.style.width; // Store the final width
+        bar.style.width = '0%'; // Start at 0
+        
+        // Animate to final width after a tiny delay
+        setTimeout(() => {
+            bar.style.transition = 'width 1.5s ease-out';
+            bar.style.width = finalWidth;
+        }, 200);
+    });
+    
+    // Animate the small analysis progress bars
+    const analysisFills = document.querySelectorAll('.analysis-progress-fill');
+    analysisFills.forEach(bar => {
+        const finalWidth = bar.style.width;
+        bar.style.width = '0%';
+        
+        setTimeout(() => {
+            bar.style.transition = 'width 1.2s ease-out';
+            bar.style.width = finalWidth;
+        }, 300); // Slightly delayed for layered effect
+    });
+}
+
+// Call the animation after everything is loaded
+setTimeout(animateProgressBars, 500);
 </script>
 </body>
 </html>
