@@ -713,6 +713,22 @@ body {
     margin-top: 20px;
 }
 
+/* Force hardware acceleration for smoother animations */
+.progress-fill, .analysis-progress-fill {
+    transition: width 1.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+    will-change: width;
+    transform: translateZ(0); /* Force GPU acceleration */
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Make sure the parent containers have proper positioning */
+.progress-bar-bg, .analysis-progress-small {
+    position: relative;
+    overflow: hidden;
+    transform: translateZ(0);
+}
+
 /* =================================================== */
 /* RESPONSIVE DESIGN (All Pages) */
 /* =================================================== */

@@ -923,67 +923,64 @@
         document.getElementById('lossAmount').textContent = `$${displayLoss.toLocaleString()}`;
         
         // Generate problems with progress bars
-        const problemsList = document.getElementById('problemsList');
-        problemsList.innerHTML = '';
-        
-        problems.forEach(problem => {
-            const scoreColorClass = getScoreColorClass(problem.score);
-            const progressFillClass = getProgressFillClass(problem.score);
-            
-            const problemHtml = `
-                <div class="problem-card">
-                    <div class="problem-header">
-                        <div class="problem-title">
-                            <i class="fas fa-exclamation-circle"></i>
-                            ${problem.name}
-                        </div>
-                        <div class="problem-score ${scoreColorClass}">${problem.score}%</div>
-                    </div>
-                    <div class="progress-container">
-                        <div class="progress-bar-bg">
-                            <div class="progress-fill ${progressFillClass}" style="width: ${problem.score}%;"></div>
-                        </div>
-                    </div>
-                    <div class="problem-footer">
-                        <span>${problem.desc}</span>
-                        <span class="problem-loss">$${problem.loss.toLocaleString()}</span>
-                    </div>
+       const problemsList = document.getElementById('problemsList');
+problemsList.innerHTML = '';
+
+problems.forEach(problem => {
+    const scoreColorClass = getScoreColorClass(problem.score);
+    const progressFillClass = getProgressFillClass(problem.score);
+    const finalWidth = problem.score; // Store the score
+    
+    const problemHtml = `
+        <div class="problem-card">
+            <div class="problem-header">
+                <div class="problem-title">
+                    <i class="fas fa-exclamation-circle"></i>
+                    ${problem.name}
                 </div>
-            `;
-            problemsList.innerHTML += problemHtml;
-        });
+                <div class="problem-score ${scoreColorClass}">${problem.score}%</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar-bg">
+                    <div class="progress-fill ${progressFillClass}" 
+                         data-final-width="${finalWidth}%" 
+                         style="width: ${problem.score}%;"></div>
+                </div>
+            </div>
+            <div class="problem-footer">
+                <span>${problem.desc}</span>
+                <span class="problem-loss">$${problem.loss.toLocaleString()}</span>
+            </div>
+        </div>
+    `;
+    problemsList.innerHTML += problemHtml;
+});
 
         // Generate detailed analysis items
         const detailedAnalysis = document.getElementById('detailedAnalysis');
         detailedAnalysis.innerHTML = '';
         
-        analysisItems.forEach(item => {
-            const scoreColorClass = getScoreColorClass(item.score);
-            const progressFillClass = getProgressFillClass(item.score);
-            
-            let rightContent = '';
-            if (item.special) {
-                rightContent = `<span style="color: #ff4444; font-weight: 700;">${item.special}</span>`;
-            } else {
-                rightContent = `<span class="${scoreColorClass}">${item.score}%</span>`;
-            }
-            
-            const itemHtml = `
-                <div class="analysis-item">
-                    <div class="analysis-icon">${item.icon}</div>
-                    <div class="analysis-content">
-                        <div class="analysis-title">${item.name}</div>
-                        <div class="analysis-progress-small">
-                            <div class="analysis-progress-fill ${progressFillClass}" style="width: ${item.score}%;"></div>
-                        </div>
-                    </div>
-                    <div class="analysis-score">
-                        ${rightContent}
-                    </div>
+       analysisItems.forEach(item => {
+    // ... existing code ...
+    
+    const itemHtml = `
+        <div class="analysis-item">
+            <div class="analysis-icon">${item.icon}</div>
+            <div class="analysis-content">
+                <div class="analysis-title">${item.name}</div>
+                <div class="analysis-progress-small">
+                    <div class="analysis-progress-fill ${progressFillClass}" 
+                         data-final-width="${item.score}%" 
+                         style="width: ${item.score}%;"></div>
                 </div>
-            `;
-            detailedAnalysis.innerHTML += itemHtml;
-        });
+            </div>
+            <div class="analysis-score">
+                ${rightContent}
+            </div>
+        </div>
+    `;
+    detailedAnalysis.innerHTML += itemHtml;
+});
     });
 
     // AI Assistant Button
@@ -1027,107 +1024,48 @@
             document.getElementById('aiModal').style.display = 'none';
         }
     });
-    // ===== PROGRESS BAR ANIMATION =====
-// This makes all progress bars animate from 0 to their final value
+   // ===== PROGRESS BAR ANIMATION - SIMPLIFIED =====
 function animateProgressBars() {
-    // Animate the big problem progress bars
-    const progressFills = document.querySelectorAll('.progress-fill');
-    progressFills.forEach(bar => {
-        const finalWidth = bar.style.width; // Store the final width
-        bar.style.width = '0%'; // Start at 0
-        
-        // Animate to final width after a tiny delay
-        setTimeout(() => {
-            bar.style.transition = 'width 1.5s ease-out';
-            bar.style.width = finalWidth;
-        }, 200);
-    });
+    console.log('🎬 Starting animation...');
     
-    // Animate the small analysis progress bars
-    const analysisFills = document.querySelectorAll('.analysis-progress-fill');
-    analysisFills.forEach(bar => {
-        const finalWidth = bar.style.width;
-        bar.style.width = '0%';
-        
-        setTimeout(() => {
-            bar.style.transition = 'width 1.2s ease-out';
-            bar.style.width = finalWidth;
-        }, 300); // Slightly delayed for layered effect
-    });
-}
-
-// Call the animation after everything is loaded
-setTimeout(animateProgressBars, 500);
-
-// ===== DEBUGGING =====
-console.log('Page loaded, checking elements...');
-console.log('Progress fills found:', document.querySelectorAll('.progress-fill').length);
-console.log('Analysis fills found:', document.querySelectorAll('.analysis-progress-fill').length);
-
-// ===== PROGRESS BAR ANIMATION =====
-function animateProgressBars() {
-    console.log('Animating progress bars...');
-    
-    // Animate the big problem progress bars
-    const progressFills = document.querySelectorAll('.progress-fill');
-    console.log('Animating', progressFills.length, 'progress bars');
-    
-    progressFills.forEach((bar, index) => {
-        // Get the final width from the style attribute
-        const finalWidth = bar.style.width;
-        console.log(`Bar ${index}: final width = ${finalWidth}`);
+    // Animate big progress bars
+    document.querySelectorAll('.progress-fill').forEach((bar, index) => {
+        const finalWidth = bar.getAttribute('data-final-width') || bar.style.width;
+        console.log(`Bar ${index}: setting to ${finalWidth}`);
         
         // Start at 0
         bar.style.width = '0%';
-        bar.style.transition = 'none'; // Remove transition temporarily
-        
-        // Force a reflow
-        bar.offsetHeight;
-        
-        // Animate to final width
-        setTimeout(() => {
-            console.log(`Animating bar ${index} to ${finalWidth}`);
-            bar.style.transition = 'width 1.5s cubic-bezier(0.4, 0.0, 0.2, 1)';
-            bar.style.width = finalWidth;
-        }, 200 + (index * 50)); // Stagger the animations
-    });
-    
-    // Animate the small analysis progress bars
-    const analysisFills = document.querySelectorAll('.analysis-progress-fill');
-    console.log('Animating', analysisFills.length, 'analysis bars');
-    
-    analysisFills.forEach((bar, index) => {
-        const finalWidth = bar.style.width;
-        bar.style.width = '0%';
         bar.style.transition = 'none';
         
-        bar.offsetHeight; // Force reflow
+        // Force reflow
+        bar.offsetHeight;
+        
+        // Animate after short delay
+        setTimeout(() => {
+            bar.style.transition = 'width 1.5s cubic-bezier(0.4, 0.0, 0.2, 1)';
+            bar.style.width = finalWidth;
+        }, 300 + (index * 100));
+    });
+    
+    // Animate small analysis bars
+    document.querySelectorAll('.analysis-progress-fill').forEach((bar, index) => {
+        const finalWidth = bar.getAttribute('data-final-width') || bar.style.width;
+        
+        bar.style.width = '0%';
+        bar.style.transition = 'none';
+        bar.offsetHeight;
         
         setTimeout(() => {
             bar.style.transition = 'width 1.2s cubic-bezier(0.4, 0.0, 0.2, 1)';
             bar.style.width = finalWidth;
-        }, 500 + (index * 30));
+        }, 600 + (index * 50));
     });
 }
 
-// Make sure the DOM is fully loaded and content is populated
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM fully loaded');
-    
-    // Wait a bit for the dynamic content to be generated
-    setTimeout(() => {
-        console.log('Checking if problems list is populated...');
-        const problemsList = document.getElementById('problemsList');
-        console.log('Problems list children:', problemsList?.children.length);
-        
-        // Now animate the bars
-        animateProgressBars();
-    }, 1500); // Wait 1.5 seconds for content to generate
-});
-
-// Also try after window load
+// Single animation trigger after everything loads
 window.addEventListener('load', function() {
-    console.log('Window fully loaded');
+    console.log('🏁 Window loaded, starting animation in 500ms');
+    setTimeout(animateProgressBars, 500);
 });
 </script>
 </body>
