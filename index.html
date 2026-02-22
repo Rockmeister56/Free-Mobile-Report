@@ -186,6 +186,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
     console.log('🚀 SCRIPT STARTED - Testing Supabase connection...');
     
@@ -287,8 +288,9 @@
             const { audited, record } = await checkDomainAudited(cleanDomain);
             console.log('✅ checkDomainAudited returned:', { audited, record });
             
+            // ===== PATH 1: DOMAIN ALREADY AUDITED =====
             if (audited) {
-                console.log('🚫 DOMAIN ALREADY AUDITED - redirecting to blocked page');
+                console.log('🚫 PATH 1: DOMAIN ALREADY AUDITED');
                 
                 const auditDate = new Date(record.audited_at).toLocaleDateString('en-US', {
                     year: 'numeric',
@@ -296,18 +298,26 @@
                     day: 'numeric'
                 });
                 
-                const redirectUrl = `blocked.html?domain=${encodeURIComponent(cleanDomain)}&date=${encodeURIComponent(auditDate)}`;
-                console.log('Redirecting to:', redirectUrl);
+                // 🔴 TEMPORARILY DISABLED REDIRECT FOR TESTING
+                console.log('🔴 REDIRECT DISABLED - Would go to: blocked.html');
+                console.log('Domain:', cleanDomain);
+                console.log('Audit Date:', auditDate);
                 
-                window.location.href = redirectUrl;
-                return;
+                // Show alert instead of redirect
+                alert(`🔒 DOMAIN ALREADY AUDITED!\n\nDomain: ${cleanDomain}\nAudited on: ${auditDate}\n\nCheck console for details.`);
+                
+                // Reset button
+                analyzeBtn.textContent = originalButtonText;
+                analyzeBtn.disabled = false;
+                
+                return; // Stop execution
             }
             
-            console.log('✅ DOMAIN NOT AUDITED - proceeding to analysis');
+            // ===== PATH 2: DOMAIN NOT AUDITED =====
+            console.log('✅ PATH 2: DOMAIN NOT AUDITED - would proceed to analysis');
             
-            // Reset button
-            analyzeBtn.textContent = originalButtonText;
-            analyzeBtn.disabled = false;
+            // 🔴 TEMPORARILY DISABLED REDIRECT FOR TESTING
+            console.log('🔴 REDIRECT DISABLED - Would go to: analysis.html');
             
             // Get budget
             let budget = '';
@@ -323,17 +333,14 @@
                 console.log('Using default budget:', budget);
             }
             
-            // Store in localStorage
-            localStorage.setItem('ppcBudget', budget);
-            localStorage.setItem('scannedUrl', url);
-            console.log('Data stored in localStorage:', { budget, url });
+            // Show alert instead of redirect
+            alert(`✅ DOMAIN NOT AUDITED!\n\nDomain: ${cleanDomain}\nBudget: ${budget}\n\nCheck console for Supabase response.`);
             
-            // Redirect to analysis
-            const encodedUrl = encodeURIComponent(url);
-            const redirectAnalysis = `analysis.html?url=${encodedUrl}&budget=${budget}`;
-            console.log('Redirecting to analysis:', redirectAnalysis);
+            // Reset button
+            analyzeBtn.textContent = originalButtonText;
+            analyzeBtn.disabled = false;
             
-            window.location.href = redirectAnalysis;
+            return; // Stop execution
         });
         
         // Allow Enter key to submit
