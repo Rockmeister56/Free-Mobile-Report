@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Code & Site Manager</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #0066cc;
+            border-radius: 20px;
+            padding: 30px;
+        }
+        h1 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+        .tab-bar {
+            display: flex;
+            gap: 10px;
+            margin: 30px 0 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        .tab {
+            padding: 10px 25px;
+            background: transparent;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 1.1rem;
+            border-radius: 30px;
+        }
+        .tab.active {
+            background: #0066cc;
+            color: white;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        
+        /* Codes Grid */
+        .code-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+        .code-card {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #00cc66;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        .code-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #00ff88;
+            margin-bottom: 5px;
+        }
+        
+        /* Sites Table */
+        .sites-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        .sites-table th {
+            text-align: left;
+            padding: 15px 10px;
+            color: #0099ff;
+            border-bottom: 2px solid #0066cc;
+        }
+        .sites-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #333;
+            color: #ddd;
+        }
+        .sites-table tr:hover {
+            background: rgba(0,102,204,0.1);
+        }
+        .domain-name {
+            font-family: monospace;
+            color: #00ff88;
+        }
+        .audit-date {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        .remove-btn {
+            background: #cc4444;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .remove-btn:hover {
+            background: #ff4444;
+        }
+        .clear-all-btn {
+            background: #cc4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        /* Add section */
+        .add-section {
+            background: rgba(0,102,204,0.1);
+            border: 2px dashed #0066cc;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        input, button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin: 5px;
+        }
+        input {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #0066cc;
+            color: white;
+            width: 200px;
+        }
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: #0099ff;
+            transform: translateY(-2px);
+        }
+        .delete-btn {
+            background: #cc4444;
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00ff88;
+        }
+        .stat-label {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #0066cc;
+            border-radius: 8px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 TOMMY'S CONTROL PANEL</h1>
+        <p style="color: #aaa; margin-bottom: 20px;">Manage access codes and remove website restrictions</p>
+        
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number" id="totalCodes">0</div>
+                <div class="stat-label">Active Codes</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalSites">0</div>
+                <div class="stat-label">Locked Sites</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="todaySites">0</div>
+                <div class="stat-label">Audited Today</div>
+            </div>
+        </div>
+        
+        <!-- Tabs -->
+        <div class="tab-bar">
+            <button class="tab active" onclick="switchTab('codes')">🔑 ACCESS CODES</button>
+            <button class="tab" onclick="switchTab('sites')">🌐 LOCKED SITES</button>
+        </div>
+        
+        <!-- CODES SECTION -->
+        <div id="codesSection" class="section active">
+            <h2 style="color: #00ff88; margin-bottom: 15px;">Active Access Codes</h2>
+            <div class="code-grid" id="codeGrid"></div>
+            
+            <div class="add-section">
+                <h3 style="color: white; margin-bottom: 15px;">➕ Add New Access Code</h3>
+                <input type="text" id="newCode" placeholder="Enter new code (e.g., TOMMY101)" style="text-transform: uppercase;">
+                <button onclick="addCode()">ADD CODE</button>
+                <button onclick="generateRandomCode()" style="background: #00cc66;">🎲 GENERATE RANDOM</button>
+            </div>
+        </div>
+        
+        <!-- SITES SECTION -->
+        <div id="sitesSection" class="section">
+            <h2 style="color: #00ff88; margin-bottom: 15px;">Locked Websites</h2>
+            <p style="color: #aaa; margin-bottom: 10px;">Remove a website to allow re-audit</p>
+            
+            <input type="text" id="siteSearch" class="search-box" placeholder="🔍 Search domains..." onkeyup="filterSites()">
+            
+            <table class="sites-table" id="sitesTable">
+                <thead>
+                    <tr>
+                        <th>Domain</th>
+                        <th>Audited On</th>
+                        <th>Access Code Used</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="sitesBody">
+                    <!-- Sites will load here -->
+                </tbody>
+            </table>
+            
+            <button class="clear-all-btn" onclick="clearAllSites()">🗑️ REMOVE ALL RESTRICTIONS</button>
+        </div>
+    </div>
+    
+    <script>
+        // ===== DATA STORAGE =====
+        // Default codes
+        const defaultCodes = [
+            'TOMMY2024', 'PPCROCKER', 'MORTGAGE24', 'BROKER99', 
+            'LEAD2024', 'AUDITPRO', 'SMARTLTD', 'CONVERT5', 
+            'LEAKFIX', 'PPCMASTER'
+        ];
+        
+        // Load data
+        let codes = JSON.parse(localStorage.getItem('accessCodes')) || defaultCodes;
+        let lockedSites = JSON.parse(localStorage.getItem('lockedSites')) || [];
+        
+        // ===== TAB SWITCHING =====
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            if (tab === 'codes') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('codesSection').classList.add('active');
+                displayCodes();
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('sitesSection').classList.add('active');
+                displaySites();
+            }
+        }
+        
+        // ===== CODE FUNCTIONS =====
+        function displayCodes() {
+            const grid = document.getElementById('codeGrid');
+            grid.innerHTML = '';
+            
+            codes.forEach(code => {
+                const card = document.createElement('div');
+                card.className = 'code-card';
+                card.innerHTML = `
+                    <div class="code-value">${code}</div>
+                    <button class="delete-btn" onclick="deleteCode('${code}')" style="margin-top: 10px; padding: 5px 10px; font-size: 0.8rem;">REMOVE</button>
+                `;
+                grid.appendChild(card);
+            });
+            
+            if (codes.length === 0) {
+                grid.innerHTML = '<p style="color: #aaa; grid-column: 1/-1; text-align: center;">No codes yet. Add some!</p>';
+            }
+            
+            localStorage.setItem('accessCodes', JSON.stringify(codes));
+            updateStats();
+        }
+        
+        function addCode() {
+            const input = document.getElementById('newCode');
+            const newCode = input.value.trim().toUpperCase();
+            
+            if (!newCode) {
+                alert('Please enter a code');
+                return;
+            }
+            
+            if (codes.includes(newCode)) {
+                alert('Code already exists!');
+                return;
+            }
+            
+            codes.push(newCode);
+            displayCodes();
+            input.value = '';
+        }
+        
+        function deleteCode(code) {
+            if (confirm(`Delete code ${code}?`)) {
+                codes = codes.filter(c => c !== code);
+                displayCodes();
+            }
+        }
+        
+        function generateRandomCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for (let i = 0; i < 8; i++) {
+                code += chars[Math.floor(Math.random() * chars.length)];
+            }
+            document.getElementById('newCode').value = code;
+        }
+        
+        // ===== SITE FUNCTIONS =====
+        function displaySites() {
+            const tbody = document.getElementById('sitesBody');
+            tbody.innerHTML = '';
+            
+            if (lockedSites.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px; color: #aaa;">No locked sites yet</td></tr>';
+                return;
+            }
+            
+            lockedSites.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(site => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="domain-name">${site.domain}</td>
+                    <td class="audit-date">${new Date(site.date).toLocaleDateString()}</td>
+                    <td>${site.code || 'N/A'}</td>
+                    <td><button class="remove-btn" onclick="removeSite('${site.domain}')">REMOVE</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            updateStats();
+        }
+        
+        function removeSite(domain) {
+            if (confirm(`Remove restriction for ${domain}? They can audit again.`)) {
+                lockedSites = lockedSites.filter(s => s.domain !== domain);
+                localStorage.setItem('lockedSites', JSON.stringify(lockedSites));
+                displaySites();
+            }
+        }
+        
+        function clearAllSites() {
+            if (confirm('Remove ALL website restrictions? This lets every site be re-audited.')) {
+                lockedSites = [];
+                localStorage.setItem('lockedSites', JSON.stringify(lockedSites));
+                displaySites();
+            }
+        }
+        
+        function filterSites() {
+            const search = document.getElementById('siteSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#sitesBody tr');
+            
+            rows.forEach(row => {
+                const domain = row.querySelector('.domain-name')?.textContent.toLowerCase() || '';
+                row.style.display = domain.includes(search) ? '' : 'none';
+            });
+        }
+        
+        // ===== STATS =====
+        function updateStats() {
+            document.getElementById('totalCodes').textContent = codes.length;
+            document.getElementById('totalSites').textContent = lockedSites.length;
+            
+            const today = new Date().toDateString();
+            const todaySites = lockedSites.filter(s => new Date(s.date).toDateString() === today).length;
+            document.getElementById('todaySites').textContent = todaySites;
+        }
+        
+        // ===== INITIALIZE =====
+        displayCodes();
+        updateStats();
+        
+        // ===== ADD SAMPLE SITES FOR DEMO (remove in production) =====
+        if (lockedSites.length === 0) {
+            lockedSites = [
+                { domain: 'example1.com', date: '2024-02-20', code: 'TOMMY2024' },
+                { domain: 'example2.com', date: '2024-02-21', code: 'PPCROCKER' },
+                { domain: 'example3.com', date: '2024-02-22', code: 'MORTGAGE24' }
+            ];
+            localStorage.setItem('lockedSites', JSON.stringify(lockedSites));
+        }
+    </script>
+</body>
+</html>
