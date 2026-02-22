@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Already Audited - PPC Audit</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/report-bg3.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.8;
+            z-index: 0;
+        }
+        
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            width: 90%;
+        }
+        
+        .blocked-card {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+            border: 2px solid #ff4444;
+            border-radius: 30px;
+            padding: 50px 40px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 0 50px rgba(255,68,68,0.3);
+        }
+        
+        .lock-icon {
+            font-size: 5rem;
+            color: #ff4444;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(255,68,68,0.5);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .domain-box {
+            background: rgba(255,68,68,0.1);
+            border: 1px solid #ff4444;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+            font-family: monospace;
+            font-size: 1.5rem;
+            color: #ff8888;
+        }
+        
+        .audit-date {
+            color: #ccc;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .audit-date strong {
+            color: #ffaa44;
+        }
+        
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff4444, transparent);
+            margin: 30px 0;
+        }
+        
+        h2 {
+            color: #0099ff;
+            margin-bottom: 20px;
+        }
+        
+        .agency-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .agency-btn {
+            padding: 18px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .primary-btn {
+            background: linear-gradient(135deg, #0066cc, #004999);
+            color: white;
+        }
+        
+        .secondary-btn {
+            background: transparent;
+            border: 2px solid #0066cc;
+            color: white;
+        }
+        
+        .primary-btn:hover, .secondary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,102,204,0.4);
+        }
+        
+        .contact-link {
+            color: #aaa;
+            text-decoration: none;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        
+        .contact-link:hover {
+            color: #0099ff;
+        }
+        
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #0066cc, #0099ff, #0066cc);
+            z-index: 100;
+        }
+        
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #0066cc, #0099ff, #0066cc);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar"></div>
+    
+    <div class="container">
+        <div class="blocked-card">
+            <div class="lock-icon">🔒</div>
+            <h1>WEBSITE ALREADY AUDITED</h1>
+            
+            <div class="domain-box" id="domainDisplay">advantage1st.com</div>
+            
+            <div class="audit-date" id="dateDisplay">
+                This domain was audited on <strong>February 22, 2024</strong>
+            </div>
+            
+            <p style="color: #ddd; margin-bottom: 20px;">
+                Each website can only receive one free audit to ensure fair use and data accuracy.
+            </p>
+            
+            <div class="divider"></div>
+            
+            <h2>🚀 FOR MARKETING AGENCIES</h2>
+            <p style="color: #ccc; margin-bottom: 25px;">
+                Want to audit multiple client websites? Get agency access:
+            </p>
+            
+            <div class="agency-options">
+                <button class="agency-btn primary-btn" onclick="window.location.href='agency-signup.html'">
+                    <span>📊</span> AGENCY PRO ACCESS - $97/month
+                </button>
+                
+                <button class="agency-btn secondary-btn" onclick="window.location.href='index.html'">
+                    <span>🔄</span> AUDIT A DIFFERENT WEBSITE
+                </button>
+            </div>
+            
+            <a href="#" class="contact-link" onclick="contactOwner()">
+                📧 Contact the website owner about their results
+            </a>
+        </div>
+    </div>
+    
+    <div class="bottom-bar"></div>
+
+    <script>
+        // Get domain from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const domain = urlParams.get('domain') || 'unknown';
+        const auditDate = urlParams.get('date') || new Date().toLocaleDateString();
+        
+        document.getElementById('domainDisplay').textContent = domain;
+        document.getElementById('dateDisplay').innerHTML = 
+            `This domain was audited on <strong>${auditDate}</strong>`;
+        
+        function contactOwner() {
+            alert('This feature connects you with the site owner. Coming soon!');
+        }
+    </script>
+</body>
+</html>

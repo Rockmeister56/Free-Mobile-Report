@@ -185,7 +185,42 @@
     
     </footer>
 
-    <script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    // Initialize Supabase
+    const SUPABASE_URL = 'https://fcgbusobfdwnpoqyuzoe.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NTMyNzAsImV4cCI6MjA0NjAyOTI3MH0.8T8kYkPRRZQh4fQnU0KQxUhgBxYcXZoVZzJvRZ8LQkM';
+    
+    const { createClient } = supabase;
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Function to check if domain has been audited
+    async function checkDomainAudited(domain) {
+        try {
+            console.log('Checking domain:', domain);
+            
+            const { data, error } = await supabaseClient
+                .from('audited_sites')
+                .select('domain, audited_at, broker_email')
+                .eq('domain', domain);
+            
+            if (error) {
+                console.error('Supabase error:', error);
+                return { audited: false, error: error.message };
+            }
+            
+            console.log('Supabase response:', data);
+            
+            return {
+                audited: data && data.length > 0,
+                record: data && data.length > 0 ? data[0] : null
+            };
+        } catch (error) {
+            console.error('Error checking domain:', error);
+            return { audited: false, error: error.message };
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const analyzeBtn = document.getElementById('analyzeBtn');
         const websiteUrl = document.getElementById('websiteUrl');
@@ -196,7 +231,7 @@
         localStorage.removeItem('ppcBudget');
         localStorage.removeItem('scannedUrl');
         
-        analyzeBtn.addEventListener('click', function() {
+        analyzeBtn.addEventListener('click', async function() {  // ← Added "async" here
             // Validate URL
             let url = websiteUrl.value.trim();
             if (!url) {
@@ -209,30 +244,53 @@
                 url = 'https://' + url;
             }
             
-            // Get budget - IMPORTANT: exactBudget OVERRIVES dropdown
+            // Extract clean domain for checking
+            let cleanDomain = url.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+            // Remove www. if present
+            cleanDomain = cleanDomain.replace(/^www\./, '');
+            
+            console.log('Clean domain:', cleanDomain);
+            
+            // SHOW LOADING STATE
+            analyzeBtn.textContent = '🔍 CHECKING DATABASE...';
+            analyzeBtn.disabled = true;
+            
+            // CHECK SUPABASE FIRST
+            const { audited, record } = await checkDomainAudited(cleanDomain);
+            
+            if (audited) {
+                console.log('Domain already audited:', record);
+                
+                // Format the date nicely
+                const auditDate = new Date(record.audited_at).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                // Redirect to blocked page
+                window.location.href = `blocked.html?domain=${encodeURIComponent(cleanDomain)}&date=${encodeURIComponent(auditDate)}`;
+                return;
+            }
+            
+            console.log('Domain not audited, proceeding...');
+            
+            // Get budget - exact budget overrides dropdown
             let budget = '';
             
-            // First check if they entered an exact amount
             if (exactBudget && exactBudget.value && exactBudget.value.trim() !== '') {
                 budget = exactBudget.value.trim();
-                console.log('Using exact budget:', budget);
-            } 
-            // Otherwise use dropdown
-            else if (ppcBudget && ppcBudget.value && ppcBudget.value !== '') {
+            } else if (ppcBudget && ppcBudget.value && ppcBudget.value !== '') {
                 budget = ppcBudget.value;
-                console.log('Using dropdown budget:', budget);
-            }
-            // Fallback to default
-            else {
-                budget = '5000'; // Default to $5k-10k range
-                console.log('Using default budget:', budget);
+            } else {
+                budget = '5000'; // Default
             }
             
-            // Store in localStorage for the journey
+            // Store in localStorage
             localStorage.setItem('ppcBudget', budget);
             localStorage.setItem('scannedUrl', url);
             
-            // Pass in URL for redundancy
+            // Pass in URL
             const encodedUrl = encodeURIComponent(url);
             window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
         });
