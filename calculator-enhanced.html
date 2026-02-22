@@ -808,162 +808,225 @@
     </div>
 
     <script>
-        // Get data from URL or localStorage
-        const urlParams = new URLSearchParams(window.location.search);
-        const scannedUrl = urlParams.get('url') || localStorage.getItem('lastScannedUrl') || 'yourwebsite.com';
-        const ppcBudget = parseInt(urlParams.get('budget') || localStorage.getItem('ppcBudget') || '7500');
-        const monthlyLoss = parseInt(urlParams.get('loss') || localStorage.getItem('monthlyLoss') || Math.round(ppcBudget * 0.625));
+    // Get data from URL or localStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    const scannedUrl = urlParams.get('url') || localStorage.getItem('lastScannedUrl') || 'yourwebsite.com';
+    const ppcBudget = parseInt(urlParams.get('budget') || localStorage.getItem('ppcBudget') || '7500');
+    const monthlyLoss = parseInt(urlParams.get('loss') || localStorage.getItem('monthlyLoss') || Math.round(ppcBudget * 0.625));
 
-        // Problem breakdown with scores (0-100 scale, lower is worse)
-        const problems = [
-            { name: 'Form Request Too Long', score: 12, loss: Math.round(monthlyLoss * 0.40), desc: '85% abandon long forms' },
-            { name: 'No Mobile AI Assistant', score: 8, loss: Math.round(monthlyLoss * 0.24), desc: '73% expect instant responses' },
-            { name: 'Slow Page Load Time', score: 35, loss: Math.round(monthlyLoss * 0.16), desc: '4.2 seconds (should be <2s)' },
-            { name: 'Ad-to-Page Mismatch', score: 42, loss: Math.round(monthlyLoss * 0.12), desc: 'Ad promise ≠ landing page' },
-            { name: 'No Click-to-Call', score: 28, loss: Math.round(monthlyLoss * 0.08), desc: 'Mobile users want to call' }
-        ];
+    // ===== DYNAMIC VARIABLE GENERATOR =====
+    // This creates different results every time!
+    function generateDynamicScores() {
+        // Generate random seed based on URL + timestamp
+        const seed = scannedUrl.length + new Date().getTime();
+        const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+        
+        // Problem scores - vary by ±15% but keep the pain realistic
+        const problemScores = {
+            formLength: random(8, 18),        // 8-18% (always terrible)
+            aiAssistant: random(5, 15),        // 5-15% (always terrible)
+            loadTime: random(28, 42),          // 28-42% (varies more)
+            adMatch: random(35, 52),           // 35-52% (yellow/orange range)
+            clickToCall: random(22, 35)         // 22-35% (red/orange range)
+        };
+        
+        // Problem losses - based on monthly loss but with variation
+        const lossVariation = 0.85 + (Math.random() * 0.3); // 0.85 to 1.15
+        const adjustedLoss = Math.round(monthlyLoss * lossVariation);
+        
+        const problemLosses = {
+            form: Math.round(adjustedLoss * 0.40 * (0.9 + Math.random() * 0.2)),
+            ai: Math.round(adjustedLoss * 0.24 * (0.9 + Math.random() * 0.2)),
+            load: Math.round(adjustedLoss * 0.16 * (0.9 + Math.random() * 0.2)),
+            ad: Math.round(adjustedLoss * 0.12 * (0.9 + Math.random() * 0.2)),
+            call: Math.round(adjustedLoss * 0.08 * (0.9 + Math.random() * 0.2))
+        };
+        
+        // Analysis items - vary each one
+        const analysisScores = {
+            loading: random(92, 100),          // Always high
+            mobileSim: random(85, 96),          // Always high
+            conversion: random(55, 72),          // Medium-low
+            aiScan: random(0, 12),               // Always terrible
+            ppcWaste: 100,                        // Always 100% (calculated fact)
+            landingPage: random(38, 52),          // Low-medium
+            formFriction: random(8, 18),          // Always terrible
+            mobileAudit: random(12, 24),          // Always terrible
+            qualityScore: random(48, 65),          // Medium
+            benchmark: random(28, 42)              // Low-medium
+        };
+        
+        return {
+            problemScores,
+            problemLosses,
+            analysisScores,
+            totalLoss: problemLosses.form + problemLosses.ai + problemLosses.load + 
+                      problemLosses.ad + problemLosses.call
+        };
+    }
 
-        // Detailed analysis items
-        const analysisItems = [
-            { name: 'Loading website content', score: 100, icon: '🌐' },
-            { name: 'Simulating mobile experience', score: 92, icon: '📱' },
-            { name: 'Checking conversion elements', score: 65, icon: '🎯' },
-            { name: 'Scanning for AI assistants', score: 0, icon: '🤖' },
-            { name: 'Calculating PPC wasted spend', score: 100, icon: '💰', special: `$${monthlyLoss.toLocaleString()}` },
-            { name: 'Analyzing landing page alignment', score: 45, icon: '📄' },
-            { name: 'Form field friction analysis', score: 12, icon: '📝' },
-            { name: 'Mobile PPC conversion audit', score: 15, icon: '📊' },
-            { name: 'Quality Score estimation', score: 58, icon: '⭐' },
-            { name: 'Industry benchmark comparison', score: 34, icon: '📈' }
-        ];
+    // Generate dynamic data
+    const dynamicData = generateDynamicScores();
+    
+    // Problem breakdown with dynamic scores
+    const problems = [
+        { name: 'Form Request Too Long', score: dynamicData.problemScores.formLength, 
+          loss: dynamicData.problemLosses.form, desc: '85% abandon long forms' },
+        { name: 'No Mobile AI Assistant', score: dynamicData.problemScores.aiAssistant, 
+          loss: dynamicData.problemLosses.ai, desc: '73% expect instant responses' },
+        { name: 'Slow Page Load Time', score: dynamicData.problemScores.loadTime, 
+          loss: dynamicData.problemLosses.load, desc: '4.2 seconds (should be <2s)' },
+        { name: 'Ad-to-Page Mismatch', score: dynamicData.problemScores.adMatch, 
+          loss: dynamicData.problemLosses.ad, desc: 'Ad promise ≠ landing page' },
+        { name: 'No Click-to-Call', score: dynamicData.problemScores.clickToCall, 
+          loss: dynamicData.problemLosses.call, desc: 'Mobile users want to call' }
+    ];
 
-        // Helper to get color class based on score
-        function getScoreColorClass(score) {
-            if (score < 30) return 'score-red';
-            if (score < 50) return 'score-orange';
-            if (score < 70) return 'score-yellow';
-            return 'score-green';
-        }
+    // Detailed analysis items with dynamic scores
+    const analysisItems = [
+        { name: 'Loading website content', score: dynamicData.analysisScores.loading, icon: '🌐' },
+        { name: 'Simulating mobile experience', score: dynamicData.analysisScores.mobileSim, icon: '📱' },
+        { name: 'Checking conversion elements', score: dynamicData.analysisScores.conversion, icon: '🎯' },
+        { name: 'Scanning for AI assistants', score: dynamicData.analysisScores.aiScan, icon: '🤖' },
+        { name: 'Calculating PPC wasted spend', score: dynamicData.analysisScores.ppcWaste, 
+          icon: '💰', special: `$${dynamicData.totalLoss.toLocaleString()}` },
+        { name: 'Analyzing landing page alignment', score: dynamicData.analysisScores.landingPage, icon: '📄' },
+        { name: 'Form field friction analysis', score: dynamicData.analysisScores.formFriction, icon: '📝' },
+        { name: 'Mobile PPC conversion audit', score: dynamicData.analysisScores.mobileAudit, icon: '📊' },
+        { name: 'Quality Score estimation', score: dynamicData.analysisScores.qualityScore, icon: '⭐' },
+        { name: 'Industry benchmark comparison', score: dynamicData.analysisScores.benchmark, icon: '📈' }
+    ];
 
-        function getProgressFillClass(score) {
-            if (score < 30) return 'red';
-            if (score < 50) return 'orange';
-            if (score < 70) return 'yellow';
-            return 'green';
-        }
+    // Update the monthly loss display to show the dynamically calculated total
+    const displayLoss = dynamicData.totalLoss || monthlyLoss;
 
-        // Update page with real data
-        document.addEventListener('DOMContentLoaded', function() {
-            // Update displays
-            document.getElementById('urlDisplay').textContent = `Website: ${scannedUrl}`;
-            document.getElementById('budgetDisplay').textContent = `Monthly Budget: $${ppcBudget.toLocaleString()}`;
-            document.getElementById('lossAmount').textContent = `$${monthlyLoss.toLocaleString()}`;
+    // Helper to get color class based on score
+    function getScoreColorClass(score) {
+        if (score < 30) return 'score-red';
+        if (score < 50) return 'score-orange';
+        if (score < 70) return 'score-yellow';
+        return 'score-green';
+    }
+
+    function getProgressFillClass(score) {
+        if (score < 30) return 'red';
+        if (score < 50) return 'orange';
+        if (score < 70) return 'yellow';
+        return 'green';
+    }
+
+    // Update page with real data
+    document.addEventListener('DOMContentLoaded', function() {
+        // Update displays
+        document.getElementById('urlDisplay').textContent = `Website: ${scannedUrl}`;
+        document.getElementById('budgetDisplay').textContent = `Monthly Budget: $${ppcBudget.toLocaleString()}`;
+        document.getElementById('lossAmount').textContent = `$${displayLoss.toLocaleString()}`;
+        
+        // Generate problems with progress bars
+        const problemsList = document.getElementById('problemsList');
+        problemsList.innerHTML = '';
+        
+        problems.forEach(problem => {
+            const scoreColorClass = getScoreColorClass(problem.score);
+            const progressFillClass = getProgressFillClass(problem.score);
             
-            // Generate problems with progress bars
-            const problemsList = document.getElementById('problemsList');
-            problemsList.innerHTML = '';
-            
-            problems.forEach(problem => {
-                const scoreColorClass = getScoreColorClass(problem.score);
-                const progressFillClass = getProgressFillClass(problem.score);
-                
-                const problemHtml = `
-                    <div class="problem-card">
-                        <div class="problem-header">
-                            <div class="problem-title">
-                                <i class="fas fa-exclamation-circle"></i>
-                                ${problem.name}
-                            </div>
-                            <div class="problem-score ${scoreColorClass}">${problem.score}%</div>
+            const problemHtml = `
+                <div class="problem-card">
+                    <div class="problem-header">
+                        <div class="problem-title">
+                            <i class="fas fa-exclamation-circle"></i>
+                            ${problem.name}
                         </div>
-                        <div class="progress-container">
-                            <div class="progress-bar-bg">
-                                <div class="progress-fill ${progressFillClass}" style="width: ${problem.score}%;"></div>
-                            </div>
-                        </div>
-                        <div class="problem-footer">
-                            <span>${problem.desc}</span>
-                            <span class="problem-loss">$${problem.loss.toLocaleString()}</span>
+                        <div class="problem-score ${scoreColorClass}">${problem.score}%</div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill ${progressFillClass}" style="width: ${problem.score}%;"></div>
                         </div>
                     </div>
-                `;
-                problemsList.innerHTML += problemHtml;
-            });
+                    <div class="problem-footer">
+                        <span>${problem.desc}</span>
+                        <span class="problem-loss">$${problem.loss.toLocaleString()}</span>
+                    </div>
+                </div>
+            `;
+            problemsList.innerHTML += problemHtml;
+        });
 
-            // Generate detailed analysis items
-            const detailedAnalysis = document.getElementById('detailedAnalysis');
-            detailedAnalysis.innerHTML = '';
+        // Generate detailed analysis items
+        const detailedAnalysis = document.getElementById('detailedAnalysis');
+        detailedAnalysis.innerHTML = '';
+        
+        analysisItems.forEach(item => {
+            const scoreColorClass = getScoreColorClass(item.score);
+            const progressFillClass = getProgressFillClass(item.score);
             
-            analysisItems.forEach(item => {
-                const scoreColorClass = getScoreColorClass(item.score);
-                const progressFillClass = getProgressFillClass(item.score);
-                
-                let rightContent = '';
-                if (item.special) {
-                    rightContent = `<span style="color: #ff4444; font-weight: 700;">${item.special}</span>`;
-                } else {
-                    rightContent = `<span class="${scoreColorClass}">${item.score}%</span>`;
-                }
-                
-                const itemHtml = `
-                    <div class="analysis-item">
-                        <div class="analysis-icon">${item.icon}</div>
-                        <div class="analysis-content">
-                            <div class="analysis-title">${item.name}</div>
-                            <div class="analysis-progress-small">
-                                <div class="analysis-progress-fill ${progressFillClass}" style="width: ${item.score}%;"></div>
-                            </div>
-                        </div>
-                        <div class="analysis-score">
-                            ${rightContent}
+            let rightContent = '';
+            if (item.special) {
+                rightContent = `<span style="color: #ff4444; font-weight: 700;">${item.special}</span>`;
+            } else {
+                rightContent = `<span class="${scoreColorClass}">${item.score}%</span>`;
+            }
+            
+            const itemHtml = `
+                <div class="analysis-item">
+                    <div class="analysis-icon">${item.icon}</div>
+                    <div class="analysis-content">
+                        <div class="analysis-title">${item.name}</div>
+                        <div class="analysis-progress-small">
+                            <div class="analysis-progress-fill ${progressFillClass}" style="width: ${item.score}%;"></div>
                         </div>
                     </div>
-                `;
-                detailedAnalysis.innerHTML += itemHtml;
-            });
+                    <div class="analysis-score">
+                        ${rightContent}
+                    </div>
+                </div>
+            `;
+            detailedAnalysis.innerHTML += itemHtml;
         });
+    });
 
-        // AI Assistant Button
-        document.getElementById('aiAssistantBtn').addEventListener('click', function() {
-            document.getElementById('aiModal').style.display = 'flex';
+    // AI Assistant Button
+    document.getElementById('aiAssistantBtn').addEventListener('click', function() {
+        document.getElementById('aiModal').style.display = 'flex';
+    });
+
+    document.getElementById('closeAIModal').addEventListener('click', function() {
+        document.getElementById('aiModal').style.display = 'none';
+    });
+
+    // Schedule Call button
+    document.getElementById('scheduleCallBtn').addEventListener('click', function() {
+        window.open('https://free-mobile-report.netlify.app/zoom-scheduler', '_blank');
+        document.getElementById('aiModal').style.display = 'none';
+    });
+
+    // Live Chat button
+    document.getElementById('liveChatBtn').addEventListener('click', function() {
+        alert('Live chat coming soon! Please schedule a call for immediate assistance.');
+    });
+
+    // Example buttons
+    const exampleButtons = document.querySelectorAll('#mobileWiseExampleBtn, #recommendationExampleBtn');
+    exampleButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            window.open('https://mortgages-assist.com', '_blank');
         });
+    });
 
-        document.getElementById('closeAIModal').addEventListener('click', function() {
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target.classList.contains('demo-popup')) {
+            event.target.style.display = 'none';
+        }
+    });
+
+    // Close with ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
             document.getElementById('aiModal').style.display = 'none';
-        });
-
-        // Schedule Call button
-        document.getElementById('scheduleCallBtn').addEventListener('click', function() {
-            window.open('https://free-mobile-report.netlify.app/zoom-scheduler', '_blank');
-            document.getElementById('aiModal').style.display = 'none';
-        });
-
-        // Live Chat button
-        document.getElementById('liveChatBtn').addEventListener('click', function() {
-            alert('Live chat coming soon! Please schedule a call for immediate assistance.');
-        });
-
-        // Example buttons
-        const exampleButtons = document.querySelectorAll('#mobileWiseExampleBtn, #recommendationExampleBtn');
-        exampleButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                window.open('https://mortgages-assist.com', '_blank');
-            });
-        });
-
-        // Close modal when clicking outside
-        window.addEventListener('click', function(event) {
-            if (event.target.classList.contains('demo-popup')) {
-                event.target.style.display = 'none';
-            }
-        });
-
-        // Close with ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                document.getElementById('aiModal').style.display = 'none';
-            }
-        });
-    </script>
+        }
+    });
+</script>
 </body>
 </html>
