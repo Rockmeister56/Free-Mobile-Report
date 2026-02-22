@@ -1,15 +1,55 @@
-// analysis.js - COMPLETE FIXED VERSION
-// This file powers the PPC Audit analysis page
+// analysis.js - COMPLETE UPDATED VERSION WITH SUPABASE
+// This file powers the PPC Audit analysis page and stores domains in Supabase
+
+// ===== SUPABASE SETUP =====
+const SUPABASE_URL = 'https://fcgbusobfdwnpoqyuzoe.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk';
+
+// Initialize Supabase
+const { createClient } = supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ===== FUNCTION TO STORE AUDITED DOMAIN =====
+async function storeAuditedDomain(domain) {
+    try {
+        // Extract clean domain (remove http, https, www, and paths)
+        let cleanDomain = domain.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+        cleanDomain = cleanDomain.replace(/^www\./, '');
+        
+        console.log('📝 Storing domain in Supabase:', cleanDomain);
+        
+        const { error } = await supabaseClient
+            .from('audited_sites')
+            .insert([
+                {
+                    domain: cleanDomain,
+                    audited_at: new Date().toISOString(),
+                    expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+                }
+            ]);
+        
+        if (error) {
+            console.error('❌ Supabase insert error:', error);
+            return { success: false, error: error.message };
+        }
+        
+        console.log('✅ Domain successfully stored in Supabase');
+        return { success: true };
+    } catch (error) {
+        console.error('❌ Error storing domain:', error);
+        return { success: false, error: error.message };
+    }
+}
 
 // Get parameters from URL or localStorage
 const urlParams = new URLSearchParams(window.location.search);
 const budgetRange = urlParams.get('budget') || localStorage.getItem('ppcBudget') || '10000';
 const scannedUrl = urlParams.get('url') || localStorage.getItem('scannedUrl') || 'your website';
 
-// Debug - see what's coming in (remove after testing)
+// Debug - see what's coming in
 console.log('Budget range received:', budgetRange);
 
-// Convert range to midpoint value - FIXED version
+// Convert range to midpoint value
 function getMidpointFromRange(range) {
     // Handle if it comes as a string with dash (like "2000-5000")
     let rangeValue = range;
@@ -69,13 +109,6 @@ const monthlyLoss = Math.round(ppcBudget * 0.625); // 62.5% waste rate
 
 console.log('Final PPC Budget:', ppcBudget);
 console.log('Monthly Loss:', monthlyLoss);
-
-// Mortgage PPC Constants
-const MORTGAGE_METRICS = {
-    cpc: 20,
-    abandonmentRate: 0.85,
-    industryConversion: 0.08
-};
 
 // Update all dynamic content on the page
 function updateDynamicContent() {
@@ -254,45 +287,43 @@ class AnalysisProgress {
         }
     }
 
-    completeAnalysis() {
-    console.log('✅ Analysis complete!');
-    
-    // Update UI
-    this.progressFill.style.background = 'linear-gradient(90deg, #00cc66, #00ff88)';
-    this.progressText.textContent = '100% Complete - Report Ready!';
-    this.progressText.style.color = '#00cc66';
-    this.statusMessage.innerHTML = '<p>"✅ Analysis complete! Redirecting to secure report..."</p>';
-    
-    // Generate one-time password
-    function generatePassword() {
-        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-        let pwd = '';
-        for (let i = 0; i < 6; i++) {
-            pwd += chars[Math.floor(Math.random() * chars.length)];
-            if (i === 2) pwd += '-';
+    async completeAnalysis() {
+        console.log('✅ Analysis complete - storing in Supabase...');
+        
+        // Update UI
+        if (this.progressFill) {
+            this.progressFill.style.background = 'linear-gradient(90deg, #00cc66, #00ff88)';
         }
-        return pwd;
-    }
-    
-    const oneTimePassword = generatePassword();
-    console.log('🔑 Generated password:', oneTimePassword);
-    
-    // Store in localStorage
-    localStorage.setItem('oneTimePassword', oneTimePassword);
-    localStorage.setItem('lastScannedUrl', scannedUrl);
-    localStorage.setItem('ppcBudget', ppcBudget);
-    localStorage.setItem('monthlyLoss', monthlyLoss);
-    
-    // Redirect to password page
-    setTimeout(() => {
-        const url = `password-protect.html?pwd=${oneTimePassword}&url=${encodeURIComponent(scannedUrl)}&budget=${ppcBudget}&loss=${monthlyLoss}`;
-        console.log('🚀 Redirecting to:', url);
-        window.location.href = url;
-    }, 2000);
-
+        
+        if (this.progressText) {
+            this.progressText.textContent = '100% Complete - Report Ready!';
+            this.progressText.style.color = '#00cc66';
+        }
+        
+        if (this.statusMessage) {
+            this.statusMessage.innerHTML = '<p>"✅ Analysis complete! Loading your report..."</p>';
+        }
+        
+        if (this.lossAlert) {
+            this.lossAlert.style.display = 'block';
+        }
+        
+        // Store in Supabase that this domain was audited
+        await storeAuditedDomain(scannedUrl);
+        
+        // Store in localStorage
+        localStorage.setItem('lastScannedUrl', scannedUrl);
+        localStorage.setItem('ppcBudget', ppcBudget);
+        localStorage.setItem('monthlyLoss', monthlyLoss);
+        
+        // Redirect DIRECTLY to results page (NO PASSWORD PAGE!)
+        setTimeout(() => {
+            const resultsUrl = `calculator-enhanced.html?url=${encodeURIComponent(scannedUrl)}&budget=${ppcBudget}&loss=${monthlyLoss}`;
+            console.log('🚀 Redirecting to results:', resultsUrl);
+            window.location.href = resultsUrl;
+        }, 2000);
     }
 }
-
 
 // Initialize everything when the page loads
 document.addEventListener('DOMContentLoaded', function() {
