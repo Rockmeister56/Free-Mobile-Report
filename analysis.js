@@ -1,13 +1,41 @@
 // analysis.js - COMPLETE UPDATED VERSION WITH SUPABASE
 // This file powers the PPC Audit analysis page and stores domains in Supabase
 
-// ===== SUPABASE SETUP =====
+// ===== LOAD SUPABASE SDK =====
 const SUPABASE_URL = 'https://fcgbusobfdwnpoqyuzoe.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk';
 
-// Initialize Supabase
-const { createClient } = supabase;
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Initialize Supabase - check if supabase is available
+let supabaseClient;
+
+// Function to initialize Supabase
+function initSupabase() {
+    return new Promise((resolve, reject) => {
+        // Check if supabase is already loaded
+        if (typeof supabase !== 'undefined') {
+            const { createClient } = supabase;
+            supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('✅ Supabase client created');
+            resolve();
+        } else {
+            // If not loaded, try to load it dynamically
+            console.log('⏳ Loading Supabase SDK...');
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+            script.onload = () => {
+                const { createClient } = supabase;
+                supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ Supabase client created after dynamic load');
+                resolve();
+            };
+            script.onerror = () => {
+                console.error('❌ Failed to load Supabase SDK');
+                reject();
+            };
+            document.head.appendChild(script);
+        }
+    });
+}
 
 // ===== FUNCTION TO STORE AUDITED DOMAIN =====
 async function storeAuditedDomain(domain) {
@@ -308,6 +336,12 @@ class AnalysisProgress {
             this.lossAlert.style.display = 'block';
         }
         
+        // Make sure Supabase is initialized before storing
+        if (!supabaseClient) {
+            console.log('⏳ Waiting for Supabase to initialize...');
+            await initSupabase();
+        }
+        
         // Store in Supabase that this domain was audited
         await storeAuditedDomain(scannedUrl);
         
@@ -326,10 +360,13 @@ class AnalysisProgress {
 }
 
 // Initialize everything when the page loads
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     console.log('Page loaded, updating content');
     
-    // First update all the dynamic content
+    // Initialize Supabase first
+    await initSupabase();
+    
+    // Update all the dynamic content
     updateDynamicContent();
     
     // Hide preloader and start analysis after 2 seconds
