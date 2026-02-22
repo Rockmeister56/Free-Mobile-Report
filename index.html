@@ -134,54 +134,43 @@
                     </div>
                 </header>
 
-             <!-- 🔐 LIMITED ACCESS CODE CONTAINER - White transparent, impossible to miss -->
-<div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 2px solid #00cc66; border-radius: 15px; padding: 20px; margin: 30px 0 20px 0; text-align: center; box-shadow: 0 0 30px rgba(0,204,102,0.3);">
-    
-    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
-        <span style="background: #00cc66; color: black; font-weight: 700; padding: 5px 15px; border-radius: 50px; font-size: 0.9rem; text-transform: uppercase;">🔐 Limited Offer</span>
-        <span style="color: #ffaa00; font-weight: 700;">$99 Value</span>
-    </div>
-    
-    <p style="color: white; font-size: 1.1rem; margin-bottom: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
-        Have an exclusive access code?
-    </p>
-    
-    <!-- BLINKING GREEN LIGHT BUTTON -->
-    <style>
-        @keyframes greenBlink {
-            0% { box-shadow: 0 0 5px #00cc66, 0 0 10px #00cc66, 0 0 20px #00cc66; }
-            50% { box-shadow: 0 0 20px #00ff88, 0 0 40px #00ff88, 0 0 60px #00ff88; }
-            100% { box-shadow: 0 0 5px #00cc66, 0 0 10px #00cc66, 0 0 20px #00cc66; }
-        }
-        .blink-green-btn {
-            animation: greenBlink 1.5s infinite;
-            background: linear-gradient(135deg, #00cc66, #008844);
-            border: none;
-            color: white;
-            font-weight: 700;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid rgba(255,255,255,0.3);
-            width: 100%;
-            max-width: 300px;
-            margin: 0 auto;
-        }
-        .blink-green-btn:hover {
-            transform: translateY(-3px);
-            background: linear-gradient(135deg, #00ff88, #00aa44);
-        }
-    </style>
-    
-    <button id="showAccessPopup" class="blink-green-btn">
-        ⚡ CLICK TO ENTER ACCESS CODE ⚡
+             <!-- SIMPLE GLOWING ACCESS BUTTON -->
+<style>
+    @keyframes softGlow {
+        0% { box-shadow: 0 0 5px #00cc66, 0 0 10px #00cc66; }
+        50% { box-shadow: 0 0 15px #00ff88, 0 0 30px #00ff88; }
+        100% { box-shadow: 0 0 5px #00cc66, 0 0 10px #00cc66; }
+    }
+    .glow-access-btn {
+        animation: softGlow 2s infinite;
+        background: rgba(0, 102, 204, 0.2);
+        border: 2px solid #00cc66;
+        color: #00ff88;
+        font-weight: 600;
+        padding: 8px 18px;
+        border-radius: 40px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+        margin: 10px 0 15px 0;
+        float: right;
+    }
+    .glow-access-btn:hover {
+        background: rgba(0, 204, 102, 0.3);
+        transform: translateY(-2px);
+    }
+    .clearfix::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+</style>
+
+<div class="clearfix">
+    <button id="showAccessPopup" class="glow-access-btn">
+        ⚡ ENTER ACCESS CODE
     </button>
-    
-    <p style="color: #aaa; font-size: 0.8rem; margin-top: 12px;">
-        One code per website • Expires in 30 days
-    </p>
 </div>
 
 <!-- PPC Budget Section -->
