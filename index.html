@@ -195,6 +195,16 @@
     const { createClient } = supabase;
     const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // ADD THIS:
+console.log('🔍 DEBUG - Domain checked:', cleanDomain);
+console.log('🔍 DEBUG - Audited?', audited);
+if (audited) {
+    console.log('🔍 DEBUG - Record found:', record);
+    alert(`DEBUG: Domain ${cleanDomain} found in database! Check console.`);
+} else {
+    alert(`DEBUG: Domain ${cleanDomain} NOT found - should proceed`);
+}
+
     // Function to check if domain has been audited
     async function checkDomainAudited(domain) {
         try {
