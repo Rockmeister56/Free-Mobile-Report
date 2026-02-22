@@ -113,6 +113,10 @@
                 <header class="hero">
                     <h1>Does your <span class="highlight">PPC Ad Spend</span> have LEAKS?</h1>
 
+                     <div>
+                        <p class="stats"> Average PPC LEAKS for Lenders = $6430 <strong>- Take control with a FREE PPC Audit Report</strong> </p>
+                    </div>
+
                     <!-- NEW: Pain Point Cards -->
                     <div class="pain-points">
                         <div class="pain-card">
@@ -128,29 +132,18 @@
                             <span class="pain-text">Cost Per Lost<br>Lead</span>
                         </div>
                     </div>
-                    
-                    <div>
-                        <p class="stats"> Average PPC LEAKS for Lenders = $6430 <strong>- Take control with a FREE PPC Audit Report</strong> </p>
-                    </div>
                 </header>
 
-                <!-- NEW: Access Code Section - Just add this block -->
-<section class="ppc-section" style="margin-top: 20px; background: rgba(0,102,204,0.1); border: 2px dashed #0066cc;">
-    <label class="ppc-label">🔐 <h2>ENTER YOUR ACCESS CODE</h2></label>
-    <p style="color: #ffaa00; margin-bottom: 10px; font-weight: 600;">Limited Time Offer - Value $99</p>
-    <input 
-        type="text" 
-        id="accessCode" 
-        placeholder="ENTER ACCESS CODE (e.g., TOMMY2024)" 
-        style="width: 100%; padding: 15px; font-size: 1.1em; border: 2px solid #0066cc; border-radius: 8px; background: white; text-transform: uppercase; text-align: center; letter-spacing: 2px; margin-bottom: 10px;"
-        maxlength="20"
-    >
-    <p style="color: #aaa; font-size: 0.85em; text-align: center;">One code per website • Expires in 30 days</p>
-</section>
+                <!-- ACCESS CODE BUTTON - Small and unobtrusive -->
+<div style="text-align: right; margin-bottom: 10px;">
+    <button id="showAccessPopup" style="background: transparent; border: 1px solid #0066cc; color: #0099ff; padding: 8px 15px; border-radius: 30px; font-size: 0.9rem; cursor: pointer;">
+        🔐 Have an Access Code?
+    </button>
+</div>
 
                 <!-- NEW: PPC Budget Section -->
                 <section class="ppc-section">
-                    <label class="ppc-label">💰 <h2>1st, what's your monthly PPC budget?</h2></label>
+                    <label class="ppc-label">💰 <h2>1ST, what's your monthly PPC?</h2></label>
                     
                     <!-- Dropdown for quick selection -->
                     <select id="ppcBudget" class="budget-select">
@@ -200,7 +193,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
     // Initialize Supabase
     const SUPABASE_URL = 'https://fcgbusobfdwnpoqyuzoe.supabase.co';
@@ -368,7 +360,69 @@
             });
         }
     });
+    // Popup functionality
+const showAccessPopup = document.getElementById('showAccessPopup');
+const accessPopup = document.getElementById('accessPopup');
+const closePopup = document.getElementById('closePopup');
+const verifyCodeBtn = document.getElementById('verifyCodeBtn');
+const popupAccessCode = document.getElementById('popupAccessCode');
+
+// Show popup
+showAccessPopup.addEventListener('click', function() {
+    accessPopup.style.display = 'flex';
+});
+
+// Close popup
+closePopup.addEventListener('click', function() {
+    accessPopup.style.display = 'none';
+    popupAccessCode.value = '';
+});
+
+// Close when clicking outside
+accessPopup.addEventListener('click', function(e) {
+    if (e.target === accessPopup) {
+        accessPopup.style.display = 'none';
+        popupAccessCode.value = '';
+    }
+});
+
+// Verify code (you'll need to add your Supabase check here)
+verifyCodeBtn.addEventListener('click', async function() {
+    const code = popupAccessCode.value.trim().toUpperCase();
+    if (!code) {
+        alert('Please enter an access code');
+        return;
+    }
+    
+    // Here you'll check against Supabase
+    // For now, just show success message
+    alert(`Code ${code} accepted! Your $99 value audit is unlocked.`);
+    accessPopup.style.display = 'none';
+    
+    // Store the code in localStorage
+    localStorage.setItem('accessCode', code);
+});
 </script>
     <script src="app.js"></script>
+
+    <!-- ACCESS CODE POPUP MODAL -->
+<div id="accessPopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center;">
+    <div style="background: #0a0a0a; border: 2px solid #0066cc; border-radius: 20px; padding: 40px; max-width: 400px; width: 90%; position: relative; box-shadow: 0 0 50px rgba(0,102,204,0.5);">
+        <button id="closePopup" style="position: absolute; top: 15px; right: 20px; background: none; border: none; color: #666; font-size: 2rem; cursor: pointer;">×</button>
+        
+        <h3 style="color: white; margin-bottom: 10px; text-align: center;">🔐 LIMITED ACCESS OFFER</h3>
+        <p style="color: #ffaa00; text-align: center; font-weight: 700; margin-bottom: 20px;">Value: $99 per audit</p>
+        
+        <input type="text" id="popupAccessCode" placeholder="ENTER ACCESS CODE" 
+               style="width: 100%; padding: 15px; background: rgba(255,255,255,0.1); border: 2px solid #0066cc; border-radius: 10px; color: white; font-size: 1.2rem; text-align: center; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase;">
+        
+        <button id="verifyCodeBtn" style="width: 100%; padding: 15px; background: linear-gradient(135deg, #0066cc, #004999); color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-bottom: 15px;">
+            VERIFY CODE
+        </button>
+        
+        <p style="color: #aaa; font-size: 0.8rem; text-align: center;">One code per website • Expires in 30 days</p>
+        <p style="color: #666; font-size: 0.8rem; text-align: center; margin-top: 15px;">Don't have a code? <a href="#" style="color: #0099ff;" onclick="document.getElementById('accessPopup').style.display='none'">Continue with free version →</a></p>
+    </div>
+</div>
 </body>
 </html>
