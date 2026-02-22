@@ -195,16 +195,6 @@
     const { createClient } = supabase;
     const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ADD THIS:
-console.log('🔍 DEBUG - Domain checked:', cleanDomain);
-console.log('🔍 DEBUG - Audited?', audited);
-if (audited) {
-    console.log('🔍 DEBUG - Record found:', record);
-    alert(`DEBUG: Domain ${cleanDomain} found in database! Check console.`);
-} else {
-    alert(`DEBUG: Domain ${cleanDomain} NOT found - should proceed`);
-}
-
     // Function to check if domain has been audited
     async function checkDomainAudited(domain) {
         try {
@@ -285,20 +275,35 @@ if (audited) {
             analyzeBtn.textContent = '🔍 CHECKING...';
             analyzeBtn.disabled = true;
             
-            // Check if domain already audited
-            const { audited, record } = await checkDomainAudited(cleanDomain);
             
-            if (audited) {
-                // Domain already audited - redirect to blocked page
-                const auditDate = new Date(record.audited_at).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-                
-                window.location.href = `blocked.html?domain=${encodeURIComponent(cleanDomain)}&date=${encodeURIComponent(auditDate)}`;
-                return;
-            }
+            // Check if domain already audited
+const { audited, record } = await checkDomainAudited(cleanDomain);
+
+// ===== DEBUG CODE =====
+console.log('🔍 DOMAIN CHECK RESULTS:');
+console.log('- Domain:', cleanDomain);
+console.log('- Audited?', audited);
+console.log('- Record:', record);
+
+alert(`🔍 DEBUG: 
+Domain: ${cleanDomain}
+Found in database? ${audited ? 'YES' : 'NO'}
+${audited ? 'Date: ' + record.audited_at : ''}
+
+Check console for full details.`);
+// ===== END DEBUG =====
+
+if (audited) {
+    // Domain already audited - redirect to blocked page
+    const auditDate = new Date(record.audited_at).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    
+    window.location.href = `blocked.html?domain=${encodeURIComponent(cleanDomain)}&date=${encodeURIComponent(auditDate)}`;
+    return;
+}
             
             // Get budget
             let budget = '';
