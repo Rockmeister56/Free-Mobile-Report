@@ -134,6 +134,20 @@
                     </div>
                 </header>
 
+                <!-- NEW: Access Code Section - Just add this block -->
+<section class="ppc-section" style="margin-top: 20px; background: rgba(0,102,204,0.1); border: 2px dashed #0066cc;">
+    <label class="ppc-label">🔐 <h2>ENTER YOUR ACCESS CODE</h2></label>
+    <p style="color: #ffaa00; margin-bottom: 10px; font-weight: 600;">Limited Time Offer - Value $99</p>
+    <input 
+        type="text" 
+        id="accessCode" 
+        placeholder="ENTER ACCESS CODE (e.g., TOMMY2024)" 
+        style="width: 100%; padding: 15px; font-size: 1.1em; border: 2px solid #0066cc; border-radius: 8px; background: white; text-transform: uppercase; text-align: center; letter-spacing: 2px; margin-bottom: 10px;"
+        maxlength="20"
+    >
+    <p style="color: #aaa; font-size: 0.85em; text-align: center;">One code per website • Expires in 30 days</p>
+</section>
+
                 <!-- NEW: PPC Budget Section -->
                 <section class="ppc-section">
                     <label class="ppc-label">💰 <h2>1st, what's your monthly PPC budget?</h2></label>
@@ -215,13 +229,63 @@
         }
     }
 
+    // NEW: Function to check if access code is valid
+    async function checkAccessCode(code) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('access_codes')
+                .select('*')
+                .eq('code', code.toUpperCase())
+                .eq('used', false)
+                .gt('expires_at', new Date().toISOString());
+            
+            if (error) throw error;
+            
+            return {
+                valid: data && data.length > 0,
+                record: data && data.length > 0 ? data[0] : null
+            };
+        } catch (error) {
+            console.error('Error checking access code:', error);
+            return { valid: false, error: error.message };
+        }
+    }
+
+    // NEW: Function to mark code as used
+    async function markCodeAsUsed(code, domain) {
+        try {
+            const { error } = await supabaseClient
+                .from('access_codes')
+                .update({ 
+                    used: true, 
+                    used_by_domain: domain,
+                    used_at: new Date().toISOString()
+                })
+                .eq('code', code);
+            
+            if (error) throw error;
+            return { success: true };
+        } catch (error) {
+            console.error('Error marking code as used:', error);
+            return { success: false };
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const analyzeBtn = document.getElementById('analyzeBtn');
         const websiteUrl = document.getElementById('websiteUrl');
         const ppcBudget = document.getElementById('ppcBudget');
         const exactBudget = document.getElementById('exactBudget');
+        const accessCode = document.getElementById('accessCode'); // NEW
         
         analyzeBtn.addEventListener('click', async function() {
+            // NEW: Validate access code
+            const code = accessCode.value.trim().toUpperCase();
+            if (!code) {
+                alert('Please enter your access code');
+                return;
+            }
+            
             // Validate URL
             let url = websiteUrl.value.trim();
             if (!url) {
@@ -258,6 +322,16 @@
                 return;
             }
             
+            // NEW: Check if access code is valid
+            const { valid, record: codeRecord } = await checkAccessCode(code);
+            
+            if (!valid) {
+                alert('Invalid or expired access code. Please contact your sales representative.');
+                analyzeBtn.textContent = originalText;
+                analyzeBtn.disabled = false;
+                return;
+            }
+            
             // Get budget
             let budget = '';
             if (exactBudget && exactBudget.value && exactBudget.value.trim() !== '') {
@@ -268,9 +342,13 @@
                 budget = '5000';
             }
             
+            // NEW: Mark code as used
+            await markCodeAsUsed(code, cleanDomain);
+            
             // Store in localStorage for the journey
             localStorage.setItem('ppcBudget', budget);
             localStorage.setItem('scannedUrl', url);
+            localStorage.setItem('accessCode', code);
             
             // Redirect to analysis page
             window.location.href = `analysis.html?url=${encodeURIComponent(url)}&budget=${budget}`;
@@ -282,6 +360,13 @@
                 analyzeBtn.click();
             }
         });
+        
+        // NEW: Auto-uppercase access code
+        if (accessCode) {
+            accessCode.addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+        }
     });
 </script>
     <script src="app.js"></script>
