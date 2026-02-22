@@ -960,27 +960,33 @@ problems.forEach(problem => {
         const detailedAnalysis = document.getElementById('detailedAnalysis');
         detailedAnalysis.innerHTML = '';
         
-       analysisItems.forEach(item => {
-    // ... existing code ...
-    
-    const itemHtml = `
-        <div class="analysis-item">
-            <div class="analysis-icon">${item.icon}</div>
-            <div class="analysis-content">
-                <div class="analysis-title">${item.name}</div>
-                <div class="analysis-progress-small">
-                    <div class="analysis-progress-fill ${progressFillClass}" 
-                         data-final-width="${item.score}%" 
-                         style="width: ${item.score}%;"></div>
+        analysisItems.forEach(item => {
+            const scoreColorClass = getScoreColorClass(item.score);
+            const progressFillClass = getProgressFillClass(item.score);
+            
+            let rightContent = '';
+            if (item.special) {
+                rightContent = `<span style="color: #ff4444; font-weight: 700;">${item.special}</span>`;
+            } else {
+                rightContent = `<span class="${scoreColorClass}">${item.score}%</span>`;
+            }
+            
+            const itemHtml = `
+                <div class="analysis-item">
+                    <div class="analysis-icon">${item.icon}</div>
+                    <div class="analysis-content">
+                        <div class="analysis-title">${item.name}</div>
+                        <div class="analysis-progress-small">
+                            <div class="analysis-progress-fill ${progressFillClass}" style="width: ${item.score}%;"></div>
+                        </div>
+                    </div>
+                    <div class="analysis-score">
+                        ${rightContent}
+                    </div>
                 </div>
-            </div>
-            <div class="analysis-score">
-                ${rightContent}
-            </div>
-        </div>
-    `;
-    detailedAnalysis.innerHTML += itemHtml;
-});
+            `;
+            detailedAnalysis.innerHTML += itemHtml;
+        });
     });
 
     // AI Assistant Button
