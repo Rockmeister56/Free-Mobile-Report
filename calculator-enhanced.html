@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your PPC Audit Report - See How Much You're Wasting</title>
+    <title>Your PPC Audit Report - Visual Performance Analysis</title>
     <link rel="stylesheet" href="calculator-styles.css">
     <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,7 +21,7 @@
             min-height: 100vh;
         }
         
-        /* NEW BACKGROUND WITH VAULT IMAGE */
+        /* VAULT BACKGROUND */
         .report-page {
             background-image: url('https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/report-bg3.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvcmVwb3J0LWJnMy5qcGciLCJpYXQiOjE3NzE3MzE2MjAsImV4cCI6MTgwMzI2NzYyMH0.M0cs_9S-JiDO6FY1OuLPwlof-SMwtWHZQleHUQfv4vE');
             background-size: cover;
@@ -31,7 +31,7 @@
             position: relative;
         }
         
-        /* 75% BLACK OVERLAY - PERFECT TRANSPARENCY */
+        /* 75% BLACK OVERLAY */
         .report-page::before {
             content: '';
             position: absolute;
@@ -50,16 +50,16 @@
         }
         
         /* ========================================== */
-        /* HEADER WITH BLACK BACKGROUND */
+        /* HEADER WITH BIGGER LOGO (50% larger) */
         /* ========================================== */
         .main-header {
             background: #000000;
-            border-bottom: 2px solid #0066cc;
-            padding: 15px 0;
+            border-bottom: 3px solid #0066cc;
+            padding: 20px 0;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 4px 20px rgba(0,102,204,0.3);
+            box-shadow: 0 4px 20px rgba(0,102,204,0.5);
         }
         
         .header-content {
@@ -71,26 +71,22 @@
             align-items: center;
         }
         
-        /* Logo Section */
-        .logo-section {
-            display: flex;
-            align-items: center;
-        }
-        
+        /* LOGO - 50% BIGGER! */
         .logo-image {
-            height: 60px;
+            height: 90px;  /* Increased from 60px */
             width: auto;
             display: block;
+            filter: drop-shadow(0 0 15px rgba(0,102,204,0.5));
         }
         
-        /* GLOWING AI ASSISTANT BUTTON - ANIMATED */
+        /* GLOWING AI ASSISTANT BUTTON */
         .ai-glow-button {
             background: linear-gradient(145deg, #001a33, #000d1a);
             color: white;
             border: 2px solid #0066cc;
-            padding: 14px 32px;
+            padding: 16px 36px;  /* Slightly larger */
             border-radius: 50px;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -105,90 +101,23 @@
         
         @keyframes glowPulse {
             0% { box-shadow: 0 0 20px rgba(0,102,204,0.5); }
-            50% { box-shadow: 0 0 40px rgba(0,102,204,0.9), 0 0 60px rgba(0,102,204,0.5); }
+            50% { box-shadow: 0 0 50px rgba(0,102,204,0.9), 0 0 70px rgba(0,102,204,0.5); }
             100% { box-shadow: 0 0 20px rgba(0,102,204,0.5); }
         }
         
-        .ai-glow-button::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #0066cc, #00aaff, #0066cc);
-            border-radius: 52px;
-            z-index: -1;
-            animation: borderRotate 3s linear infinite;
-        }
-        
-        @keyframes borderRotate {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
-        }
-        
         .ai-glow-button i {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: #00aaff;
             animation: iconPulse 1.5s infinite;
         }
         
         @keyframes iconPulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1); text-shadow: 0 0 10px #00aaff; }
+            50% { transform: scale(1.1); text-shadow: 0 0 15px #00aaff; }
             100% { transform: scale(1); }
         }
         
-        .ai-glow-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 50px rgba(0,102,204,0.9);
-        }
-        
-        .ai-glow-button:hover i {
-            animation: none;
-            transform: scale(1.2);
-        }
-        
-        /* ========================================== */
-        /* MAIN CONTAINER - FLEXBOX LAYOUT */
-        /* ========================================== */
-        .main-container {
-            max-width: 1400px;
-            margin: 40px auto;
-            padding: 0 30px;
-            display: flex;
-            gap: 40px;
-        }
-        
-        /* LEFT COLUMN - REPORT AREA (75%) */
-        .left-column {
-            flex: 3; /* 75% */
-            min-width: 0; /* Prevents overflow */
-        }
-        
-        /* RIGHT COLUMN - BANNERS AREA (25%) */
-        .right-column {
-            flex: 1; /* 25% */
-            min-width: 300px;
-            max-width: 350px;
-        }
-        
-        /* ========================================== */
-        /* TRANSPARENT BLACK CARDS (75% black) */
-        /* ========================================== */
-        .report-card {
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(0, 102, 204, 0.3);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            color: white;
-        }
-        
-        /* Blue accent bars */
+        /* Blue bars */
         .top-bar, .bottom-bar {
             background: linear-gradient(90deg, #0066cc, #0099ff, #0066cc);
             height: 8px;
@@ -201,6 +130,44 @@
         
         .top-bar { top: 0; }
         .bottom-bar { bottom: 0; }
+        
+        /* ========================================== */
+        /* MAIN CONTAINER - FLEXBOX LAYOUT */
+        /* ========================================== */
+        .main-container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 30px;
+            display: flex;
+            gap: 40px;
+        }
+        
+        /* LEFT COLUMN - REPORT AREA (70%) */
+        .left-column {
+            flex: 2.3; /* ~70% */
+            min-width: 0;
+        }
+        
+        /* RIGHT COLUMN - SIDEBAR (30%) */
+        .right-column {
+            flex: 1; /* ~30% */
+            min-width: 320px;
+            max-width: 380px;
+        }
+        
+        /* ========================================== */
+        /* TRANSPARENT BLACK CARDS */
+        /* ========================================== */
+        .report-card {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 102, 204, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            color: white;
+        }
         
         /* RESULTS HEADER */
         .results-header {
@@ -231,6 +198,10 @@
         .loss-amount {
             text-align: center;
             margin: 20px 0 30px;
+            padding: 20px;
+            background: rgba(255,68,68,0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255,68,68,0.3);
         }
         
         .loss-label {
@@ -242,10 +213,10 @@
         }
         
         .loss-number {
-            font-size: 4.5rem;
+            font-size: 5rem;
             font-weight: 800;
             color: #ff4444;
-            text-shadow: 0 0 30px rgba(255,68,68,0.5);
+            text-shadow: 0 0 30px rgba(255,68,68,0.7);
             line-height: 1;
         }
         
@@ -259,13 +230,13 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 20px;
+            margin: 30px 0 20px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-bottom: 10px;
         }
         
         .section-header i {
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: #0066cc;
         }
         
@@ -281,110 +252,272 @@
             margin-left: 10px;
         }
         
-        /* PROBLEM ITEMS */
-        .problem-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            margin-bottom: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-left: 4px solid #ff4444;
-            border-radius: 8px;
-            transition: transform 0.3s ease;
-        }
-        
-        .problem-item:hover {
-            transform: translateX(5px);
-            background: rgba(255,68,68,0.1);
-        }
-        
-        .problem-content {
-            flex: 1;
-        }
-        
-        .problem-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: white;
-        }
-        
-        .problem-desc {
-            font-size: 0.9rem;
-            color: #aaa;
-        }
-        
-        .problem-cost {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #ff4444;
-            text-align: right;
-            min-width: 120px;
-        }
-        
-        .problem-cost small {
-            font-size: 0.8rem;
-            color: #aaa;
-            display: block;
-        }
-        
         /* ========================================== */
-        /* RIGHT COLUMN - BANNERS SECTION */
+        /* PROGRESS BAR CARDS - VISUAL MASTERPIECE */
         /* ========================================== */
-        .banners-section {
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(0,102,204,0.3);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-        }
-        
-        .banners-section h3 {
-            color: white;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 1.3rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
-        }
-        
-        .banners-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .banner-container {
-            background: rgba(0,0,0,0.3);
-            border: 2px dashed rgba(0,102,204,0.5);
+        .problem-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
-            padding: 15px;
+            padding: 18px;
+            margin-bottom: 15px;
             transition: all 0.3s ease;
         }
         
-        .banner-container:hover {
+        .problem-card:hover {
             border-color: #0066cc;
             background: rgba(0,102,204,0.1);
+            transform: translateX(5px);
         }
         
-        .banner-image {
+        .problem-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .problem-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .problem-title i {
+            color: #ff4444;
+            margin-right: 8px;
+        }
+        
+        .problem-score {
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.5);
+        }
+        
+        .score-red { color: #ff4444; }
+        .score-orange { color: #ff8844; }
+        .score-yellow { color: #ffcc44; }
+        .score-green { color: #44ff44; }
+        
+        /* PROGRESS BAR CONTAINER */
+        .progress-container {
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar-bg {
             width: 100%;
-            height: auto;
-            aspect-ratio: 1/1;
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
+            height: 24px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 1s ease;
+            position: relative;
+        }
+        
+        .progress-fill.red { background: linear-gradient(90deg, #ff4444, #ff8844); }
+        .progress-fill.orange { background: linear-gradient(90deg, #ff8844, #ffcc44); }
+        .progress-fill.yellow { background: linear-gradient(90deg, #ffcc44, #aaff44); }
+        .progress-fill.green { background: linear-gradient(90deg, #44ff44, #00ffaa); }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .problem-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+        
+        .problem-loss {
+            color: #ff4444;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        /* ========================================== */
+        /* DETAILED ANALYSIS ITEMS (Smaller cards) */
+        /* ========================================== */
+        .analysis-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: #666;
-            font-size: 0.9rem;
-            text-align: center;
-            margin-bottom: 10px;
-            overflow: hidden;
+            gap: 15px;
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         
-        .banner-image img {
+        .analysis-item:last-child {
+            border-bottom: none;
+        }
+        
+        .analysis-icon {
+            width: 30px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        
+        .analysis-content {
+            flex: 1;
+        }
+        
+        .analysis-title {
+            color: white;
+            margin-bottom: 5px;
+        }
+        
+        .analysis-progress-small {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .analysis-progress-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 1s ease;
+        }
+        
+        .analysis-score {
+            min-width: 60px;
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        /* ========================================== */
+        /* RIGHT COLUMN COMPONENTS */
+        /* ========================================== */
+        
+        /* RECOMMENDATION CARD */
+        .recommendation-card {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            border: 2px solid #0066cc;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0,102,204,0.3);
+        }
+        
+        .recommendation-badge {
+            background: #0066cc;
+            color: white;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .recommendation-logo {
+            max-width: 200px;
+            margin: 15px auto;
+        }
+        
+        .recommendation-logo img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .example-btn {
+            background: linear-gradient(135deg, #0066cc, #004999);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .example-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,102,204,0.5);
+        }
+        
+        /* TESTIMONIAL CARD */
+        .testimonial-card {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0,102,204,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .testimonial-text {
+            color: #ddd;
+            font-style: italic;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .testimonial-author {
+            color: #0099ff;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .testimonial-company {
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+        
+        /* BANNERS GRID */
+        .banners-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .banner-square {
+            aspect-ratio: 1/1;
+            background: rgba(0,102,204,0.1);
+            border: 1px solid rgba(0,102,204,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .banner-square:hover {
+            border-color: #0066cc;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,102,204,0.3);
+        }
+        
+        .banner-square img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -398,137 +531,19 @@
             justify-content: center;
             background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
             color: #0099ff;
-        }
-        
-        .banner-url-input {
-            width: 100%;
-            padding: 8px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 5px;
-            color: white;
             font-size: 0.8rem;
-            margin-bottom: 8px;
-        }
-        
-        .banner-url-input:focus {
-            outline: none;
-            border-color: #0066cc;
-        }
-        
-        .affiliate-link-input {
-            width: 100%;
-            padding: 8px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 5px;
-            color: white;
-            font-size: 0.8rem;
-        }
-        
-        /* SOLUTION CARD */
-        .solution-card {
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(0,102,204,0.3);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-            color: white;
-        }
-        
-        .solution-variation {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #ddd;
-        }
-        
-        .solution-variation strong {
-            color: #0099ff;
-        }
-        
-        .solution-divider {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #0066cc, transparent);
-            margin: 20px 0;
-        }
-        
-        /* EMAIL CAPTURE */
-        .email-capture-card {
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(0,102,204,0.3);
-            border-radius: 20px;
-            padding: 25px;
-        }
-        
-        .form-row {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .email-capture-card input {
-            width: 100%;
-            padding: 15px 20px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 10px;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .email-capture-card input:focus {
-            outline: none;
-            border-color: #0066cc;
-            background: rgba(255,255,255,0.15);
-            box-shadow: 0 0 15px rgba(0,102,204,0.3);
-        }
-        
-        .email-capture-card input::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-        
-        .download-btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #0066cc, #004999);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .download-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0,102,204,0.5);
-        }
-        
-        .privacy-note {
             text-align: center;
-            margin-top: 15px;
-            color: #aaa;
-            font-size: 0.8rem;
+            padding: 10px;
         }
         
-        /* AI MODAL */
+        /* MODAL STYLES */
         .demo-popup {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -545,7 +560,7 @@
             text-align: center;
             position: relative;
             border: 2px solid #0066cc;
-            box-shadow: 0 0 50px rgba(0,102,204,0.3);
+            box-shadow: 0 0 50px rgba(0,102,204,0.5);
         }
         
         .close-btn {
@@ -591,13 +606,8 @@
             border: 1px solid #0066cc;
         }
         
-        .start-demo-btn:hover, .schedule-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,102,204,0.3);
-        }
-        
         /* RESPONSIVE */
-        @media (max-width: 1000px) {
+        @media (max-width: 1100px) {
             .main-container {
                 flex-direction: column;
             }
@@ -607,12 +617,7 @@
             }
             
             .banners-grid {
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-            
-            .banner-container {
-                width: calc(50% - 10px);
+                grid-template-columns: repeat(4, 1fr);
             }
         }
         
@@ -623,20 +628,11 @@
             }
             
             .banners-grid {
-                flex-direction: column;
+                grid-template-columns: repeat(2, 1fr);
             }
             
-            .banner-container {
-                width: 100%;
-            }
-            
-            .problem-item {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .problem-cost {
-                margin-top: 10px;
+            .loss-number {
+                font-size: 3.5rem;
             }
         }
     </style>
@@ -645,7 +641,7 @@
     <!-- Blue Top Bar -->
     <div class="top-bar"></div>
 
-    <!-- Black Header with Logo and Glowing AI Button -->
+    <!-- Header with 50% BIGGER LOGO -->
     <header class="main-header">
         <div class="header-content">
             <div class="logo-section">
@@ -664,12 +660,12 @@
     </header>
 
     <div class="main-container">
-        <!-- LEFT COLUMN - REPORT AREA (75%) -->
+        <!-- LEFT COLUMN - REPORT AREA -->
         <div class="left-column">
             <!-- Main Report Card -->
             <div class="report-card">
                 <div class="results-header">
-                    <h1>🔥 PPC AUDIT RESULTS</h1>
+                    <h1>🔍 PPC AUDIT RESULTS</h1>
                     <div class="url-display" id="urlDisplay">Loading...</div>
                     <div style="color: #0099ff; margin-top: 10px;" id="budgetDisplay">Monthly Budget: $7,500</div>
                 </div>
@@ -681,57 +677,114 @@
                     <div class="loss-period">based on your PPC spend</div>
                 </div>
 
-                <!-- SECTION: Critical Problems -->
+                <!-- SECTION: Critical Problems with Progress Bars -->
                 <div class="section-header">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <h2>5 PROBLEMS <span>DRAINING YOUR BUDGET</span></h2>
+                    <h2>CRITICAL PROBLEMS <span>5 ISSUES FOUND</span></h2>
                 </div>
 
                 <div id="problemsList">
-                    <!-- Dynamically filled by JavaScript -->
+                    <!-- Dynamically filled with progress bars -->
+                </div>
+
+                <!-- SECTION: Detailed Analysis -->
+                <div class="section-header" style="margin-top: 30px;">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>DETAILED ANALYSIS <span>PERFORMANCE SCORES</span></h2>
+                </div>
+
+                <div id="detailedAnalysis">
+                    <!-- Dynamically filled with analysis items -->
+                </div>
+
+                <!-- Mobile-Wise AI Banner Recommendation -->
+                <div style="margin-top: 30px; text-align: center;">
+                    <div style="background: rgba(0,102,204,0.2); border-radius: 15px; padding: 25px; border: 2px solid #0066cc;">
+                        <h3 style="color: white; margin-bottom: 15px;">🏆 OUR #1 RECOMMENDATION</h3>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #0099ff; margin-bottom: 10px;">Mobile-Wise AI</div>
+                        <p style="color: #ddd; margin-bottom: 20px;">Recover 60% of lost leads and 5X your mobile conversions with Smart AI technology</p>
+                        <button class="example-btn" id="mobileWiseExampleBtn">
+                            <i class="fas fa-eye"></i> SEE LIVE EXAMPLE
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- RIGHT COLUMN - BANNERS AREA (25%) -->
+        <!-- RIGHT COLUMN - SIDEBAR -->
         <div class="right-column">
-            <!-- BANNERS SECTION -->
-            <div class="banners-section">
-                <h3><i class="fas fa-ad" style="color: #0066cc;"></i> AFFILIATE PARTNERS</h3>
-                <div class="banners-grid" id="bannersGrid">
-                    <!-- 8 Banner containers will be generated by JavaScript -->
-                </div>
+            <!-- #1 RECOMMENDATION CARD -->
+            <div class="recommendation-card">
+                <div class="recommendation-badge">🏆 #1 RECOMMENDATION</div>
+                <div style="font-size: 1.8rem; font-weight: 700; color: white; margin-bottom: 5px;">Mobile-Wise AI</div>
+                <div style="color: #0099ff; margin-bottom: 15px;">5X More Conversions</div>
+                <button class="example-btn" id="recommendationExampleBtn" style="width: 100%; justify-content: center;">
+                    <i class="fas fa-eye"></i> SEE EXAMPLE SITE
+                </button>
             </div>
 
-            <!-- SOLUTION CARD -->
-            <div class="solution-card">
-                <div class="section-header" style="margin-bottom: 15px;">
-                    <i class="fas fa-lightbulb"></i>
-                    <h3 style="font-size: 1.3rem;">THE SOLUTION</h3>
-                </div>
-                <div class="solution-variation" id="solutionVariation">
-                    <!-- Random variation will appear here -->
-                </div>
-            </div>
-
-            <!-- EMAIL CAPTURE CARD -->
-            <div class="email-capture-card">
-                <h3 style="color: white; margin-bottom: 20px; text-align: center;">
-                    <i class="fas fa-download" style="color: #0066cc;"></i> GET FULL REPORT
+            <!-- TESTIMONIALS SECTION -->
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-star" style="color: #ffcc00;"></i> WHAT MORTGAGE COMPANIES SAY
                 </h3>
                 
-                <div class="form-row">
-                    <input type="text" id="userFirstName" placeholder="First Name" required>
-                    <input type="email" id="userEmail" placeholder="Email Address" required>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">"Found $12k in wasted spend in 2 minutes! The visual progress bars showed exactly where our leaks were."</div>
+                    <div class="testimonial-author">- Mike Davidson</div>
+                    <div class="testimonial-company">Fairway Mortgage</div>
                 </div>
                 
-                <button class="download-btn" id="downloadReportBtn">
-                    <i class="fas fa-file-pdf"></i>
-                    SEND FREE REPORT
-                </button>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">"Our form was killing 85% of mobile leads. Mobile-Wise AI fixed it and we doubled conversions in 30 days."</div>
+                    <div class="testimonial-author">- Sarah Chen</div>
+                    <div class="testimonial-company">Rocket Mortgage</div>
+                </div>
                 
-                <div class="privacy-note">
-                    <i class="fas fa-lock"></i> We respect your privacy. Unsubscribe anytime.
+                <div class="testimonial-card">
+                    <div class="testimonial-text">"The progress bar scores made it impossible to ignore our problems. Now we're saving $5k monthly."</div>
+                    <div class="testimonial-author">- Tom Richards</div>
+                    <div class="testimonial-company">Guaranteed Rate</div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-text">"Best PPC audit tool we've used. The visual layout shows exactly what needs fixing first."</div>
+                    <div class="testimonial-author">- Jennifer Walsh</div>
+                    <div class="testimonial-company">LoanDepot</div>
+                </div>
+            </div>
+
+            <!-- AFFILIATE BANNERS (4 in 2x2 grid) -->
+            <div>
+                <h3 style="color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-handshake" style="color: #0066cc;"></i> TRUSTED PARTNERS
+                </h3>
+                
+                <div class="banners-grid">
+                    <div class="banner-square">
+                        <div class="banner-placeholder">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                            <div>AdWords<br>Expert</div>
+                        </div>
+                    </div>
+                    <div class="banner-square">
+                        <div class="banner-placeholder">
+                            <i class="fas fa-search fa-2x"></i>
+                            <div>SEO<br>Pro</div>
+                        </div>
+                    </div>
+                    <div class="banner-square">
+                        <div class="banner-placeholder">
+                            <i class="fas fa-mobile-alt fa-2x"></i>
+                            <div>Mobile<br>Optimizer</div>
+                        </div>
+                    </div>
+                    <div class="banner-square">
+                        <div class="banner-placeholder">
+                            <i class="fas fa-robot fa-2x"></i>
+                            <div>AI<br>Solutions</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -754,20 +807,6 @@
         </div>
     </div>
 
-    <!-- Report Success Popup -->
-    <div id="reportSuccess" class="demo-popup" style="display: none;">
-        <div class="popup-content">
-            <button id="closeReportSuccess" class="close-btn">×</button>
-            <div style="font-size: 4rem; color: #00cc66; margin-bottom: 15px;">✅</div>
-            <h3 style="color: white;">REPORT SENT!</h3>
-            <p style="color: #ccc; margin: 20px 0;">Your 15-page PPC Audit Report is on its way to your inbox.</p>
-            <p style="color: #0099ff;"><strong>Check your email in 2-3 minutes</strong></p>
-            <div class="popup-actions">
-                <button id="closeSuccessBtn" class="start-demo-btn">GOT IT</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         // Get data from URL or localStorage
         const urlParams = new URLSearchParams(window.location.search);
@@ -775,32 +814,43 @@
         const ppcBudget = parseInt(urlParams.get('budget') || localStorage.getItem('ppcBudget') || '7500');
         const monthlyLoss = parseInt(urlParams.get('loss') || localStorage.getItem('monthlyLoss') || Math.round(ppcBudget * 0.625));
 
-        // Calculate problem breakdowns
-        const problemBreakdown = [
-            { name: 'Form Too Long (12 fields)', desc: '85% abandon long forms on mobile', percent: 0.40 },
-            { name: 'No Mobile AI Assistant', desc: '73% expect instant responses', percent: 0.24 },
-            { name: 'Slow Load Time', desc: '4.2 seconds (should be <2s)', percent: 0.16 },
-            { name: 'Ad-to-Page Mismatch', desc: 'Ad promise ≠ landing page', percent: 0.12 },
-            { name: 'No Click-to-Call', desc: 'Mobile users want to call immediately', percent: 0.08 }
+        // Problem breakdown with scores (0-100 scale, lower is worse)
+        const problems = [
+            { name: 'Form Request Too Long', score: 12, loss: Math.round(monthlyLoss * 0.40), desc: '85% abandon long forms' },
+            { name: 'No Mobile AI Assistant', score: 8, loss: Math.round(monthlyLoss * 0.24), desc: '73% expect instant responses' },
+            { name: 'Slow Page Load Time', score: 35, loss: Math.round(monthlyLoss * 0.16), desc: '4.2 seconds (should be <2s)' },
+            { name: 'Ad-to-Page Mismatch', score: 42, loss: Math.round(monthlyLoss * 0.12), desc: 'Ad promise ≠ landing page' },
+            { name: 'No Click-to-Call', score: 28, loss: Math.round(monthlyLoss * 0.08), desc: 'Mobile users want to call' }
         ];
 
-        // Solution variations with report CTA
-        const solutionVariations = [
-            `<strong>Your form is costing you 65% of potential leads.</strong> Every field you add drops conversion rates dramatically. Smart AI assistants pre-qualify visitors before they hit your form, delivering 5X more sales-ready leads.
-            <br><br>
-            <strong>📥 For more information on how Smart AI can increase your conversion rates,</strong> download your free PPC Audit Report and discover how to maximize your website efficiency and plug the leaks in your mobile funnel.`,
-            
-            `<strong>The #1 mobile killer? Long forms.</strong> Mortgage shoppers abandon 8 out of 10 forms on mobile. Our AI assistant engages visitors instantly, captures their info, and sends you pre-qualified leads automatically.
-            <br><br>
-            <strong>📥 Your free PPC Audit Report</strong> contains detailed analysis of your form friction points and specific recommendations to implement Smart AI solutions that turn abandoned traffic into qualified leads.`,
-            
-            `<strong>Stop losing $${monthlyLoss.toLocaleString()} monthly to form abandonment.</strong> Smart AI technology engages visitors in real-time, answers their questions, and pre-qualifies them - turning 65% of lost traffic into 5X more conversions.
-            <br><br>
-            <strong>📥 Download your complete PPC Audit Report below</strong> to see exactly how much revenue you can recover with Smart AI optimization strategies tailored to your website.`
+        // Detailed analysis items
+        const analysisItems = [
+            { name: 'Loading website content', score: 100, icon: '🌐' },
+            { name: 'Simulating mobile experience', score: 92, icon: '📱' },
+            { name: 'Checking conversion elements', score: 65, icon: '🎯' },
+            { name: 'Scanning for AI assistants', score: 0, icon: '🤖' },
+            { name: 'Calculating PPC wasted spend', score: 100, icon: '💰', special: `$${monthlyLoss.toLocaleString()}` },
+            { name: 'Analyzing landing page alignment', score: 45, icon: '📄' },
+            { name: 'Form field friction analysis', score: 12, icon: '📝' },
+            { name: 'Mobile PPC conversion audit', score: 15, icon: '📊' },
+            { name: 'Quality Score estimation', score: 58, icon: '⭐' },
+            { name: 'Industry benchmark comparison', score: 34, icon: '📈' }
         ];
 
-        // Select random solution variation
-        const randomSolution = solutionVariations[Math.floor(Math.random() * solutionVariations.length)];
+        // Helper to get color class based on score
+        function getScoreColorClass(score) {
+            if (score < 30) return 'score-red';
+            if (score < 50) return 'score-orange';
+            if (score < 70) return 'score-yellow';
+            return 'score-green';
+        }
+
+        function getProgressFillClass(score) {
+            if (score < 30) return 'red';
+            if (score < 50) return 'orange';
+            if (score < 70) return 'yellow';
+            return 'green';
+        }
 
         // Update page with real data
         document.addEventListener('DOMContentLoaded', function() {
@@ -809,63 +859,71 @@
             document.getElementById('budgetDisplay').textContent = `Monthly Budget: $${ppcBudget.toLocaleString()}`;
             document.getElementById('lossAmount').textContent = `$${monthlyLoss.toLocaleString()}`;
             
-            // Set solution variation
-            document.getElementById('solutionVariation').innerHTML = randomSolution;
-            
-            // Generate problems list
+            // Generate problems with progress bars
             const problemsList = document.getElementById('problemsList');
             problemsList.innerHTML = '';
             
-            problemBreakdown.forEach(problem => {
-                const cost = Math.round(monthlyLoss * problem.percent);
+            problems.forEach(problem => {
+                const scoreColorClass = getScoreColorClass(problem.score);
+                const progressFillClass = getProgressFillClass(problem.score);
+                
                 const problemHtml = `
-                    <div class="problem-item">
-                        <div class="problem-content">
-                            <div class="problem-title">${problem.name}</div>
-                            <div class="problem-desc">${problem.desc}</div>
+                    <div class="problem-card">
+                        <div class="problem-header">
+                            <div class="problem-title">
+                                <i class="fas fa-exclamation-circle"></i>
+                                ${problem.name}
+                            </div>
+                            <div class="problem-score ${scoreColorClass}">${problem.score}%</div>
                         </div>
-                        <div class="problem-cost">
-                            $${cost.toLocaleString()}
-                            <small>/month</small>
+                        <div class="progress-container">
+                            <div class="progress-bar-bg">
+                                <div class="progress-fill ${progressFillClass}" style="width: ${problem.score}%;"></div>
+                            </div>
+                        </div>
+                        <div class="problem-footer">
+                            <span>${problem.desc}</span>
+                            <span class="problem-loss">$${problem.loss.toLocaleString()}</span>
                         </div>
                     </div>
                 `;
                 problemsList.innerHTML += problemHtml;
             });
 
-            // Add total row
-            problemsList.innerHTML += `
-                <div class="problem-item" style="border-left-color: #0066cc; background: rgba(0,102,204,0.1);">
-                    <div class="problem-content">
-                        <div class="problem-title" style="color: #0099ff;">TOTAL MONTHLY WASTE</div>
-                    </div>
-                    <div class="problem-cost" style="color: #0099ff;">
-                        $${monthlyLoss.toLocaleString()}
-                        <small>/month</small>
-                    </div>
-                </div>
-            `;
-
-            // Generate 8 banner containers
-            const bannersGrid = document.getElementById('bannersGrid');
-            for (let i = 1; i <= 8; i++) {
-                const bannerHtml = `
-                    <div class="banner-container">
-                        <div class="banner-image">
-                            <div class="banner-placeholder">
-                                <i class="fas fa-image" style="font-size: 2rem; opacity: 0.5;"></i>
-                                <span style="margin-left: 10px;">Banner ${i}</span>
+            // Generate detailed analysis items
+            const detailedAnalysis = document.getElementById('detailedAnalysis');
+            detailedAnalysis.innerHTML = '';
+            
+            analysisItems.forEach(item => {
+                const scoreColorClass = getScoreColorClass(item.score);
+                const progressFillClass = getProgressFillClass(item.score);
+                
+                let rightContent = '';
+                if (item.special) {
+                    rightContent = `<span style="color: #ff4444; font-weight: 700;">${item.special}</span>`;
+                } else {
+                    rightContent = `<span class="${scoreColorClass}">${item.score}%</span>`;
+                }
+                
+                const itemHtml = `
+                    <div class="analysis-item">
+                        <div class="analysis-icon">${item.icon}</div>
+                        <div class="analysis-content">
+                            <div class="analysis-title">${item.name}</div>
+                            <div class="analysis-progress-small">
+                                <div class="analysis-progress-fill ${progressFillClass}" style="width: ${item.score}%;"></div>
                             </div>
                         </div>
-                        <input type="text" class="banner-url-input" placeholder="Image URL" value="">
-                        <input type="text" class="affiliate-link-input" placeholder="Affiliate Link URL" value="">
+                        <div class="analysis-score">
+                            ${rightContent}
+                        </div>
                     </div>
                 `;
-                bannersGrid.innerHTML += bannerHtml;
-            }
+                detailedAnalysis.innerHTML += itemHtml;
+            });
         });
 
-        // AI Assistant Button - Glowing one
+        // AI Assistant Button
         document.getElementById('aiAssistantBtn').addEventListener('click', function() {
             document.getElementById('aiModal').style.display = 'flex';
         });
@@ -885,31 +943,12 @@
             alert('Live chat coming soon! Please schedule a call for immediate assistance.');
         });
 
-        // Download Report button
-        document.getElementById('downloadReportBtn').addEventListener('click', function() {
-            const firstName = document.getElementById('userFirstName').value;
-            const email = document.getElementById('userEmail').value;
-            
-            if (!firstName || !email) {
-                alert('Please enter both your first name and email address');
-                return;
-            }
-            
-            // Show success popup
-            document.getElementById('reportSuccess').style.display = 'flex';
-            
-            // Clear form
-            document.getElementById('userFirstName').value = '';
-            document.getElementById('userEmail').value = '';
-        });
-
-        // Close report success
-        document.getElementById('closeReportSuccess').addEventListener('click', function() {
-            document.getElementById('reportSuccess').style.display = 'none';
-        });
-        
-        document.getElementById('closeSuccessBtn').addEventListener('click', function() {
-            document.getElementById('reportSuccess').style.display = 'none';
+        // Example buttons
+        const exampleButtons = document.querySelectorAll('#mobileWiseExampleBtn, #recommendationExampleBtn');
+        exampleButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                window.open('https://mortgages-assist.com', '_blank');
+            });
         });
 
         // Close modal when clicking outside
@@ -923,7 +962,6 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 document.getElementById('aiModal').style.display = 'none';
-                document.getElementById('reportSuccess').style.display = 'none';
             }
         });
     </script>
