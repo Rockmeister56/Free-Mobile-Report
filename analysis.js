@@ -255,37 +255,44 @@ class AnalysisProgress {
     }
 
     completeAnalysis() {
-        console.log('Analysis complete');
-        
-        // Update progress bar for completion
-        if (this.progressFill) {
-            this.progressFill.style.background = 'linear-gradient(90deg, #00cc66, #00ff88)';
+    console.log('✅ Analysis complete!');
+    
+    // Update UI
+    this.progressFill.style.background = 'linear-gradient(90deg, #00cc66, #00ff88)';
+    this.progressText.textContent = '100% Complete - Report Ready!';
+    this.progressText.style.color = '#00cc66';
+    this.statusMessage.innerHTML = '<p>"✅ Analysis complete! Redirecting to secure report..."</p>';
+    
+    // Generate one-time password
+    function generatePassword() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let pwd = '';
+        for (let i = 0; i < 6; i++) {
+            pwd += chars[Math.floor(Math.random() * chars.length)];
+            if (i === 2) pwd += '-';
         }
-        
-        if (this.progressText) {
-            this.progressText.textContent = '100% Complete - Report Ready!';
-            this.progressText.style.color = '#00cc66';
-        }
-        
-        if (this.statusMessage) {
-            this.statusMessage.innerHTML = '<p>"✅ Analysis complete! Redirecting to your PPC audit report..."</p>';
-        }
-        
-        if (this.lossAlert) {
-            this.lossAlert.style.display = 'block';
-        }
-        
-        // Store all data for results page
-        localStorage.setItem('lastScannedUrl', scannedUrl);
-        localStorage.setItem('ppcBudget', ppcBudget);
-        localStorage.setItem('monthlyLoss', monthlyLoss);
-        
-        // Redirect to results page
-        setTimeout(() => {
-            window.location.href = `calculator-enhanced.html?url=${encodeURIComponent(scannedUrl)}&budget=${ppcBudget}&loss=${monthlyLoss}`;
-        }, 2000);
+        return pwd;
+    }
+    
+    const oneTimePassword = generatePassword();
+    console.log('🔑 Generated password:', oneTimePassword);
+    
+    // Store in localStorage
+    localStorage.setItem('oneTimePassword', oneTimePassword);
+    localStorage.setItem('lastScannedUrl', scannedUrl);
+    localStorage.setItem('ppcBudget', ppcBudget);
+    localStorage.setItem('monthlyLoss', monthlyLoss);
+    
+    // Redirect to password page
+    setTimeout(() => {
+        const url = `password-protect.html?pwd=${oneTimePassword}&url=${encodeURIComponent(scannedUrl)}&budget=${ppcBudget}&loss=${monthlyLoss}`;
+        console.log('🚀 Redirecting to:', url);
+        window.location.href = url;
+    }, 2000);
+
     }
 }
+
 
 // Initialize everything when the page loads
 document.addEventListener('DOMContentLoaded', function() {
