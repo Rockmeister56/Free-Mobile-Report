@@ -3,225 +3,753 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile Revenue Calculator - See How Much You're Losing | Mobile-Wise AI</title>
+    <title>Your PPC Audit Report - See How Much You're Wasting</title>
     <link rel="stylesheet" href="calculator-styles.css">
     <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* RESET AND BASE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+        }
+        
+        /* NEW BACKGROUND WITH VAULT IMAGE */
+        .report-page {
+            background-image: url('https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/report-bg3.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvcmVwb3J0LWJnMy5qcGciLCJpYXQiOjE3NzE3MzE2MjAsImV4cCI6MTgwMzI2NzYyMH0.M0cs_9S-JiDO6FY1OuLPwlof-SMwtWHZQleHUQfv4vE');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* 75% BLACK OVERLAY - PERFECT TRANSPARENCY */
+        .report-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1;
+        }
+        
+        /* All content sits above overlay */
+        .main-header, .main-container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* ========================================== */
+        /* HEADER WITH BLACK BACKGROUND */
+        /* ========================================== */
+        .main-header {
+            background: #000000;
+            border-bottom: 2px solid #0066cc;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,102,204,0.3);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-image {
+            height: 60px;
+            width: auto;
+            display: block;
+        }
+        
+        /* GLOWING AI ASSISTANT BUTTON - ANIMATED */
+        .ai-glow-button {
+            background: linear-gradient(145deg, #001a33, #000d1a);
+            color: white;
+            border: 2px solid #0066cc;
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0,102,204,0.5);
+            animation: glowPulse 2s infinite;
+        }
+        
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 20px rgba(0,102,204,0.5); }
+            50% { box-shadow: 0 0 40px rgba(0,102,204,0.9), 0 0 60px rgba(0,102,204,0.5); }
+            100% { box-shadow: 0 0 20px rgba(0,102,204,0.5); }
+        }
+        
+        .ai-glow-button::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #0066cc, #00aaff, #0066cc);
+            border-radius: 52px;
+            z-index: -1;
+            animation: borderRotate 3s linear infinite;
+        }
+        
+        @keyframes borderRotate {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        
+        .ai-glow-button i {
+            font-size: 1.3rem;
+            color: #00aaff;
+            animation: iconPulse 1.5s infinite;
+        }
+        
+        @keyframes iconPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); text-shadow: 0 0 10px #00aaff; }
+            100% { transform: scale(1); }
+        }
+        
+        .ai-glow-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 50px rgba(0,102,204,0.9);
+        }
+        
+        .ai-glow-button:hover i {
+            animation: none;
+            transform: scale(1.2);
+        }
+        
+        /* ========================================== */
+        /* MAIN CONTAINER - FLEXBOX LAYOUT */
+        /* ========================================== */
+        .main-container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 30px;
+            display: flex;
+            gap: 40px;
+        }
+        
+        /* LEFT COLUMN - REPORT AREA (75%) */
+        .left-column {
+            flex: 3; /* 75% */
+            min-width: 0; /* Prevents overflow */
+        }
+        
+        /* RIGHT COLUMN - BANNERS AREA (25%) */
+        .right-column {
+            flex: 1; /* 25% */
+            min-width: 300px;
+            max-width: 350px;
+        }
+        
+        /* ========================================== */
+        /* TRANSPARENT BLACK CARDS (75% black) */
+        /* ========================================== */
+        .report-card {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 102, 204, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            color: white;
+        }
+        
+        /* Blue accent bars */
+        .top-bar, .bottom-bar {
+            background: linear-gradient(90deg, #0066cc, #0099ff, #0066cc);
+            height: 8px;
+            width: 100%;
+            position: fixed;
+            left: 0;
+            z-index: 10;
+            box-shadow: 0 2px 20px rgba(0,150,255,0.5);
+        }
+        
+        .top-bar { top: 0; }
+        .bottom-bar { bottom: 0; }
+        
+        /* RESULTS HEADER */
+        .results-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .results-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 0 20px rgba(0,102,204,0.7);
+            margin-bottom: 10px;
+        }
+        
+        .url-display {
+            background: rgba(0,102,204,0.1);
+            border: 1px solid rgba(0,102,204,0.3);
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            color: #0099ff;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+        
+        /* LOSS AMOUNT - BIG AND BOLD */
+        .loss-amount {
+            text-align: center;
+            margin: 20px 0 30px;
+        }
+        
+        .loss-label {
+            color: #aaa;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+        
+        .loss-number {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: #ff4444;
+            text-shadow: 0 0 30px rgba(255,68,68,0.5);
+            line-height: 1;
+        }
+        
+        .loss-period {
+            color: #ccc;
+            font-size: 1.2rem;
+        }
+        
+        /* SECTION HEADERS */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+        
+        .section-header i {
+            font-size: 1.8rem;
+            color: #0066cc;
+        }
+        
+        .section-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .section-header h2 span {
+            color: #0066cc;
+            font-size: 1rem;
+            margin-left: 10px;
+        }
+        
+        /* PROBLEM ITEMS */
+        .problem-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 4px solid #ff4444;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .problem-item:hover {
+            transform: translateX(5px);
+            background: rgba(255,68,68,0.1);
+        }
+        
+        .problem-content {
+            flex: 1;
+        }
+        
+        .problem-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: white;
+        }
+        
+        .problem-desc {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        .problem-cost {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff4444;
+            text-align: right;
+            min-width: 120px;
+        }
+        
+        .problem-cost small {
+            font-size: 0.8rem;
+            color: #aaa;
+            display: block;
+        }
+        
+        /* ========================================== */
+        /* RIGHT COLUMN - BANNERS SECTION */
+        /* ========================================== */
+        .banners-section {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0,102,204,0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .banners-section h3 {
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.3rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+        
+        .banners-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .banner-container {
+            background: rgba(0,0,0,0.3);
+            border: 2px dashed rgba(0,102,204,0.5);
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .banner-container:hover {
+            border-color: #0066cc;
+            background: rgba(0,102,204,0.1);
+        }
+        
+        .banner-image {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1/1;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        
+        .banner-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .banner-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            color: #0099ff;
+        }
+        
+        .banner-url-input {
+            width: 100%;
+            padding: 8px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 5px;
+            color: white;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+        
+        .banner-url-input:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+        
+        .affiliate-link-input {
+            width: 100%;
+            padding: 8px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 5px;
+            color: white;
+            font-size: 0.8rem;
+        }
+        
+        /* SOLUTION CARD */
+        .solution-card {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0,102,204,0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            color: white;
+        }
+        
+        .solution-variation {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #ddd;
+        }
+        
+        .solution-variation strong {
+            color: #0099ff;
+        }
+        
+        .solution-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0066cc, transparent);
+            margin: 20px 0;
+        }
+        
+        /* EMAIL CAPTURE */
+        .email-capture-card {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0,102,204,0.3);
+            border-radius: 20px;
+            padding: 25px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .email-capture-card input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .email-capture-card input:focus {
+            outline: none;
+            border-color: #0066cc;
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 15px rgba(0,102,204,0.3);
+        }
+        
+        .email-capture-card input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .download-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #0066cc, #004999);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,102,204,0.5);
+        }
+        
+        .privacy-note {
+            text-align: center;
+            margin-top: 15px;
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+        
+        /* AI MODAL */
+        .demo-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .popup-content {
+            background: #0a0a0a;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            border: 2px solid #0066cc;
+            box-shadow: 0 0 50px rgba(0,102,204,0.3);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .close-btn:hover {
+            color: #0066cc;
+        }
+        
+        .popup-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+        
+        .start-demo-btn, .schedule-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .start-demo-btn {
+            background: linear-gradient(135deg, #0066cc, #004999);
+            color: white;
+        }
+        
+        .schedule-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid #0066cc;
+        }
+        
+        .start-demo-btn:hover, .schedule-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,102,204,0.3);
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 1000px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .right-column {
+                max-width: 100%;
+            }
+            
+            .banners-grid {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .banner-container {
+                width: calc(50% - 10px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .banners-grid {
+                flex-direction: column;
+            }
+            
+            .banner-container {
+                width: 100%;
+            }
+            
+            .problem-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .problem-cost {
+                margin-top: 10px;
+            }
+        }
+    </style>
 </head>
-<body>
-    <!-- Blue Top Header Bar -->
+<body class="report-page">
+    <!-- Blue Top Bar -->
+    <div class="top-bar"></div>
+
+    <!-- Black Header with Logo and Glowing AI Button -->
     <header class="main-header">
         <div class="header-content">
-            <div class="brand-section">
-                <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1758507868460_logo.png" 
-                     alt="Mobile-Wise AI" 
-                     class="brand-logo">
-                <span class="brand-name">Mobile-Wise AI</span>
+            <div class="logo-section">
+                <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/ppc-logo5.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvcHBjLWxvZ281LnBuZyIsImlhdCI6MTc3MTczMTY5MywiZXhwIjoxODAzMjY3NjkzfQ.443m8-GAvv5uE0uIx2UYPImaBvVfOKyYJm5PoEHAIzk" 
+                     alt="PPC Audit Report" 
+                     class="logo-image">
             </div>
-            <div class="header-cta">
-                <span class="boost-text"><h2>Want to Boost Your Mobile Conversion 300%?</h2></span>
-                <button id="boostHeaderBtn" class="boost-header-btn">
-                    🚀 BOOST HERE
-                </button>
-            </div>
+            
+            <!-- GLOWING AI ASSISTANT BUTTON -->
+            <button class="ai-glow-button" id="aiAssistantBtn">
+                <i class="fas fa-robot"></i>
+                ASK AI ASSISTANT
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
     </header>
 
     <div class="main-container">
-        <!-- Left Column: Mobile Report -->
-        <section class="report-section">
-            <div class="report-content">
-                <h1>Your Mobile Performance Report</h1>
+        <!-- LEFT COLUMN - REPORT AREA (75%) -->
+        <div class="left-column">
+            <!-- Main Report Card -->
+            <div class="report-card">
+                <div class="results-header">
+                    <h1>🔥 PPC AUDIT RESULTS</h1>
+                    <div class="url-display" id="urlDisplay">Loading...</div>
+                    <div style="color: #0099ff; margin-top: 10px;" id="budgetDisplay">Monthly Budget: $7,500</div>
+                </div>
+
+                <!-- BIG LOSS AMOUNT -->
+                <div class="loss-amount">
+                    <div class="loss-label">ESTIMATED MONTHLY WASTE</div>
+                    <div class="loss-number" id="lossAmount">$4,688</div>
+                    <div class="loss-period">based on your PPC spend</div>
+                </div>
+
+                <!-- SECTION: Critical Problems -->
+                <div class="section-header">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h2>5 PROBLEMS <span>DRAINING YOUR BUDGET</span></h2>
+                </div>
+
+                <div id="problemsList">
+                    <!-- Dynamically filled by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN - BANNERS AREA (25%) -->
+        <div class="right-column">
+            <!-- BANNERS SECTION -->
+            <div class="banners-section">
+                <h3><i class="fas fa-ad" style="color: #0066cc;"></i> AFFILIATE PARTNERS</h3>
+                <div class="banners-grid" id="bannersGrid">
+                    <!-- 8 Banner containers will be generated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- SOLUTION CARD -->
+            <div class="solution-card">
+                <div class="section-header" style="margin-bottom: 15px;">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3 style="font-size: 1.3rem;">THE SOLUTION</h3>
+                </div>
+                <div class="solution-variation" id="solutionVariation">
+                    <!-- Random variation will appear here -->
+                </div>
+            </div>
+
+            <!-- EMAIL CAPTURE CARD -->
+            <div class="email-capture-card">
+                <h3 style="color: white; margin-bottom: 20px; text-align: center;">
+                    <i class="fas fa-download" style="color: #0066cc;"></i> GET FULL REPORT
+                </h3>
                 
-                <!-- Executive Summary -->
-                <div class="report-section-card">
-                    <h3>📈 Executive Summary</h3>
-                    <p>Based on our analysis, your mobile site has significant opportunities for improvement that could increase conversions by up to <strong>3X</strong>. Here are your key metrics:</p>
-                    
-                    <div class="report-stats">
-                        <div class="stat-card">
-                            <div class="stat-value" id="conversionScore">--%</div>
-                            <div class="stat-label">Conversion Score</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="mobileTraffic">--%</div>
-                            <div class="stat-label">Mobile Traffic</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="bounceRate">--%</div>
-                            <div class="stat-label">Bounce Rate</div>
-                        </div>
-                    </div>
-                    
-                    <!-- NEW BOOST BUTTON -->
-                    <button class="boost-button" id="openBoostModal">
-                        <i class="fas fa-rocket mr-2"></i>
-                        Boost My Conversions Now
-                    </button>
+                <div class="form-row">
+                    <input type="text" id="userFirstName" placeholder="First Name" required>
+                    <input type="email" id="userEmail" placeholder="Email Address" required>
                 </div>
-
-                <!-- Critical Issues -->
-                <div class="report-section-card critical">
-                    <h3>🚨 Critical Issues Found</h3>
-                    <div class="issues-grid">
-                        <div class="issue-item">
-                            <span class="issue-icon">⚡</span>
-                            <div class="issue-content">
-                                <strong>Slow Page Load Times</strong>
-                                <p>Visitors leave if pages take >3 seconds to load, especially on mobile</p>
-                            </div>
-                        </div>
-                        <div class="issue-item">
-                            <span class="issue-icon">📱</span>
-                            <div class="issue-content">
-                                <strong>Poor Mobile Responsiveness</strong>
-                                <p>Site not optimized for smaller screens, causing layout issues</p>
-                            </div>
-                        </div>
-                        <div class="issue-item">
-                            <span class="issue-icon">🧭</span>
-                            <div class="issue-content">
-                                <strong>Difficult Navigation</strong>
-                                <p>Complex layout makes it hard for users to find what they need</p>
-                            </div>
-                        </div>
-                        <div class="issue-item">
-                            <span class="issue-icon">🎯</span>
-                            <div class="issue-content">
-                                <strong>Unclear Call-to-Actions</strong>
-                                <p>Visitors don't know what action to take next</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Get Full Report -->
-                <div class="report-section-card cta-card">
-                    <h3>📬 Get Your Full Detailed Report</h3>
-                    <p>Receive a comprehensive 15-page PDF analysis with:</p>
-                    <ul class="benefits-list">
-                        <li>✅ Detailed technical audit results</li>
-                        <li>✅ Specific recommendations for your industry</li>
-                        <li>✅ Step-by-step implementation guide</li>
-                        <li>✅ Competitor mobile performance comparison</li>
-                        <li>✅ AI-powered conversion optimization strategies</li>
-                    </ul>
-                    
-                    <form class="email-capture-form" id="mainReportForm">
-                        <div class="form-group double-fields">
-                            <div class="field-group">
-                                <input type="text" id="userFirstName" placeholder="First Name" required>
-                            </div>
-                            <div class="field-group">
-                                <input type="email" id="userEmail" placeholder="Email Address" required>
-                            </div>
-                        </div>
-                        <span class="input-hint">We'll send the full report immediately</span>
-                        
-                        <button type="submit" class="get-report-btn">
-                            📧 SEND ME THE FULL REPORT
-                        </button>
-                    </form>
-                    
-                    <div class="privacy-note">
-                        <small>🔒 We respect your privacy. Unsubscribe at any time.</small>
-                    </div>
+                
+                <button class="download-btn" id="downloadReportBtn">
+                    <i class="fas fa-file-pdf"></i>
+                    SEND FREE REPORT
+                </button>
+                
+                <div class="privacy-note">
+                    <i class="fas fa-lock"></i> We respect your privacy. Unsubscribe anytime.
                 </div>
             </div>
-        </section>
-
-        <!-- Right Column: Calculator -->
-        <section class="calculator-section">
-            <div class="calculator-container">
-                <!-- Video Teaser Section -->
-                <div class="video-teaser-section">
-                    <!-- Video content can go here -->
-                </div>
-
-                <!-- Hero Section -->
-                <div class="hero-section">
-                    <h2>Discover How Much Revenue Your Mobile Site is <span class="highlight">COSTING You</span></h2>
-                    <p class="subtitle">Most businesses lose 70% of mobile visitors - calculate your exact revenue loss and see how AI can 3X your conversions</p>
-                    
-                    <div class="social-proof">
-                        <p>🚀 <strong>428+ businesses</strong> discovered their mobile gaps this week</p>
-                    </div>
-                </div>
-
-                <!-- Calculator Form -->
-                <div class="calculator-form">
-                    <div class="input-group">
-                        <label for="monthlyVisitors">Monthly Website Visitors</label>
-                        <input type="number" id="monthlyVisitors" placeholder="e.g., 10000" min="100">
-                        <span class="input-hint">How many people visit your site monthly?</span>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="conversionRate">Current Conversion Rate (%)</label>
-                        <input type="number" id="conversionRate" placeholder="e.g., 2" step="0.1" min="0.1" max="100">
-                        <span class="input-hint">What % of visitors become customers?</span>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="averageSale">Average Sale Value ($)</label>
-                        <input type="number" id="averageSale" placeholder="e.g., 100" min="1">
-                        <span class="input-hint">How much is the average customer worth?</span>
-                    </div>
-
-                    <button id="calculateBtn" class="calculate-btn">
-                        🚀 CALCULATE MY REVENUE LOSS
-                    </button>
-                </div>
-
-                <!-- Results Section -->
-                <section id="resultsSection" class="results-section" style="display: none;">
-                    <div class="results-card">
-                        <h3>💰 YOUR MOBILE REVENUE ANALYSIS</h3>
-                        
-                        <div class="result-row current">
-                            <div class="result-label">Current Monthly Revenue:</div>
-                            <div class="result-value" id="currentRevenue">$0</div>
-                        </div>
-                        
-                        <div class="result-row potential">
-                            <div class="result-label">
-                                <span class="ai-badge">MOBILE-WISE AI 3X BOOST</span><br>
-                                Potential Monthly Revenue:
-                            </div>
-                            <div class="result-value" id="potentialRevenue">$0</div>
-                        </div>
-                        
-                        <div class="result-row difference">
-                            <div class="result-label">Additional Monthly Revenue:</div>
-                            <div class="result-value" id="additionalRevenue">$0</div>
-                        </div>
-
-                        <div class="cta-section">
-                            <p class="cta-text">"You're leaving <strong id="lossAmount">$0</strong> on the table every month due to mobile conversion issues!"</p>
-                            
-                            <button id="seeDemoBtn" class="demo-btn">
-                                🎬 SEE HOW MOBILE-WISE AI SOLVES THIS
-                            </button>
-                            
-                            <p class="podcast-invite">
-                                🎧 Join our <strong>"Ask AI For Business"</strong> podcast to learn how others 3X'd their conversions
-                            </p>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </section>
+        </div>
     </div>
 
-    <!-- AI Demo Pop-up -->
-    <div id="demoPopup" class="demo-popup" style="display: none;">
+    <!-- Blue Bottom Bar -->
+    <div class="bottom-bar"></div>
+
+    <!-- AI Assistant Modal -->
+    <div id="aiModal" class="demo-popup" style="display: none;">
         <div class="popup-content">
-            <button id="closePopup" class="close-btn">×</button>
-            <h3>🚀 Experience Mobile-Wise AI in Action!</h3>
-            <p>See exactly how our AI assistant converts your mobile visitors into customers</p>
+            <button id="closeAIModal" class="close-btn">×</button>
+            <i class="fas fa-robot" style="font-size: 3rem; color: #0066cc; margin-bottom: 15px;"></i>
+            <h3 style="color: white;">AI ASSISTANT</h3>
+            <p style="color: #ccc; margin: 20px 0;">How can we help you with your PPC audit today?</p>
             <div class="popup-actions">
-                <button id="startDemo" class="start-demo-btn">START AI DEMO</button>
-                <button id="scheduleCall" class="schedule-btn">SCHEDULE CALL</button>
+                <button id="scheduleCallBtn" class="start-demo-btn">SCHEDULE CONSULT</button>
+                <button id="liveChatBtn" class="schedule-btn">LIVE CHAT</button>
             </div>
         </div>
     </div>
@@ -230,377 +758,174 @@
     <div id="reportSuccess" class="demo-popup" style="display: none;">
         <div class="popup-content">
             <button id="closeReportSuccess" class="close-btn">×</button>
-            <div class="success-icon">✅</div>
-            <h3>Report Sent Successfully!</h3>
-            <p>We've emailed your comprehensive 15-page Mobile Performance Report to your inbox.</p>
-            <p><strong>Check your email in 2-3 minutes.</strong></p>
+            <div style="font-size: 4rem; color: #00cc66; margin-bottom: 15px;">✅</div>
+            <h3 style="color: white;">REPORT SENT!</h3>
+            <p style="color: #ccc; margin: 20px 0;">Your 15-page PPC Audit Report is on its way to your inbox.</p>
+            <p style="color: #0099ff;"><strong>Check your email in 2-3 minutes</strong></p>
             <div class="popup-actions">
-                <button id="closeSuccessBtn" class="start-demo-btn">GOT IT!</button>
+                <button id="closeSuccessBtn" class="start-demo-btn">GOT IT</button>
             </div>
         </div>
     </div>
 
-    <!-- ✅ CAPTAIN BRETT'S VIDEO POPUP MODAL -->
-    <div id="videoModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3 style="text-align: center; margin-bottom: 15px;">Quick Tip to Boost Your Mobile Conversions</h3>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/inFc3I0ymQs" frameborder="0" allowfullscreen></iframe>
-            <form id="videoReportForm">
-                <input type="text" id="userName" placeholder="Your Name" required>
-                <input type="email" id="videoUserEmail" placeholder="Your Email" required>
-                <button type="submit">📧 Send My Free Mobile Report</button>
-            </form>
-            <p style="text-align: center; margin-top: 10px; font-size: 12px; color: #666;">
-                We'll email your detailed analysis immediately
-            </p>
-        </div>
-    </div>
-
-    <!-- ENHANCED BOOST MODAL -->
-    <div class="boost-modal" id="boostModal" style="display: none;">
-        <div class="boost-modal-overlay"></div>
-        <div class="boost-modal-content">
-            <span class="close-boost-modal" id="closeBoostModal">×</span>
-            
-            <div class="video-player-container">
-                <iframe class="boost-modal-video" 
-                        src="https://www.youtube.com/embed/inFc3I0ymQs" 
-                        title="Mobile Wise AI - Smart Voice Assistant" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                </iframe>
-            </div>
-            
-            <div class="demo-cta-section">
-                <button id="freeZoomDemoBtn" class="free-zoom-demo-btn">
-                    🎯 FREE ZOOM DEMO
-                </button>
-                <p class="cta-subtext">See exactly how we'll 3X your mobile conversions</p>
-            </div>
-        </div>
-    </div>
-
-    <script src="calculator-logic.js"></script>
-    
-    <!-- ✅ EMAILJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    
     <script>
-// Immediate metrics update after HTML is parsed
-setTimeout(function() {
-    const metrics = {
-        conversionScore: Math.floor(Math.random() * 16) + 15,
-        mobileTraffic: Math.floor(Math.random() * 21) + 30,
-        bounceRate: Math.floor(Math.random() * 16) + 70
-    };
-    
-    document.getElementById('conversionScore').textContent = metrics.conversionScore + '%';
-    document.getElementById('mobileTraffic').textContent = metrics.mobileTraffic + '%';
-    document.getElementById('bounceRate').textContent = metrics.bounceRate + '%';
-}, 100);
+        // Get data from URL or localStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        const scannedUrl = urlParams.get('url') || localStorage.getItem('lastScannedUrl') || 'yourwebsite.com';
+        const ppcBudget = parseInt(urlParams.get('budget') || localStorage.getItem('ppcBudget') || '7500');
+        const monthlyLoss = parseInt(urlParams.get('loss') || localStorage.getItem('monthlyLoss') || Math.round(ppcBudget * 0.625));
 
-// ✅ EMAILJS INITIALIZATION
-(function() {
-    emailjs.init("7-9oxa3UC3uKxtqGM");
-})();
+        // Calculate problem breakdowns
+        const problemBreakdown = [
+            { name: 'Form Too Long (12 fields)', desc: '85% abandon long forms on mobile', percent: 0.40 },
+            { name: 'No Mobile AI Assistant', desc: '73% expect instant responses', percent: 0.24 },
+            { name: 'Slow Load Time', desc: '4.2 seconds (should be <2s)', percent: 0.16 },
+            { name: 'Ad-to-Page Mismatch', desc: 'Ad promise ≠ landing page', percent: 0.12 },
+            { name: 'No Click-to-Call', desc: 'Mobile users want to call immediately', percent: 0.08 }
+        ];
 
-// Modal functionality
-const modal = document.getElementById('videoModal');
-const closeBtn = document.querySelector('.close');
-const videoReportForm = document.getElementById('videoReportForm');
-
-// Close modal when X is clicked
-closeBtn.onclick = function() {
-    modal.style.display = 'none';
-}
-
-// Close modal when clicking outside content
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-}
-
-// Form submission for VIDEO MODAL form
-videoReportForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const userName = document.getElementById('userName').value;
-    const userEmail = document.getElementById('videoUserEmail').value;
-    
-    // Send the email with scan results
-    sendMobileReport(userName, userEmail);
-});
-
-// ✅ FIXED: Enhanced function with dual sending
-function sendMobileReport(userName, userEmail) {
-    // Calculate dynamic values for the report
-    function calculateRevenueOpportunity() {
-        try {
-            const monthlyVisitors = parseFloat(document.getElementById('monthlyVisitors')?.value) || 10000;
-            const conversionRate = parseFloat(document.getElementById('conversionRate')?.value) || 2;
-            const averageSale = parseFloat(document.getElementById('averageSale')?.value) || 100;
+        // Solution variations with report CTA
+        const solutionVariations = [
+            `<strong>Your form is costing you 65% of potential leads.</strong> Every field you add drops conversion rates dramatically. Smart AI assistants pre-qualify visitors before they hit your form, delivering 5X more sales-ready leads.
+            <br><br>
+            <strong>📥 For more information on how Smart AI can increase your conversion rates,</strong> download your free PPC Audit Report and discover how to maximize your website efficiency and plug the leaks in your mobile funnel.`,
             
-            const currentRevenue = monthlyVisitors * (conversionRate / 100) * averageSale;
-            const additionalRevenue = currentRevenue * 2; // 3X potential
-            return Math.round(additionalRevenue).toLocaleString();
-        } catch (error) {
-            return '5,000';
-        }
-    }
-
-    const revenueOpportunity = calculateRevenueOpportunity(); // FIXED: Define variable
-
-    const userReportParams = {
-        user_name: userName,
-        user_email: userEmail,
-        website_url: window.location.href,
-        mobile_score: document.getElementById('conversionScore')?.textContent || '35%',
-        chatbot_detected: 'AI Analysis Complete',
-        revenue_opportunity: revenueOpportunity,
-        conversion_rate: document.getElementById('conversionRate')?.value || 'Not calculated',
-        critical_issues_count: '5',
-        mobile_score_class: 'fair'
-    };
-
-    console.log('Sending report to user:', userEmail);
-
-    // Send to user
-    emailjs.send('service_b9bppgb', 'template_f6j78g6', userReportParams)
-        .then(function(response) {
-            console.log('✅ User report sent!');
+            `<strong>The #1 mobile killer? Long forms.</strong> Mortgage shoppers abandon 8 out of 10 forms on mobile. Our AI assistant engages visitors instantly, captures their info, and sends you pre-qualified leads automatically.
+            <br><br>
+            <strong>📥 Your free PPC Audit Report</strong> contains detailed analysis of your form friction points and specific recommendations to implement Smart AI solutions that turn abandoned traffic into qualified leads.`,
             
-            // ✅ FIXED: ALSO send notification to YOUR EMAIL
-            const leadNotificationParams = {
-                user_name: `🚨 NEW LEAD: ${userName}`,
-                user_email: userEmail,
-                website_url: `Email: ${userEmail} | Time: ${new Date().toLocaleString()}`,
-                mobile_score: 'IMMEDIATE FOLLOW-UP NEEDED',
-                chatbot_detected: 'Mobile Report Request',
-                revenue_opportunity: `Potential: $${revenueOpportunity}`,
-                conversion_rate: 'Hot Lead - Contact Today!',
-                to_email: 'mobilewise.ai@gmail.com' // ✅ YOUR EMAIL ADDED HERE
-            };
+            `<strong>Stop losing $${monthlyLoss.toLocaleString()} monthly to form abandonment.</strong> Smart AI technology engages visitors in real-time, answers their questions, and pre-qualifies them - turning 65% of lost traffic into 5X more conversions.
+            <br><br>
+            <strong>📥 Download your complete PPC Audit Report below</strong> to see exactly how much revenue you can recover with Smart AI optimization strategies tailored to your website.`
+        ];
+
+        // Select random solution variation
+        const randomSolution = solutionVariations[Math.floor(Math.random() * solutionVariations.length)];
+
+        // Update page with real data
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update displays
+            document.getElementById('urlDisplay').textContent = `Website: ${scannedUrl}`;
+            document.getElementById('budgetDisplay').textContent = `Monthly Budget: $${ppcBudget.toLocaleString()}`;
+            document.getElementById('lossAmount').textContent = `$${monthlyLoss.toLocaleString()}`;
             
-            console.log('Sending lead notification to mobilewise.ai@gmail.com');
-            return emailjs.send('service_b9bppgb', 'template_lhlonjg', leadNotificationParams);
-        })
-        .then(function() {
-            console.log('✅ Lead notification sent to mobilewise.ai@gmail.com');
-            alert('🎉 Your FREE Mobile Report is on the way! Check your email in 2-3 minutes.');
-            if (modal) modal.style.display = 'none';
-            if (videoReportForm) videoReportForm.reset();
-        })
-        .catch(function(error) {
-            console.error('Email error:', error);
-            alert('❌ Failed to send report. Please try again.');
-        });
-}
-
-// ✅ FIXED: MAIN REPORT FORM with lead notification
-const mainReportForm = document.getElementById('mainReportForm');
-const reportSuccess = document.getElementById('reportSuccess');
-
-if (mainReportForm) {
-    mainReportForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const userFirstName = document.getElementById('userFirstName').value;
-        const userEmail = document.getElementById('userEmail').value;
-        
-        if (!userFirstName || !userEmail) {
-            alert('Please enter both your first name and email address');
-            return;
-        }
-        
-        console.log('Main report form submitted:', { firstName: userFirstName, email: userEmail });
-        
-        // Calculate revenue for lead notification
-        function calculateRevenueOpportunity() {
-            try {
-                const monthlyVisitors = parseFloat(document.getElementById('monthlyVisitors')?.value) || 10000;
-                const conversionRate = parseFloat(document.getElementById('conversionRate')?.value) || 2;
-                const averageSale = parseFloat(document.getElementById('averageSale')?.value) || 100;
-                
-                const currentRevenue = monthlyVisitors * (conversionRate / 100) * averageSale;
-                const additionalRevenue = currentRevenue * 2;
-                return Math.round(additionalRevenue).toLocaleString();
-            } catch (error) {
-                return '5,000';
-            }
-        }
-
-        const revenueOpportunity = calculateRevenueOpportunity();
-
-        // Send email for main report form
-        const mainReportParams = {
-            user_name: userFirstName,
-            user_email: userEmail,
-            conversion_score: document.getElementById('conversionScore').textContent,
-            mobile_traffic: document.getElementById('mobileTraffic').textContent,
-            bounce_rate: document.getElementById('bounceRate').textContent,
-            date_sent: new Date().toLocaleDateString(),
-            website_url: window.location.href,
-            mobile_score: document.getElementById('conversionScore').textContent.replace('%', ''),
-            report_type: '15-Page Detailed Mobile Report'
-        };
-
-        emailjs.send('service_b9bppgb', 'template_f6j78g6', mainReportParams)
-            .then(function(response) {
-                console.log('✅ MAIN REPORT FORM EMAIL SENT!', response);
-                
-               // ✅ FIXED: ALSO send lead notification to YOUR EMAIL - WITH CORRECT TEMPLATE
-const leadNotificationParams = {
-    user_name: `${userFirstName}`,
-    user_email: userEmail,
-    website_url: `Email: ${userEmail} | Time: ${new Date().toLocaleString()}`,
-    mobile_score: '15-Page Report Requested',
-    chatbot_detected: 'Detailed Report Download',
-    revenue_opportunity: `Potential: $${revenueOpportunity}`,
-    conversion_rate: 'Report Lead - Follow Up',
-    to_email: 'mobilewise.ai@gmail.com' // ← THIS WAS MISSING
-};
-                
-                console.log('Sending main form lead notification to mobilewise.ai@gmail.com');
-                // ✅ FIXED: Using correct template for lead notification
-                return emailjs.send('service_b9bppgb', 'template_lhlonjg', leadNotificationParams);
-            })
-            .then(function() {
-                console.log('✅ Main form lead notification sent to mobilewise.ai@gmail.com');
-                // Show success popup
-                if (reportSuccess) {
-                    reportSuccess.style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                }
-                // Clear the form
-                mainReportForm.reset();
-            })
-            .catch(function(error) {
-                console.error('❌ Main form EmailJS error:', error);
-                alert('❌ Failed to send report. Please try again.');
+            // Set solution variation
+            document.getElementById('solutionVariation').innerHTML = randomSolution;
+            
+            // Generate problems list
+            const problemsList = document.getElementById('problemsList');
+            problemsList.innerHTML = '';
+            
+            problemBreakdown.forEach(problem => {
+                const cost = Math.round(monthlyLoss * problem.percent);
+                const problemHtml = `
+                    <div class="problem-item">
+                        <div class="problem-content">
+                            <div class="problem-title">${problem.name}</div>
+                            <div class="problem-desc">${problem.desc}</div>
+                        </div>
+                        <div class="problem-cost">
+                            $${cost.toLocaleString()}
+                            <small>/month</small>
+                        </div>
+                    </div>
+                `;
+                problemsList.innerHTML += problemHtml;
             });
-    });
-}
-    
-// ✅ BOOST MODAL FUNCTIONALITY
-const openBoostModalBtn = document.getElementById('openBoostModal');
-const boostHeaderBtn = document.getElementById('boostHeaderBtn');
-const closeBoostModalBtn = document.getElementById('closeBoostModal');
-const boostModal = document.getElementById('boostModal');
-const freeZoomDemoBtn = document.getElementById('freeZoomDemoBtn');
-    
-// Open modal from both buttons
-if (openBoostModalBtn) {
-    openBoostModalBtn.addEventListener('click', () => {
-        console.log('Opening boost modal from main button');
-        boostModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    });
-}
-    
-if (boostHeaderBtn) {
-    boostHeaderBtn.addEventListener('click', () => {
-        console.log('Opening boost modal from header button');
-        boostModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    });
-}
-    
-// Close modal
-if (closeBoostModalBtn) {
-    closeBoostModalBtn.addEventListener('click', () => {
-        console.log('Closing boost modal');
-        boostModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        resetVideo();
-    });
-}
-    
-// Close modal when clicking overlay
-if (boostModal) {
-    boostModal.addEventListener('click', (e) => {
-        if (e.target === boostModal || e.target.classList.contains('boost-modal-overlay')) {
-            boostModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            resetVideo();
-        }
-    });
-}
-    
-// Close modal with ESC key
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && boostModal.style.display === 'flex') {
-        boostModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        resetVideo();
-    }
-});
-    
-// Free Zoom Demo button functionality
-if (freeZoomDemoBtn) {
-    freeZoomDemoBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        console.log('Free Zoom Demo button clicked');
-        
-        // Close the modal first
-        boostModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        resetVideo();
-        
-        // Then redirect to the scheduling page in new tab
-        setTimeout(() => {
+
+            // Add total row
+            problemsList.innerHTML += `
+                <div class="problem-item" style="border-left-color: #0066cc; background: rgba(0,102,204,0.1);">
+                    <div class="problem-content">
+                        <div class="problem-title" style="color: #0099ff;">TOTAL MONTHLY WASTE</div>
+                    </div>
+                    <div class="problem-cost" style="color: #0099ff;">
+                        $${monthlyLoss.toLocaleString()}
+                        <small>/month</small>
+                    </div>
+                </div>
+            `;
+
+            // Generate 8 banner containers
+            const bannersGrid = document.getElementById('bannersGrid');
+            for (let i = 1; i <= 8; i++) {
+                const bannerHtml = `
+                    <div class="banner-container">
+                        <div class="banner-image">
+                            <div class="banner-placeholder">
+                                <i class="fas fa-image" style="font-size: 2rem; opacity: 0.5;"></i>
+                                <span style="margin-left: 10px;">Banner ${i}</span>
+                            </div>
+                        </div>
+                        <input type="text" class="banner-url-input" placeholder="Image URL" value="">
+                        <input type="text" class="affiliate-link-input" placeholder="Affiliate Link URL" value="">
+                    </div>
+                `;
+                bannersGrid.innerHTML += bannerHtml;
+            }
+        });
+
+        // AI Assistant Button - Glowing one
+        document.getElementById('aiAssistantBtn').addEventListener('click', function() {
+            document.getElementById('aiModal').style.display = 'flex';
+        });
+
+        document.getElementById('closeAIModal').addEventListener('click', function() {
+            document.getElementById('aiModal').style.display = 'none';
+        });
+
+        // Schedule Call button
+        document.getElementById('scheduleCallBtn').addEventListener('click', function() {
             window.open('https://free-mobile-report.netlify.app/zoom-scheduler', '_blank');
-        }, 300);
-    });
-}
-    
-// Function to reset video
-function resetVideo() {
-    const iframe = document.querySelector('.boost-modal-video');
-    if (iframe) {
-        iframe.src = iframe.src; // Reset to stop video
-    }
-}
-    
-// Also connect the "See Demo" button in results
-const seeDemoBtn = document.getElementById('seeDemoBtn');
-if (seeDemoBtn) {
-    seeDemoBtn.addEventListener('click', () => {
-        boostModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    });
-}
+            document.getElementById('aiModal').style.display = 'none';
+        });
 
-// Report Success Popup elements
-const closeReportSuccess = document.getElementById('closeReportSuccess');
-const closeSuccessBtn = document.getElementById('closeSuccessBtn');
+        // Live Chat button
+        document.getElementById('liveChatBtn').addEventListener('click', function() {
+            alert('Live chat coming soon! Please schedule a call for immediate assistance.');
+        });
 
-// Close report success popup
-function closeReportSuccessFunc() {
-    if (reportSuccess) {
-        reportSuccess.style.display = 'none';
-        document.body.style.overflow = '';
-    }
-}
+        // Download Report button
+        document.getElementById('downloadReportBtn').addEventListener('click', function() {
+            const firstName = document.getElementById('userFirstName').value;
+            const email = document.getElementById('userEmail').value;
+            
+            if (!firstName || !email) {
+                alert('Please enter both your first name and email address');
+                return;
+            }
+            
+            // Show success popup
+            document.getElementById('reportSuccess').style.display = 'flex';
+            
+            // Clear form
+            document.getElementById('userFirstName').value = '';
+            document.getElementById('userEmail').value = '';
+        });
 
-if (closeReportSuccess) {
-    closeReportSuccess.addEventListener('click', closeReportSuccessFunc);
-}
+        // Close report success
+        document.getElementById('closeReportSuccess').addEventListener('click', function() {
+            document.getElementById('reportSuccess').style.display = 'none';
+        });
+        
+        document.getElementById('closeSuccessBtn').addEventListener('click', function() {
+            document.getElementById('reportSuccess').style.display = 'none';
+        });
 
-if (closeSuccessBtn) {
-    closeSuccessBtn.addEventListener('click', closeReportSuccessFunc);
-}
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target.classList.contains('demo-popup')) {
+                event.target.style.display = 'none';
+            }
+        });
 
-// Close report success when clicking outside
-if (reportSuccess) {
-    reportSuccess.addEventListener('click', function(e) {
-        if (e.target === reportSuccess) {
-            closeReportSuccessFunc();
-        }
-    });
-}
-</script>
+        // Close with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('aiModal').style.display = 'none';
+                document.getElementById('reportSuccess').style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
