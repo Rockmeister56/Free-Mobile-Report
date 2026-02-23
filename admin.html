@@ -271,307 +271,98 @@
     </div>
     
     <script>
-        // ===== SUPABASE SETUP =====
-        const SUPABASE_URL = 'https://fcgbusobfdwnpoqyuzoe.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk';
-        
-        const { createClient } = supabase;
-        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // ===== SUPABASE SETUP =====
+    const SUPABASE_URL = 'https://fcgbusobfdwnpoqyuzoe.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk';
+    
+    console.log('🚀 Admin panel starting...');
+    console.log('Supabase URL:', SUPABASE_URL);
+    console.log('Supabase Key (first 10):', SUPABASE_ANON_KEY.substring(0, 10) + '...');
+    
+    const { createClient } = supabase;
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('✅ Supabase client created');
 
-        // ===== DATA STORAGE =====
-        // Default codes (only used if no codes in Supabase)
-        const defaultCodes = [
-            'TOMMY2024', 'PPCROCKER', 'MORTGAGE24', 'BROKER99', 
-            'LEAD2024', 'AUDITPRO', 'SMARTLTD', 'CONVERT5', 
-            'LEAKFIX', 'PPCMASTER'
-        ];
+    // ===== LOAD LOCKED SITES FROM SUPABASE =====
+    async function loadLockedSites() {
+        console.log('📥 Loading locked sites from Supabase...');
         
-        // Initialize arrays
-        let codes = [];
-        let lockedSites = [];
+        const loadingEl = document.getElementById('sitesLoading');
+        const errorEl = document.getElementById('sitesError');
+        const tableEl = document.getElementById('sitesTable');
+        const clearBtn = document.querySelector('.clear-all-btn');
         
-        // ===== LOAD CODES FROM SUPABASE =====
-        async function loadCodes() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('access_codes')
-                    .select('*')
-                    .eq('used', false)
-                    .gt('expires_at', new Date().toISOString());
-                
-                if (error) throw error;
-                
-                if (data && data.length > 0) {
-                    codes = data.map(item => item.code);
-                } else {
-                    // If no codes in Supabase, use defaults and insert them
-                    codes = defaultCodes;
-                    for (const code of defaultCodes) {
-                        await supabaseClient
-                            .from('access_codes')
-                            .insert([{
-                                code: code,
-                                expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
-                            }]);
-                    }
-                }
-                
-                displayCodes();
-                updateStats();
-            } catch (error) {
-                console.error('Error loading codes:', error);
-                // Fallback to localStorage
-                codes = JSON.parse(localStorage.getItem('accessCodes')) || defaultCodes;
-                displayCodes();
-            }
-        }
-        
-        // ===== LOAD LOCKED SITES FROM SUPABASE =====
-        async function loadLockedSites() {
-            const loadingEl = document.getElementById('sitesLoading');
-            const errorEl = document.getElementById('sitesError');
-            const tableEl = document.getElementById('sitesTable');
-            const clearBtn = document.querySelector('.clear-all-btn');
+        try {
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
+            tableEl.style.display = 'none';
+            clearBtn.style.display = 'none';
             
-            try {
-                loadingEl.style.display = 'block';
-                errorEl.style.display = 'none';
-                tableEl.style.display = 'none';
-                clearBtn.style.display = 'none';
-                
-                const { data, error } = await supabaseClient
-                    .from('audited_sites')
-                    .select('*')
-                    .order('audited_at', { ascending: false });
-                
-                if (error) throw error;
-                
-                loadingEl.style.display = 'none';
-                
-                if (data && data.length > 0) {
-                    lockedSites = data.map(site => ({
-                        domain: site.domain,
-                        date: site.audited_at,
-                        code: site.code_used || site.report_password || 'N/A'
-                    }));
-                    
-                    tableEl.style.display = 'table';
-                    clearBtn.style.display = 'inline-block';
-                    displaySites();
-                } else {
-                    // No sites found
-                    document.getElementById('sitesBody').innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px; color: #aaa;">No locked sites yet</td></tr>';
-                    tableEl.style.display = 'table';
-                }
-                
-                updateStats();
-            } catch (error) {
-                console.error('Error loading locked sites:', error);
-                loadingEl.style.display = 'none';
-                errorEl.style.display = 'block';
-                errorEl.textContent = 'Error loading sites from database: ' + error.message;
-            }
-        }
-        
-        // ===== REMOVE SITE FROM SUPABASE =====
-        async function removeSite(domain) {
-            if (confirm(`Remove restriction for ${domain}? They can audit again.`)) {
-                try {
-                    const { error } = await supabaseClient
-                        .from('audited_sites')
-                        .delete()
-                        .eq('domain', domain);
-                    
-                    if (error) throw error;
-                    
-                    // Reload the list
-                    await loadLockedSites();
-                    
-                } catch (error) {
-                    console.error('Error removing site:', error);
-                    alert('Error removing site: ' + error.message);
-                }
-            }
-        }
-        
-        // ===== CLEAR ALL SITES =====
-        async function clearAllSites() {
-            if (confirm('Remove ALL website restrictions? This lets every site be re-audited.')) {
-                try {
-                    const { error } = await supabaseClient
-                        .from('audited_sites')
-                        .delete()
-                        .gte('id', 0); // Deletes all records
-                    
-                    if (error) throw error;
-                    
-                    // Reload the list
-                    await loadLockedSites();
-                    
-                } catch (error) {
-                    console.error('Error clearing sites:', error);
-                    alert('Error clearing sites: ' + error.message);
-                }
-            }
-        }
-        
-        // ===== ADD CODE TO SUPABASE =====
-        async function addCode() {
-            const input = document.getElementById('newCode');
-            const newCode = input.value.trim().toUpperCase();
+            console.log('Querying audited_sites table...');
+            const { data, error } = await supabaseClient
+                .from('audited_sites')
+                .select('*')
+                .order('audited_at', { ascending: false });
             
-            if (!newCode) {
-                alert('Please enter a code');
-                return;
+            console.log('Query response:', { data, error });
+            
+            if (error) {
+                console.error('❌ Supabase error:', error);
+                throw error;
             }
             
-            try {
-                const { error } = await supabaseClient
-                    .from('access_codes')
-                    .insert([{
-                        code: newCode,
-                        expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-                        used: false
-                    }]);
-                
-                if (error) {
-                    if (error.message.includes('duplicate')) {
-                        alert('Code already exists!');
-                    } else {
-                        throw error;
-                    }
-                    return;
-                }
-                
-                // Reload codes
-                await loadCodes();
-                input.value = '';
-                
-            } catch (error) {
-                console.error('Error adding code:', error);
-                alert('Error adding code: ' + error.message);
-            }
-        }
-        
-        // ===== DELETE CODE FROM SUPABASE =====
-        async function deleteCode(code) {
-            if (confirm(`Delete code ${code}?`)) {
-                try {
-                    const { error } = await supabaseClient
-                        .from('access_codes')
-                        .delete()
-                        .eq('code', code);
-                    
-                    if (error) throw error;
-                    
-                    // Reload codes
-                    await loadCodes();
-                    
-                } catch (error) {
-                    console.error('Error deleting code:', error);
-                    alert('Error deleting code: ' + error.message);
-                }
-            }
-        }
-        
-        // ===== TAB SWITCHING =====
-        function switchTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            loadingEl.style.display = 'none';
             
-            if (tab === 'codes') {
-                document.querySelectorAll('.tab')[0].classList.add('active');
-                document.getElementById('codesSection').classList.add('active');
-                displayCodes();
+            if (data && data.length > 0) {
+                console.log(`✅ Found ${data.length} locked sites`);
+                console.log('Sample data:', data[0]);
+                
+                lockedSites = data.map(site => ({
+                    domain: site.domain,
+                    date: site.audited_at,
+                    code: site.code_used || site.report_password || 'N/A'
+                }));
+                
+                tableEl.style.display = 'table';
+                clearBtn.style.display = 'inline-block';
+                displaySites();
             } else {
-                document.querySelectorAll('.tab')[1].classList.add('active');
-                document.getElementById('sitesSection').classList.add('active');
-                loadLockedSites(); // Reload when switching to sites tab
-            }
-        }
-        
-        // ===== DISPLAY CODES =====
-        function displayCodes() {
-            const grid = document.getElementById('codeGrid');
-            grid.innerHTML = '';
-            
-            codes.forEach(code => {
-                const card = document.createElement('div');
-                card.className = 'code-card';
-                card.innerHTML = `
-                    <div class="code-value">${code}</div>
-                    <button class="delete-btn" onclick="deleteCode('${code}')" style="margin-top: 10px; padding: 5px 10px; font-size: 0.8rem;">REMOVE</button>
-                `;
-                grid.appendChild(card);
-            });
-            
-            if (codes.length === 0) {
-                grid.innerHTML = '<p style="color: #aaa; grid-column: 1/-1; text-align: center;">No codes yet. Add some!</p>';
+                console.log('ℹ️ No locked sites found in database');
+                document.getElementById('sitesBody').innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px; color: #aaa;">No locked sites yet</td></tr>';
+                tableEl.style.display = 'table';
             }
             
             updateStats();
+        } catch (error) {
+            console.error('❌ Error in loadLockedSites:', error);
+            loadingEl.style.display = 'none';
+            errorEl.style.display = 'block';
+            errorEl.textContent = 'Error loading sites from database: ' + error.message;
         }
-        
-        // ===== DISPLAY SITES =====
-        function displaySites() {
-            const tbody = document.getElementById('sitesBody');
-            tbody.innerHTML = '';
+    }
+    
+    // ===== TEST SUPABASE CONNECTION =====
+    async function testConnection() {
+        console.log('🔍 Testing Supabase connection...');
+        try {
+            const { data, error } = await supabaseClient
+                .from('audited_sites')
+                .select('count', { count: 'exact', head: true });
             
-            if (lockedSites.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px; color: #aaa;">No locked sites yet</td></tr>';
-                return;
+            console.log('Connection test result:', { data, error });
+            
+            if (error) {
+                console.error('❌ Connection failed:', error);
+            } else {
+                console.log('✅ Supabase connection successful');
             }
-            
-            lockedSites.forEach(site => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="domain-name">${site.domain}</td>
-                    <td class="audit-date">${new Date(site.date).toLocaleDateString()}</td>
-                    <td>${site.code}</td>
-                    <td><button class="remove-btn" onclick="removeSite('${site.domain}')">REMOVE</button></td>
-                `;
-                tbody.appendChild(row);
-            });
-            
-            updateStats();
+        } catch (e) {
+            console.error('❌ Connection test exception:', e);
         }
-        
-        // ===== GENERATE RANDOM CODE =====
-        function generateRandomCode() {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-            let code = '';
-            for (let i = 0; i < 8; i++) {
-                code += chars[Math.floor(Math.random() * chars.length)];
-            }
-            document.getElementById('newCode').value = code;
-        }
-        
-        // ===== FILTER SITES =====
-        function filterSites() {
-            const search = document.getElementById('siteSearch').value.toLowerCase();
-            const rows = document.querySelectorAll('#sitesBody tr');
-            
-            rows.forEach(row => {
-                const domain = row.querySelector('.domain-name')?.textContent.toLowerCase() || '';
-                row.style.display = domain.includes(search) ? '' : 'none';
-            });
-        }
-        
-        // ===== UPDATE STATS =====
-        function updateStats() {
-            document.getElementById('totalCodes').textContent = codes.length;
-            document.getElementById('totalSites').textContent = lockedSites.length;
-            
-            const today = new Date().toDateString();
-            const todaySites = lockedSites.filter(s => new Date(s.date).toDateString() === today).length;
-            document.getElementById('todaySites').textContent = todaySites;
-        }
-        
-        // ===== INITIALIZE =====
-        document.addEventListener('DOMContentLoaded', function() {
-            loadCodes();
-            // Don't load sites until tab is clicked
-        });
-    </script>
+    }
+    
+    // Run connection test when page loads
+    testConnection();
+</script>
 </body>
 </html>
