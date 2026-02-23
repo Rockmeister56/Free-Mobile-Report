@@ -103,6 +103,30 @@
             text-shadow: 0 0 10px rgba(255,170,0,0.5);
         }
     </style>
+    <style>
+    /* Access button styles */
+    .access-btn {
+        background: transparent;
+        border: 1px solid #0066cc;
+        color: #0099ff;
+        padding: 8px 15px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .access-btn.active {
+        background: rgba(0,255,136,0.2);
+        border-color: #00ff88;
+        color: #00ff88;
+    }
+    
+    .access-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,102,204,0.3);
+    }
+</style>
 </head>
 <body>
     <!-- Full-width header with your image as background -->
@@ -168,7 +192,7 @@
 </style>
 
 <div class="clearfix">
-    <button id="showAccessPopup" class="glow-access-btn">
+    <button id="showAccessPopup" class="access-btn">
         ⚡ TO START AUDIT - ENTER VIP ACCESS CODE
     </button>
 </div>
@@ -430,11 +454,9 @@ const accessButton = document.getElementById('showAccessPopup');
 if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
     // Valid code exists - show active state
     if (accessButton) {
-        accessButton.innerHTML = '✅ CODE ACTIVE';
-        accessButton.style.background = 'rgba(0,255,136,0.2)';
-        accessButton.style.borderColor = '#00ff88';
-        accessButton.style.color = '#00ff88';
-    }
+    accessButton.innerHTML = '✅ CODE ACTIVE';
+    accessButton.classList.add('active');
+}
     
     const accessCodeField = document.getElementById('accessCode');
     if (accessCodeField) {
@@ -443,11 +465,9 @@ if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
 } else {
     // No valid code - show default button
     if (accessButton) {
-        accessButton.innerHTML = '🔐 ENTER ACCESS CODE';
-        accessButton.style.background = 'transparent';
-        accessButton.style.borderColor = '#0066cc';
-        accessButton.style.color = '#0099ff';
-    }
+    accessButton.innerHTML = '🔐 ENTER ACCESS CODE';
+    accessButton.classList.remove('active');
+}
     
     // Clear any invalid stored code
     localStorage.removeItem('accessCode');
@@ -522,9 +542,7 @@ if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
 const accessButton = document.getElementById('showAccessPopup');
 if (accessButton) {
     accessButton.innerHTML = '✅ CODE ACTIVE';
-    accessButton.style.background = 'rgba(0,255,136,0.2)';
-    accessButton.style.borderColor = '#00ff88';
-    accessButton.style.color = '#00ff88';
+    accessButton.classList.add('active');
 }
 
 // Also update hidden access code field if it exists
