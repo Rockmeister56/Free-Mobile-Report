@@ -394,7 +394,7 @@
             }
         });
     });
-    
+
     </script>
     <script src="app.js"></script>
 
@@ -423,10 +423,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Popup script loaded');
 
-    // Check for saved code on page load
+// Check for saved code on page load
 const savedCode = localStorage.getItem('accessCode');
-if (savedCode) {
-    const accessButton = document.getElementById('showAccessPopup');
+const accessButton = document.getElementById('showAccessPopup');
+
+if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
+    // Valid code exists - show active state
     if (accessButton) {
         accessButton.innerHTML = '✅ CODE ACTIVE';
         accessButton.style.background = 'rgba(0,255,136,0.2)';
@@ -438,6 +440,17 @@ if (savedCode) {
     if (accessCodeField) {
         accessCodeField.value = savedCode;
     }
+} else {
+    // No valid code - show default button
+    if (accessButton) {
+        accessButton.innerHTML = '🔐 ENTER ACCESS CODE';
+        accessButton.style.background = 'transparent';
+        accessButton.style.borderColor = '#0066cc';
+        accessButton.style.color = '#0099ff';
+    }
+    
+    // Clear any invalid stored code
+    localStorage.removeItem('accessCode');
 }
     
     const showAccessPopup = document.getElementById('showAccessPopup');
