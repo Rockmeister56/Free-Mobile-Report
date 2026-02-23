@@ -392,6 +392,118 @@
             }
         });
     });
+    // Popup functionality
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Popup script loaded');
+    
+    const showAccessPopup = document.getElementById('showAccessPopup');
+    const accessPopup = document.getElementById('accessPopup');
+    const closePopup = document.getElementById('closePopup');
+    const verifyCodeBtn = document.getElementById('verifyCodeBtn');
+    const popupAccessCode = document.getElementById('popupAccessCode');
+    const continueFree = document.getElementById('continueFree');
+    const mainAccessCode = document.getElementById('accessCode'); // Hidden field if you have one
+    
+    console.log('Elements found:', {
+        showAccessPopup: !!showAccessPopup,
+        accessPopup: !!accessPopup,
+        closePopup: !!closePopup,
+        verifyCodeBtn: !!verifyCodeBtn,
+        popupAccessCode: !!popupAccessCode,
+        continueFree: !!continueFree
+    });
+    
+    // Show popup
+    if (showAccessPopup) {
+        showAccessPopup.addEventListener('click', function() {
+            console.log('Show popup clicked');
+            accessPopup.style.display = 'flex';
+        });
+    }
+    
+    // Close popup
+    if (closePopup) {
+        closePopup.addEventListener('click', function() {
+            console.log('Close popup clicked');
+            accessPopup.style.display = 'none';
+            if (popupAccessCode) popupAccessCode.value = '';
+        });
+    }
+    
+    // Close when clicking outside
+    if (accessPopup) {
+        accessPopup.addEventListener('click', function(e) {
+            if (e.target === accessPopup) {
+                console.log('Clicked outside');
+                accessPopup.style.display = 'none';
+                if (popupAccessCode) popupAccessCode.value = '';
+            }
+        });
+    }
+    
+    // Continue with free version
+    if (continueFree) {
+        continueFree.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Continue free clicked');
+            accessPopup.style.display = 'none';
+        });
+    }
+    
+    // Verify code - REAL SUPABASE CHECK using functions from main script
+    if (verifyCodeBtn) {
+        verifyCodeBtn.addEventListener('click', async function() {
+            const code = popupAccessCode ? popupAccessCode.value.trim().toUpperCase() : '';
+            console.log('Verify code clicked:', code);
+            
+            if (!code) {
+                alert('Please enter an access code');
+                return;
+            }
+            
+            // Check if code is valid using the function from main script
+            const { valid, record } = await checkAccessCode(code);
+            
+            if (valid) {
+                alert(`✅ Code ${code} accepted! Your $99 value audit is unlocked.`);
+                accessPopup.style.display = 'none';
+                localStorage.setItem('accessCode', code);
+                
+                // Update the button to show success
+                if (showAccessPopup) {
+                    showAccessPopup.innerHTML = '✅ CODE ACTIVE';
+                    showAccessPopup.style.background = 'rgba(0,255,136,0.2)';
+                    showAccessPopup.style.borderColor = '#00ff88';
+                    showAccessPopup.style.color = '#00ff88';
+                }
+                
+                // Auto-fill the main access code field if it exists
+                if (mainAccessCode) {
+                    mainAccessCode.value = code;
+                }
+                
+                // Clear popup input
+                if (popupAccessCode) popupAccessCode.value = '';
+                
+            } else {
+                alert('❌ Invalid or expired access code. Please try again.');
+            }
+        });
+    }
+    
+    // Check if code already exists in localStorage
+    const savedCode = localStorage.getItem('accessCode');
+    if (savedCode && showAccessPopup) {
+        showAccessPopup.innerHTML = '✅ CODE ACTIVE';
+        showAccessPopup.style.background = 'rgba(0,255,136,0.2)';
+        showAccessPopup.style.borderColor = '#00ff88';
+        showAccessPopup.style.color = '#00ff88';
+        
+        if (mainAccessCode) {
+            mainAccessCode.value = savedCode;
+        }
+    }
+});
 </script>
 </body>
 </html>
