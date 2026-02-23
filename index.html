@@ -256,16 +256,23 @@
                 localStorage.setItem('ppcBudget', budget);
                 localStorage.setItem('scannedUrl', url);
 
-                // 🔍 DEBUG - verify URL before redirect
-console.log('🔍 ABOUT TO REDIRECT WITH:');
-console.log('   - Raw URL:', url);
-console.log('   - Encoded URL:', encodeURIComponent(url));
-console.log('   - Budget:', budget);
-console.log('   - Full redirect URL:', `analysis.html?url=${encodeURIComponent(url)}&budget=${budget}`);
                 
-                // Pass both in URL for redundancy
-                const encodedUrl = encodeURIComponent(url);
-                window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
+                
+                // 🔍 DEBUG - verify the URL before redirect
+console.log('🔍 RAW URL:', url);
+console.log('🔍 ENCODED URL:', encodeURIComponent(url));
+console.log('🔍 BUDGET:', budget);
+console.log('🔍 FULL REDIRECT:', `analysis.html?url=${encodeURIComponent(url)}&budget=${budget}`);
+
+// Make sure URL is valid
+if (!url || url === '') {
+    alert('❌ ERROR: URL is empty!');
+    return;
+}
+
+// Pass both in URL for redundancy
+const encodedUrl = encodeURIComponent(url);
+window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
             });
             
             // Allow Enter key to submit
