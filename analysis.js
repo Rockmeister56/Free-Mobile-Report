@@ -349,49 +349,65 @@ class AnalysisProgress {
         }
     }
 
-    async completeAnalysis() {
-        console.log('✅ Analysis complete - storing in Supabase...');
-        
-        // Update UI
-        if (this.progressFill) {
-            this.progressFill.style.background = 'linear-gradient(90deg, #00cc66, #00ff88)';
-        }
-        
-        if (this.progressText) {
-            this.progressText.textContent = '100% Complete - Report Ready!';
-            this.progressText.style.color = '#00cc66';
-        }
-        
-        if (this.statusMessage) {
-            this.statusMessage.innerHTML = '<p>"✅ Analysis complete! Loading your report..."</p>';
-        }
-        
-        if (this.lossAlert) {
-            this.lossAlert.style.display = 'block';
-        }
-        
-        // Make sure Supabase is initialized before storing
-        if (!supabaseClient) {
-            console.log('⏳ Waiting for Supabase to initialize...');
-            await initSupabase();
-        }
-        
-        // Store in Supabase that this domain was audited
-        const accessCode = localStorage.getItem('accessCode');
-await storeAuditedDomain(scannedUrl, accessCode);
-        
-        // Store in localStorage
-        localStorage.setItem('lastScannedUrl', scannedUrl);
-        localStorage.setItem('ppcBudget', ppcBudget);
-        localStorage.setItem('monthlyLoss', monthlyLoss);
-        
-        // Redirect DIRECTLY to results page (NO PASSWORD PAGE!)
-        setTimeout(() => {
-            const resultsUrl = `calculator-enhanced.html?url=${encodeURIComponent(scannedUrl)}&budget=${ppcBudget}&loss=${monthlyLoss}`;
-            console.log('🚀 Redirecting to results:', resultsUrl);
-            window.location.href = resultsUrl;
-        }, 2000);
+   async completeAnalysis() {
+    console.log('✅ Analysis complete - storing in Supabase...');
+    
+    // Update UI
+    if (this.progressFill) {
+        this.progressFill.style.background = 'linear-gradient(90deg, #00cc66, #00ff88)';
     }
+    
+    if (this.progressText) {
+        this.progressText.textContent = '100% Complete - Report Ready!';
+        this.progressText.style.color = '#00cc66';
+    }
+    
+    if (this.statusMessage) {
+        this.statusMessage.innerHTML = '<p>"✅ Analysis complete! Loading your report..."</p>';
+    }
+    
+    if (this.lossAlert) {
+        this.lossAlert.style.display = 'block';
+    }
+    
+    // 🔍 DEBUG ALERT 1 - Starting storage
+    alert('🔍 STEP 1: About to store domain: ' + scannedUrl);
+    
+    // Make sure Supabase is initialized before storing
+    if (!supabaseClient) {
+        console.log('⏳ Waiting for Supabase to initialize...');
+        alert('🔍 STEP 2: Initializing Supabase...');
+        await initSupabase();
+    }
+    
+    // Get access code
+    const accessCode = localStorage.getItem('accessCode') || 'NO-CODE';
+    alert('🔍 STEP 3: Access code = ' + accessCode);
+    
+    // Store in Supabase that this domain was audited
+    alert('🔍 STEP 4: Calling storeAuditedDomain...');
+    const result = await storeAuditedDomain(scannedUrl, accessCode);
+    
+    // 🔍 DEBUG ALERT 5 - See if it worked
+    if (result && result.success) {
+        alert('✅ STEP 5: SUCCESS! Domain stored in Supabase');
+    } else {
+        alert('❌ STEP 5: FAILED! ' + (result?.error || 'Unknown error'));
+    }
+    
+    // Store in localStorage
+    localStorage.setItem('lastScannedUrl', scannedUrl);
+    localStorage.setItem('ppcBudget', ppcBudget);
+    localStorage.setItem('monthlyLoss', monthlyLoss);
+    
+    // Redirect to results page
+    setTimeout(() => {
+        const resultsUrl = `calculator-enhanced.html?url=${encodeURIComponent(scannedUrl)}&budget=${ppcBudget}&loss=${monthlyLoss}`;
+        console.log('🚀 Redirecting to results:', resultsUrl);
+        alert('🔍 STEP 6: Redirecting to results page');
+        window.location.href = resultsUrl;
+    }, 2000);
+}
 }
 
 // Initialize everything when the page loads
