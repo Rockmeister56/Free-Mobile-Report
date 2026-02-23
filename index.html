@@ -249,8 +249,14 @@
                     url = 'https://' + url;
                 }
                 
-                // Get budget (exact input overrides dropdown)
-                let budget = exactBudget.value || ppcBudget.value || '10000';
+               // Get budget (exact input overrides dropdown) - SAFE VERSION
+let budget = '10000'; // Default
+
+if (exactBudget && exactBudget.value && exactBudget.value.trim() !== '') {
+    budget = exactBudget.value.trim();
+} else if (ppcBudget && ppcBudget.value && ppcBudget.value !== '') {
+    budget = ppcBudget.value;
+}
                 
                 // Store in localStorage for the journey
                 localStorage.setItem('ppcBudget', budget);
