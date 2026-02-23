@@ -102,6 +102,38 @@
             color: #ffaa00;
             text-shadow: 0 0 10px rgba(255,170,0,0.5);
         }
+
+        /* Glowing effect for access button */
+@keyframes softGlow {
+    0% { box-shadow: 0 0 5px #00cc66, 0 0 10px #00cc66; }
+    50% { box-shadow: 0 0 20px #00ff88, 0 0 30px #00ff88; }
+    100% { box-shadow: 0 0 5px #00cc66, 0 0 10px #00cc66; }
+}
+
+.access-btn {
+    background: transparent;
+    border: 2px solid #0066cc;
+    color: #0099ff;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: softGlow 2s infinite;
+}
+
+.access-btn.active {
+    background: rgba(0,255,136,0.2);
+    border-color: #00ff88;
+    color: #00ff88;
+    animation: softGlow 2s infinite; /* Keep the glow when active */
+}
+
+.access-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,102,204,0.4);
+}
     </style>
     <style>
     /* Access button styles */
