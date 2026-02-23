@@ -398,14 +398,6 @@
             // Clear any old data
             localStorage.removeItem('ppcBudget');
             localStorage.removeItem('scannedUrl');
-            
-            analyzeBtn.addEventListener('click', function() {
-                // Validate URL
-                let url = websiteUrl.value.trim();
-                if (!url) {
-                    alert('Please enter your website URL');
-                    return;
-                }
                 
                 // Format URL if needed
                 if (!url.startsWith('http')) {
@@ -470,6 +462,23 @@ window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
 // Popup functionality - THIS MUST BE INSIDE THE SCRIPT TAG
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Popup script loaded');
+
+    // Check for saved code on page load
+const savedCode = localStorage.getItem('accessCode');
+if (savedCode) {
+    const accessButton = document.getElementById('showAccessPopup');
+    if (accessButton) {
+        accessButton.innerHTML = '✅ CODE ACTIVE';
+        accessButton.style.background = 'rgba(0,255,136,0.2)';
+        accessButton.style.borderColor = '#00ff88';
+        accessButton.style.color = '#00ff88';
+    }
+    
+    const accessCodeField = document.getElementById('accessCode');
+    if (accessCodeField) {
+        accessCodeField.value = savedCode;
+    }
+}
     
     const showAccessPopup = document.getElementById('showAccessPopup');
     const accessPopup = document.getElementById('accessPopup');
@@ -536,7 +545,20 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // For now, just show success
-            alert(`✅ Code ${code} accepted! Your $99 value audit is unlocked.`);
+            // Update button to show active state
+const accessButton = document.getElementById('showAccessPopup');
+if (accessButton) {
+    accessButton.innerHTML = '✅ CODE ACTIVE';
+    accessButton.style.background = 'rgba(0,255,136,0.2)';
+    accessButton.style.borderColor = '#00ff88';
+    accessButton.style.color = '#00ff88';
+}
+
+// Also update hidden access code field if it exists
+const accessCodeField = document.getElementById('accessCode');
+if (accessCodeField) {
+    accessCodeField.value = code;
+    }
             accessPopup.style.display = 'none';
             localStorage.setItem('accessCode', code);
         });
