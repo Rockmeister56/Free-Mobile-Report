@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Code & Site Manager</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -256,15 +257,15 @@
     <script>
         // ===== DATA STORAGE =====
         // Default codes
-        const defaultCodes = [
-            'TOMMY2024', 'PPCROCKER', 'MORTGAGE24', 'BROKER99', 
-            'LEAD2024', 'AUDITPRO', 'SMARTLTD', 'CONVERT5', 
-            'LEAKFIX', 'PPCMASTER'
-        ];
-        
-        // Load data
-        let codes = JSON.parse(localStorage.getItem('accessCodes')) || defaultCodes;
-        let lockedSites = JSON.parse(localStorage.getItem('lockedSites')) || [];
+const SUPABASE_URL = 'https://fcgbusobfdwnpoqyuzoe.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk';
+
+const { createClient } = supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Initialize arrays
+let codes = [];
+let lockedSites = [];
         
         // ===== TAB SWITCHING =====
         function switchTab(tab) {
@@ -400,19 +401,39 @@
             document.getElementById('todaySites').textContent = todaySites;
         }
         
-        // ===== INITIALIZE =====
-        displayCodes();
-        updateStats();
-        
-        // ===== ADD SAMPLE SITES FOR DEMO (remove in production) =====
-        if (lockedSites.length === 0) {
-            lockedSites = [
-                { domain: 'example1.com', date: '2024-02-20', code: 'TOMMY2024' },
-                { domain: 'example2.com', date: '2024-02-21', code: 'PPCROCKER' },
-                { domain: 'example3.com', date: '2024-02-22', code: 'MORTGAGE24' }
-            ];
-            localStorage.setItem('lockedSites', JSON.stringify(lockedSites));
-        }
+        // ===== LOAD REAL DATA FROM SUPABASE =====
+async function loadRealData() {
+    // Load codes
+    const { data: codeData } = await supabaseClient
+        .from('access_codes')
+        .select('*')
+        .eq('used', false);
+    
+    if (codeData) {
+        codes = codeData.map(c => c.code);
+    }
+    
+    // Load locked sites
+    const { data: siteData } = await supabaseClient
+        .from('audited_sites')
+        .select('*')
+        .order('audited_at', { ascending: false });
+    
+    if (siteData) {
+        lockedSites = siteData.map(site => ({
+            domain: site.domain,
+            date: site.audited_at,
+            code: site.report_password || 'N/A'
+        }));
+    }
+    
+    displayCodes();
+    displaySites();
+    updateStats();
+}
+
+// ===== INITIALIZE =====
+loadRealData();
     </script>
 </body>
 </html>
