@@ -443,6 +443,19 @@
 </div>
 
 <script>
+    // Popup functionality
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Popup script loaded');
+    
+    // CLEAR ANY OLD TEST CODES - ADD THIS LINE
+    localStorage.removeItem('accessCode');
+    
+    // Check for saved code on page load
+    const savedCode = localStorage.getItem('accessCode');
+    const accessButton = document.getElementById('showAccessPopup');
+    
+});
+
 // Popup functionality - THIS MUST BE INSIDE THE SCRIPT TAG
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Popup script loaded');
