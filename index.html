@@ -103,11 +103,11 @@
             text-shadow: 0 0 10px rgba(255,170,0,0.5);
         }
 
-        /* Glowing effect for access button */
-@keyframes softGlow {
-    0% { box-shadow: 0 0 5px #00cc66, 0 0 10px #00cc66; }
-    50% { box-shadow: 0 0 20px #00ff88, 0 0 30px #00ff88; }
-    100% { box-shadow: 0 0 5px #00cc66, 0 0 10px #00cc66; }
+        /* Gentle blue glow for access button */
+@keyframes softBlueGlow {
+    0% { box-shadow: 0 0 3px #0066cc, 0 0 6px #0066cc; }
+    50% { box-shadow: 0 0 8px #0099ff, 0 0 12px #0099ff; }
+    100% { box-shadow: 0 0 3px #0066cc, 0 0 6px #0066cc; }
 }
 
 .access-btn {
@@ -120,19 +120,19 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    animation: softGlow 2s infinite;
+    animation: softBlueGlow 3s infinite; /* Slower, gentler pulse */
 }
 
 .access-btn.active {
-    background: rgba(0,255,136,0.2);
-    border-color: #00ff88;
-    color: #00ff88;
-    animation: softGlow 2s infinite; /* Keep the glow when active */
+    background: rgba(0,102,204,0.15); /* Subtle blue background when active */
+    border-color: #0099ff;
+    color: #00aaff;
+    animation: softBlueGlow 3s infinite;
 }
 
 .access-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0,102,204,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,102,204,0.3);
 }
     </style>
     <style>
