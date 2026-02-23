@@ -536,6 +536,52 @@ if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
             e.preventDefault();
             console.log('Continue free clicked');
             accessPopup.style.display = 'none';
+           
+                // Verify code - WITH SUPABASE CHECK
+    if (verifyCodeBtn) {
+        verifyCodeBtn.addEventListener('click', async function() {
+            const code = popupAccessCode ? popupAccessCode.value.trim().toUpperCase() : '';
+            
+            if (!code) {
+                alert('Please enter an access code');
+                return;
+            }
+            
+            // Show loading state
+            verifyCodeBtn.textContent = 'CHECKING...';
+            verifyCodeBtn.disabled = true;
+            
+            // Check if code is valid in Supabase
+            const { valid, record } = await checkAccessCode(code);
+            
+            if (valid) {
+                // Valid code - update button
+                if (showAccessPopup) {
+                    showAccessPopup.innerHTML = '✅ CODE ACTIVE';
+                    showAccessPopup.classList.add('active');
+                }
+                
+                // Update hidden access code field
+                const accessCodeField = document.getElementById('accessCode');
+                if (accessCodeField) {
+                    accessCodeField.value = code;
+                }
+                
+                accessPopup.style.display = 'none';
+                localStorage.setItem('accessCode', code);
+            } else {
+                // Invalid code - show error
+                alert('❌ Invalid or expired access code. Please try again.');
+                popupAccessCode.value = '';
+                popupAccessCode.focus();
+            }
+            
+            // Reset button
+            verifyCodeBtn.textContent = 'VERIFY CODE';
+            verifyCodeBtn.disabled = false;
+        });
+    }
+
         });
     }
     
