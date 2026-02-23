@@ -308,11 +308,97 @@
         const websiteUrl = document.getElementById('websiteUrl');
         const ppcBudget = document.getElementById('ppcBudget');
         const exactBudget = document.getElementById('exactBudget');
-        const accessCode = document.getElementById('accessCode'); // Make sure this exists in your HTML
+        const accessCodeInput = document.getElementById('accessCode'); 
+        const showAccessPopup = document.getElementById('showAccessPopup');
+        const accessPopup = document.getElementById('accessPopup');
+        const closePopup = document.getElementById('closePopup');
+        const verifyCodeBtn = document.getElementById('verifyCodeBtn');
+        const popupAccessCode = document.getElementById('popupAccessCode');
+        const continueFree = document.getElementById('continueFree');
         
+        // ===== CHECK FOR SAVED CODE ON PAGE LOAD =====
+        const savedCode = localStorage.getItem('accessCode');
+        if (savedCode && showAccessPopup) {
+            showAccessPopup.innerHTML = '✅ CODE ACTIVE';
+            showAccessPopup.style.background = 'rgba(0,255,136,0.2)';
+            showAccessPopup.style.borderColor = '#00ff88';
+            showAccessPopup.style.color = '#00ff88';
+            
+            if (accessCodeInput) {
+                accessCodeInput.value = savedCode;
+            }
+        }
+        
+        // ===== POPUP FUNCTIONALITY =====
+        if (showAccessPopup) {
+            showAccessPopup.addEventListener('click', function() {
+                console.log('Show popup clicked');
+                accessPopup.style.display = 'flex';
+            });
+        }
+        
+        if (closePopup) {
+            closePopup.addEventListener('click', function() {
+                accessPopup.style.display = 'none';
+                if (popupAccessCode) popupAccessCode.value = '';
+            });
+        }
+        
+        if (accessPopup) {
+            accessPopup.addEventListener('click', function(e) {
+                if (e.target === accessPopup) {
+                    accessPopup.style.display = 'none';
+                    if (popupAccessCode) popupAccessCode.value = '';
+                }
+            });
+        }
+        
+        if (continueFree) {
+            continueFree.addEventListener('click', function(e) {
+                e.preventDefault();
+                accessPopup.style.display = 'none';
+            });
+        }
+        
+        // ===== VERIFY CODE =====
+        if (verifyCodeBtn) {
+            verifyCodeBtn.addEventListener('click', async function() {
+                const code = popupAccessCode ? popupAccessCode.value.trim().toUpperCase() : '';
+                
+                if (!code) {
+                    alert('Please enter an access code');
+                    return;
+                }
+                
+                const { valid, record } = await checkAccessCode(code);
+                
+                if (valid) {
+                    accessPopup.style.display = 'none';
+                    localStorage.setItem('accessCode', code);
+                    
+                    if (showAccessPopup) {
+                        showAccessPopup.innerHTML = '✅ CODE ACTIVE';
+                        showAccessPopup.style.background = 'rgba(0,255,136,0.2)';
+                        showAccessPopup.style.borderColor = '#00ff88';
+                        showAccessPopup.style.color = '#00ff88';
+                    }
+                    
+                    if (accessCodeInput) {
+                        accessCodeInput.value = code;
+                    }
+                    
+                    if (popupAccessCode) popupAccessCode.value = '';
+                    
+                } else {
+                    alert('❌ Invalid or expired access code. Please try again.');
+                }
+            });
+        }
+        
+        // ===== ANALYZE BUTTON =====
         analyzeBtn.addEventListener('click', async function() {
             // Validate access code
-            const code = accessCode ? accessCode.value.trim().toUpperCase() : '';
+            const code = accessCodeInput ? accessCodeInput.value.trim().toUpperCase() : '';
             if (!code) {
                 alert('Please enter your access code');
                 return;
@@ -325,25 +411,20 @@
                 return;
             }
             
-            // Format URL
             if (!url.startsWith('http')) {
                 url = 'https://' + url;
             }
             
-            // Extract clean domain
             let cleanDomain = url.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
             cleanDomain = cleanDomain.replace(/^www\./, '');
             
-            // Show loading
             const originalText = analyzeBtn.textContent;
             analyzeBtn.textContent = '🔍 CHECKING...';
             analyzeBtn.disabled = true;
             
-            // CHECK 1: Is domain already audited?
             const { audited, record } = await checkDomainAudited(cleanDomain);
             
             if (audited) {
-                // Domain already audited - redirect to blocked page
                 const auditDate = new Date(record.audited_at).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
@@ -354,8 +435,7 @@
                 return;
             }
             
-            // CHECK 2: Is access code valid?
-            const { valid, record: codeRecord } = await checkAccessCode(code);
+            const { valid } = await checkAccessCode(code);
             
             if (!valid) {
                 alert('Invalid or expired access code. Please contact your sales representative.');
@@ -364,146 +444,59 @@
                 return;
             }
             
-            // Get budget
-            let budget = '10000'; // Default
+            let budget = '10000';
             if (exactBudget && exactBudget.value && exactBudget.value.trim() !== '') {
                 budget = exactBudget.value.trim();
             } else if (ppcBudget && ppcBudget.value && ppcBudget.value !== '') {
                 budget = ppcBudget.value;
             }
             
-            // Mark code as used
             await markCodeAsUsed(code, cleanDomain);
             
-            // Store in localStorage
             localStorage.setItem('ppcBudget', budget);
             localStorage.setItem('scannedUrl', url);
             localStorage.setItem('accessCode', code);
             
-            // Redirect to analysis page
             const encodedUrl = encodeURIComponent(url);
             window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
         });
         
-        // Allow Enter key
         websiteUrl.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 analyzeBtn.click();
             }
         });
     });
-    // Popup functionality
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Popup script loaded');
-    
-    const showAccessPopup = document.getElementById('showAccessPopup');
-    const accessPopup = document.getElementById('accessPopup');
-    const closePopup = document.getElementById('closePopup');
-    const verifyCodeBtn = document.getElementById('verifyCodeBtn');
-    const popupAccessCode = document.getElementById('popupAccessCode');
-    const continueFree = document.getElementById('continueFree');
-    const mainAccessCode = document.getElementById('accessCode'); // Hidden field if you have one
-    
-    console.log('Elements found:', {
-        showAccessPopup: !!showAccessPopup,
-        accessPopup: !!accessPopup,
-        closePopup: !!closePopup,
-        verifyCodeBtn: !!verifyCodeBtn,
-        popupAccessCode: !!popupAccessCode,
-        continueFree: !!continueFree
-    });
-    
-    // Show popup
-    if (showAccessPopup) {
-        showAccessPopup.addEventListener('click', function() {
-            console.log('Show popup clicked');
-            accessPopup.style.display = 'flex';
-        });
-    }
-    
-    // Close popup
-    if (closePopup) {
-        closePopup.addEventListener('click', function() {
-            console.log('Close popup clicked');
-            accessPopup.style.display = 'none';
-            if (popupAccessCode) popupAccessCode.value = '';
-        });
-    }
-    
-    // Close when clicking outside
-    if (accessPopup) {
-        accessPopup.addEventListener('click', function(e) {
-            if (e.target === accessPopup) {
-                console.log('Clicked outside');
-                accessPopup.style.display = 'none';
-                if (popupAccessCode) popupAccessCode.value = '';
-            }
-        });
-    }
-    
-    // Continue with free version
-    if (continueFree) {
-        continueFree.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Continue free clicked');
-            accessPopup.style.display = 'none';
-        });
-    }
-    
-    // Verify code - REAL SUPABASE CHECK using functions from main script
-    if (verifyCodeBtn) {
-        verifyCodeBtn.addEventListener('click', async function() {
-            const code = popupAccessCode ? popupAccessCode.value.trim().toUpperCase() : '';
-            console.log('Verify code clicked:', code);
-            
-            if (!code) {
-                alert('Please enter an access code');
-                return;
-            }
-            
-            // Check if code is valid using the function from main script
-            const { valid, record } = await checkAccessCode(code);
-            
-            if (valid) {
-                alert(`✅ Code ${code} accepted! Your $99 value audit is unlocked.`);
-                accessPopup.style.display = 'none';
-                localStorage.setItem('accessCode', code);
-                
-                // Update the button to show success
-                if (showAccessPopup) {
-                    showAccessPopup.innerHTML = '✅ CODE ACTIVE';
-                    showAccessPopup.style.background = 'rgba(0,255,136,0.2)';
-                    showAccessPopup.style.borderColor = '#00ff88';
-                    showAccessPopup.style.color = '#00ff88';
-                }
-                
-                // Auto-fill the main access code field if it exists
-                if (mainAccessCode) {
-                    mainAccessCode.value = code;
-                }
-                
-                // Clear popup input
-                if (popupAccessCode) popupAccessCode.value = '';
-                
-            } else {
-                alert('❌ Invalid or expired access code. Please try again.');
-            }
-        });
-    }
-    
-    // Check if code already exists in localStorage
-    const savedCode = localStorage.getItem('accessCode');
-    if (savedCode && showAccessPopup) {
-        showAccessPopup.innerHTML = '✅ CODE ACTIVE';
-        showAccessPopup.style.background = 'rgba(0,255,136,0.2)';
-        showAccessPopup.style.borderColor = '#00ff88';
-        showAccessPopup.style.color = '#00ff88';
-        
-        if (mainAccessCode) {
-            mainAccessCode.value = savedCode;
-        }
-    }
-});
 </script>
+
+<!-- ACCESS CODE POPUP MODAL -->
+<div id="accessPopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center;">
+    <div style="background: #0a0a0a; border: 2px solid #0066cc; border-radius: 20px; padding: 40px; max-width: 400px; width: 90%; position: relative; box-shadow: 0 0 50px rgba(0,102,204,0.5);">
+        <button id="closePopup" style="position: absolute; top: 15px; right: 20px; background: none; border: none; color: #666; font-size: 2rem; cursor: pointer;">×</button>
+        
+        <h3 style="color: white; margin-bottom: 10px; text-align: center;">🔐 LIMITED ACCESS OFFER</h3>
+        <p style="color: #ffaa00; text-align: center; font-weight: 700; margin-bottom: 20px;">Value: $99 per audit</p>
+        
+        <input type="text" id="popupAccessCode" placeholder="ENTER ACCESS CODE" 
+               style="width: 100%; padding: 15px; background: rgba(255,255,255,0.1); border: 2px solid #0066cc; border-radius: 10px; color: white; font-size: 1.2rem; text-align: center; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase;">
+        
+        <button id="verifyCodeBtn" style="width: 100%; padding: 15px; background: linear-gradient(135deg, #0066cc, #004999); color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-bottom: 15px;">
+            VERIFY CODE
+        </button>
+        
+        <p style="color: #aaa; font-size: 0.8rem; text-align: center;">One code per website • Expires in 30 days</p>
+        <p style="color: #666; font-size: 0.8rem; text-align: center; margin-top: 15px;">Don't have a code? <a href="#" id="continueFree" style="color: #0099ff;">Continue with free version →</a></p>
+    </div>
+</div>
+
+<!-- ACCESS CODE BUTTON - Place this where you want the button to appear -->
+<div style="text-align: right; margin-bottom: 10px;">
+    <button id="showAccessPopup" style="background: transparent; border: 1px solid #0066cc; color: #0099ff; padding: 8px 15px; border-radius: 30px; font-size: 0.9rem; cursor: pointer;">
+        🔐 Have an Access Code?
+    </button>
+</div>
+
+<!-- Hidden access code field for form submission -->
+<input type="hidden" id="accessCode">
 </body>
 </html>
