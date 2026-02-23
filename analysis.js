@@ -38,7 +38,7 @@ function initSupabase() {
 }
 
 // ===== FUNCTION TO STORE AUDITED DOMAIN =====
-async function storeAuditedDomain(domain) {
+async function storeAuditedDomain(domain, accessCode = null) {
     try {
         // Extract clean domain (remove http, https, www, and paths)
         let cleanDomain = domain.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
@@ -46,18 +46,52 @@ async function storeAuditedDomain(domain) {
         
         console.log('📝 Storing domain in Supabase:', cleanDomain);
         
+        // Get user IP (optional)
+        let userIp = 'unknown';
+        try {
+            const ipResponse = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipResponse.json();
+            userIp = ipData.ip;
+        } catch (e) {
+            console.log('Could not get IP');
+        }
+        
         const { error } = await supabaseClient
             .from('audited_sites')
             .insert([
                 {
                     domain: cleanDomain,
                     audited_at: new Date().toISOString(),
-                    expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+                    report_password: accessCode || 'USED', // Store the access code if available
+                    expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+                    user_ip: userIp,
+                    user_agent: navigator.userAgent,
+                    // created_at will auto-populate
+                    // broker_email is optional
                 }
             ]);
         
         if (error) {
             console.error('❌ Supabase insert error:', error);
+            
+            // Try without optional fields if error persists
+            if (error.message.includes('report_password')) {
+                console.log('Trying simplified insert...');
+                const { error: retryError } = await supabaseClient
+                    .from('audited_sites')
+                    .insert([
+                        {
+                            domain: cleanDomain,
+                            audited_at: new Date().toISOString(),
+                            expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+                        }
+                    ]);
+                
+                if (retryError) throw retryError;
+                console.log('✅ Domain stored (simplified)');
+                return { success: true };
+            }
+            
             return { success: false, error: error.message };
         }
         
@@ -343,7 +377,8 @@ class AnalysisProgress {
         }
         
         // Store in Supabase that this domain was audited
-        await storeAuditedDomain(scannedUrl);
+        const accessCode = localStorage.getItem('accessCode');
+await storeAuditedDomain(scannedUrl, accessCode);
         
         // Store in localStorage
         localStorage.setItem('lastScannedUrl', scannedUrl);
