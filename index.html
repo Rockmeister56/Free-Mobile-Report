@@ -255,6 +255,13 @@
                 // Store in localStorage for the journey
                 localStorage.setItem('ppcBudget', budget);
                 localStorage.setItem('scannedUrl', url);
+
+                // 🔍 DEBUG - verify URL before redirect
+console.log('🔍 ABOUT TO REDIRECT WITH:');
+console.log('   - Raw URL:', url);
+console.log('   - Encoded URL:', encodeURIComponent(url));
+console.log('   - Budget:', budget);
+console.log('   - Full redirect URL:', `analysis.html?url=${encodeURIComponent(url)}&budget=${budget}`);
                 
                 // Pass both in URL for redundancy
                 const encodedUrl = encodeURIComponent(url);
