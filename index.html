@@ -446,6 +446,7 @@
     // Popup functionality
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Popup script loaded');
+    localStorage.removeItem('accessCode');
 
     // Check for saved code on page load
     const savedCode = localStorage.getItem('accessCode');
