@@ -539,26 +539,7 @@ if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
         });
     }
     
-    // Verify code
-    if (verifyCodeBtn) {
-        verifyCodeBtn.addEventListener('click', function() {
-            const code = popupAccessCode ? popupAccessCode.value.trim().toUpperCase() : '';
-            console.log('Verify code clicked:', code);
-            
-            if (!code) {
-                alert('Please enter an access code');
-                return;
-            }
-            
-            // For now, just show success
-            // Update button to show active state
-const accessButton = document.getElementById('showAccessPopup');
-if (accessButton) {
-    accessButton.innerHTML = '✅ CODE ACTIVE';
-    accessButton.classList.add('active');
-}
-
-// Also update hidden access code field if it exists
+   // Also update hidden access code field if it exists
 const accessCodeField = document.getElementById('accessCode');
 if (accessCodeField) {
     accessCodeField.value = code;
@@ -566,8 +547,6 @@ if (accessCodeField) {
             accessPopup.style.display = 'none';
             localStorage.setItem('accessCode', code);
         });
-    }
-});
 </script>
 </body>
 </html>
