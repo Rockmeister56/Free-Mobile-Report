@@ -446,45 +446,32 @@
     // Popup functionality
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Popup script loaded');
-    
-    // CLEAR ANY OLD TEST CODES - ADD THIS LINE
-    localStorage.removeItem('accessCode');
-    
+
     // Check for saved code on page load
     const savedCode = localStorage.getItem('accessCode');
     const accessButton = document.getElementById('showAccessPopup');
-    
-});
 
-// Popup functionality - THIS MUST BE INSIDE THE SCRIPT TAG
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Popup script loaded');
-
-// Check for saved code on page load
-const savedCode = localStorage.getItem('accessCode');
-const accessButton = document.getElementById('showAccessPopup');
-
-if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
-    // Valid code exists - show active state
-    if (accessButton) {
-    accessButton.innerHTML = '✅ CODE ACTIVE';
-    accessButton.classList.add('active');
-}
-    
-    const accessCodeField = document.getElementById('accessCode');
-    if (accessCodeField) {
-        accessCodeField.value = savedCode;
+    if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
+        // Valid code exists - show active state
+        if (accessButton) {
+            accessButton.innerHTML = '✅ CODE ACTIVE';
+            accessButton.classList.add('active');
+        }
+        
+        const accessCodeField = document.getElementById('accessCode');
+        if (accessCodeField) {
+            accessCodeField.value = savedCode;
+        }
+    } else {
+        // No valid code - show default button
+        if (accessButton) {
+            accessButton.innerHTML = '⚡ TO START AUDIT - ENTER VIP ACCESS CODE';
+            accessButton.classList.remove('active');
+        }
+        
+        // Clear any invalid stored code
+        localStorage.removeItem('accessCode');
     }
-} else {
-    // No valid code - show default button
-    if (accessButton) {
-    accessButton.innerHTML = '🔐 ENTER ACCESS CODE';
-    accessButton.classList.remove('active');
-}
-    
-    // Clear any invalid stored code
-    localStorage.removeItem('accessCode');
-}
     
     const showAccessPopup = document.getElementById('showAccessPopup');
     const accessPopup = document.getElementById('accessPopup');
@@ -536,8 +523,10 @@ if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
             e.preventDefault();
             console.log('Continue free clicked');
             accessPopup.style.display = 'none';
-           
-                // Verify code - WITH SUPABASE CHECK
+        });
+    }
+    
+    // Verify code - WITH SUPABASE CHECK
     if (verifyCodeBtn) {
         verifyCodeBtn.addEventListener('click', async function() {
             const code = popupAccessCode ? popupAccessCode.value.trim().toUpperCase() : '';
@@ -581,18 +570,8 @@ if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
             verifyCodeBtn.disabled = false;
         });
     }
-
-        });
-    }
+}); // <-- This should be the ONLY closing bracket here
     
-   // Also update hidden access code field if it exists
-const accessCodeField = document.getElementById('accessCode');
-if (accessCodeField) {
-    accessCodeField.value = code;
-    }
-            accessPopup.style.display = 'none';
-            localStorage.setItem('accessCode', code);
-        });
 </script>
 </body>
 </html>
