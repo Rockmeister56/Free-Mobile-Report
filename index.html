@@ -191,7 +191,7 @@
     }
 </style>
 
-<div class="clearfix">
+<div class="clearfix" style="text-align: left;">
     <button id="showAccessPopup" class="access-btn">
         ⚡ TO START AUDIT - ENTER VIP ACCESS CODE
     </button>
@@ -444,34 +444,35 @@
 
 <script>
 // Popup functionality - THIS MUST BE INSIDE THE SCRIPT TAG
+// Popup functionality
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Popup script loaded');
 
-// Check for saved code on page load
-const savedCode = localStorage.getItem('accessCode');
-const accessButton = document.getElementById('showAccessPopup');
+    // Check for saved code on page load
+    const savedCode = localStorage.getItem('accessCode');
+    const accessButton = document.getElementById('showAccessPopup');
 
-if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
-    // Valid code exists - show active state
-    if (accessButton) {
-    accessButton.innerHTML = '✅ CODE ACTIVE';
-    accessButton.classList.add('active');
-}
-    
-    const accessCodeField = document.getElementById('accessCode');
-    if (accessCodeField) {
-        accessCodeField.value = savedCode;
+    if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
+        // Valid code exists - show active state
+        if (accessButton) {
+            accessButton.innerHTML = '✅ CODE ACTIVE';
+            accessButton.classList.add('active');
+        }
+        
+        const accessCodeField = document.getElementById('accessCode');
+        if (accessCodeField) {
+            accessCodeField.value = savedCode;
+        }
+    } else {
+        // No valid code - show default button
+        if (accessButton) {
+            accessButton.innerHTML = '🔐 ENTER ACCESS CODE';
+            accessButton.classList.remove('active');
+        }
+        
+        // Clear any invalid stored code
+        localStorage.removeItem('accessCode');
     }
-} else {
-    // No valid code - show default button
-    if (accessButton) {
-    accessButton.innerHTML = '🔐 ENTER ACCESS CODE';
-    accessButton.classList.remove('active');
-}
-    
-    // Clear any invalid stored code
-    localStorage.removeItem('accessCode');
-}
     
     const showAccessPopup = document.getElementById('showAccessPopup');
     const accessPopup = document.getElementById('accessPopup');
@@ -525,6 +526,35 @@ if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
             accessPopup.style.display = 'none';
         });
     }
+    
+    // Verify code
+    if (verifyCodeBtn) {
+        verifyCodeBtn.addEventListener('click', function() {
+            const code = popupAccessCode ? popupAccessCode.value.trim().toUpperCase() : '';
+            console.log('Verify code clicked:', code);
+            
+            if (!code) {
+                alert('Please enter an access code');
+                return;
+            }
+            
+            // Update button to show active state
+            if (showAccessPopup) {
+                showAccessPopup.innerHTML = '✅ CODE ACTIVE';
+                showAccessPopup.classList.add('active');
+            }
+
+            // Also update hidden access code field if it exists
+            const accessCodeField = document.getElementById('accessCode');
+            if (accessCodeField) {
+                accessCodeField.value = code;
+            }
+            
+            accessPopup.style.display = 'none';
+            localStorage.setItem('accessCode', code);
+        });
+    }
+});
     
     // Verify code
     if (verifyCodeBtn) {
