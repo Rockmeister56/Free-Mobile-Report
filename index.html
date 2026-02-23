@@ -262,14 +262,6 @@ if (exactBudget && exactBudget.value && exactBudget.value.trim() !== '') {
                 localStorage.setItem('ppcBudget', budget);
                 localStorage.setItem('scannedUrl', url);
 
-                
-                
-                // 🔍 DEBUG - verify the URL before redirect
-console.log('🔍 RAW URL:', url);
-console.log('🔍 ENCODED URL:', encodeURIComponent(url));
-console.log('🔍 BUDGET:', budget);
-console.log('🔍 FULL REDIRECT:', `analysis.html?url=${encodeURIComponent(url)}&budget=${budget}`);
-
 // Make sure URL is valid
 if (!url || url === '') {
     alert('❌ ERROR: URL is empty!');

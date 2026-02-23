@@ -1,11 +1,6 @@
 // analysis.js - COMPLETE UPDATED VERSION WITH SUPABASE
 // This file powers the PPC Audit analysis page and stores domains in Supabase
 
-// ===== DEBUG - SEE WHAT'S COMING IN =====
-console.log('🔥 FULL URL PARAMETERS:', window.location.search);
-console.log('🔥 URL PARAM "url":', new URLSearchParams(window.location.search).get('url'));
-console.log('🔥 localStorage "scannedUrl":', localStorage.getItem('scannedUrl'));
-
 // ===== LOAD SUPABASE SDK =====
 const SUPABASE_URL = 'https://fcgbusobfdwnpoqyuzoe.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk';
@@ -112,7 +107,6 @@ async function storeAuditedDomain(domain, accessCode = null) {
 const urlParams = new URLSearchParams(window.location.search);
 const budgetRange = urlParams.get('budget') || localStorage.getItem('ppcBudget') || '10000';
 const scannedUrl = urlParams.get('url') || localStorage.getItem('scannedUrl') || '';
-console.log('🔍 ACTUAL URL BEING USED:', scannedUrl);
 
 // Debug - see what's coming in
 console.log('Budget range received:', budgetRange);
@@ -374,31 +368,6 @@ class AnalysisProgress {
     
     if (this.lossAlert) {
         this.lossAlert.style.display = 'block';
-    }
-    
-    // 🔍 DEBUG ALERT 1 - Starting storage
-    alert('🔍 STEP 1: About to store domain: ' + scannedUrl);
-    
-    // Make sure Supabase is initialized before storing
-    if (!supabaseClient) {
-        console.log('⏳ Waiting for Supabase to initialize...');
-        alert('🔍 STEP 2: Initializing Supabase...');
-        await initSupabase();
-    }
-    
-    // Get access code
-    const accessCode = localStorage.getItem('accessCode') || 'NO-CODE';
-    alert('🔍 STEP 3: Access code = ' + accessCode);
-    
-    // Store in Supabase that this domain was audited
-    alert('🔍 STEP 4: Calling storeAuditedDomain...');
-    const result = await storeAuditedDomain(scannedUrl, accessCode);
-    
-    // 🔍 DEBUG ALERT 5 - See if it worked
-    if (result && result.success) {
-        alert('✅ STEP 5: SUCCESS! Domain stored in Supabase');
-    } else {
-        alert('❌ STEP 5: FAILED! ' + (result?.error || 'Unknown error'));
     }
     
     // Store in localStorage
