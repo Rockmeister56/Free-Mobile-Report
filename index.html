@@ -444,35 +444,34 @@
 
 <script>
 // Popup functionality - THIS MUST BE INSIDE THE SCRIPT TAG
-// Popup functionality
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Popup script loaded');
 
-    // Check for saved code on page load
-    const savedCode = localStorage.getItem('accessCode');
-    const accessButton = document.getElementById('showAccessPopup');
+// Check for saved code on page load
+const savedCode = localStorage.getItem('accessCode');
+const accessButton = document.getElementById('showAccessPopup');
 
-    if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
-        // Valid code exists - show active state
-        if (accessButton) {
-            accessButton.innerHTML = '✅ CODE ACTIVE';
-            accessButton.classList.add('active');
-        }
-        
-        const accessCodeField = document.getElementById('accessCode');
-        if (accessCodeField) {
-            accessCodeField.value = savedCode;
-        }
-    } else {
-        // No valid code - show default button
-        if (accessButton) {
-            accessButton.innerHTML = '🔐 ENTER ACCESS CODE';
-            accessButton.classList.remove('active');
-        }
-        
-        // Clear any invalid stored code
-        localStorage.removeItem('accessCode');
+if (savedCode && savedCode !== 'undefined' && savedCode !== 'null') {
+    // Valid code exists - show active state
+    if (accessButton) {
+    accessButton.innerHTML = '✅ CODE ACTIVE';
+    accessButton.classList.add('active');
+}
+    
+    const accessCodeField = document.getElementById('accessCode');
+    if (accessCodeField) {
+        accessCodeField.value = savedCode;
     }
+} else {
+    // No valid code - show default button
+    if (accessButton) {
+    accessButton.innerHTML = '🔐 ENTER ACCESS CODE';
+    accessButton.classList.remove('active');
+}
+    
+    // Clear any invalid stored code
+    localStorage.removeItem('accessCode');
+}
     
     const showAccessPopup = document.getElementById('showAccessPopup');
     const accessPopup = document.getElementById('accessPopup');
@@ -538,36 +537,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Update button to show active state
-            if (showAccessPopup) {
-                showAccessPopup.innerHTML = '✅ CODE ACTIVE';
-                showAccessPopup.classList.add('active');
-            }
-
-            // Also update hidden access code field if it exists
-            const accessCodeField = document.getElementById('accessCode');
-            if (accessCodeField) {
-                accessCodeField.value = code;
-            }
-            
-            accessPopup.style.display = 'none';
-            localStorage.setItem('accessCode', code);
-        });
-    }
-});
-// <-- THIS IS THE ONLY CLOSING BRACKET NEEDED
-    
-    // Verify code
-    if (verifyCodeBtn) {
-        verifyCodeBtn.addEventListener('click', function() {
-            const code = popupAccessCode ? popupAccessCode.value.trim().toUpperCase() : '';
-            console.log('Verify code clicked:', code);
-            
-            if (!code) {
-                alert('Please enter an access code');
-                return;
-            }
-            
             // For now, just show success
             // Update button to show active state
 const accessButton = document.getElementById('showAccessPopup');
@@ -585,6 +554,7 @@ if (accessCodeField) {
             localStorage.setItem('accessCode', code);
         });
     }
+});
 </script>
 </body>
 </html>
