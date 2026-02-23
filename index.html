@@ -224,162 +224,174 @@
     
     </footer>
 
-    <script>
-        // Updated JavaScript to handle PPC budget
-        document.addEventListener('DOMContentLoaded', function() {
-            const analyzeBtn = document.getElementById('analyzeBtn');
-            const websiteUrl = document.getElementById('websiteUrl');
-            const ppcBudget = document.getElementById('ppcBudget');
-            const exactBudget = document.getElementById('exactBudget');
-            
-            // Clear any old data
-            localStorage.removeItem('ppcBudget');
-            localStorage.removeItem('scannedUrl');
-            
-            analyzeBtn.addEventListener('click', function() {
-                // Validate URL
-                let url = websiteUrl.value.trim();
-                if (!url) {
-                    alert('Please enter your website URL');
-                    return;
-                }
-                
-                // Format URL if needed
-                if (!url.startsWith('http')) {
-                    url = 'https://' + url;
-                }
-                
-               // Get budget (exact input overrides dropdown) - SAFE VERSION
-let budget = '10000'; // Default
-
-if (exactBudget && exactBudget.value && exactBudget.value.trim() !== '') {
-    budget = exactBudget.value.trim();
-} else if (ppcBudget && ppcBudget.value && ppcBudget.value !== '') {
-    budget = ppcBudget.value;
-}
-                
-                // Store in localStorage for the journey
-                localStorage.setItem('ppcBudget', budget);
-                localStorage.setItem('scannedUrl', url);
-
-// Make sure URL is valid
-if (!url || url === '') {
-    alert('❌ ERROR: URL is empty!');
-    return;
-}
-
-// Pass both in URL for redundancy
-const encodedUrl = encodeURIComponent(url);
-window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
-            });
-            
-            // Allow Enter key to submit
-            websiteUrl.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    analyzeBtn.click();
-                }
-            });
-        });
-
-    </script>
-    <script src="app.js"></script>
-
-<!-- ACCESS CODE POPUP MODAL -->
-<div id="accessPopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center;">
-    <div style="background: #0a0a0a; border: 2px solid #0066cc; border-radius: 20px; padding: 40px; max-width: 400px; width: 90%; position: relative; box-shadow: 0 0 50px rgba(0,102,204,0.5);">
-        <button id="closePopup" style="position: absolute; top: 15px; right: 20px; background: none; border: none; color: #666; font-size: 2rem; cursor: pointer;">×</button>
-        
-        <h3 style="color: white; margin-bottom: 10px; text-align: center;">🔐 LIMITED ACCESS OFFER</h3>
-        <p style="color: #ffaa00; text-align: center; font-weight: 700; margin-bottom: 20px;">Value: $99 per audit</p>
-        
-        <input type="text" id="popupAccessCode" placeholder="ENTER ACCESS CODE" 
-               style="width: 100%; padding: 15px; background: rgba(255,255,255,0.1); border: 2px solid #0066cc; border-radius: 10px; color: white; font-size: 1.2rem; text-align: center; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase;">
-        
-        <button id="verifyCodeBtn" style="width: 100%; padding: 15px; background: linear-gradient(135deg, #0066cc, #004999); color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-bottom: 15px;">
-            VERIFY CODE
-        </button>
-        
-        <p style="color: #aaa; font-size: 0.8rem; text-align: center;">One code per website • Expires in 30 days</p>
-        <p style="color: #666; font-size: 0.8rem; text-align: center; margin-top: 15px;">Don't have a code? <a href="#" id="continueFree" style="color: #0099ff;">Continue with free version →</a></p>
-    </div>
-</div>
-
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Popup functionality - THIS MUST BE INSIDE THE SCRIPT TAG
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Popup script loaded');
+    // ===== SUPABASE SETUP =====
+    const SUPABASE_URL = 'https://fcgbusobfdwnpoqyuzoe.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk';
     
-    const showAccessPopup = document.getElementById('showAccessPopup');
-    const accessPopup = document.getElementById('accessPopup');
-    const closePopup = document.getElementById('closePopup');
-    const verifyCodeBtn = document.getElementById('verifyCodeBtn');
-    const popupAccessCode = document.getElementById('popupAccessCode');
-    const continueFree = document.getElementById('continueFree');
-    
-    console.log('Elements found:', {
-        showAccessPopup: !!showAccessPopup,
-        accessPopup: !!accessPopup,
-        closePopup: !!closePopup,
-        verifyCodeBtn: !!verifyCodeBtn,
-        popupAccessCode: !!popupAccessCode,
-        continueFree: !!continueFree
-    });
-    
-    // Show popup
-    if (showAccessPopup) {
-        showAccessPopup.addEventListener('click', function() {
-            console.log('Show popup clicked');
-            accessPopup.style.display = 'flex';
-        });
-    }
-    
-    // Close popup
-    if (closePopup) {
-        closePopup.addEventListener('click', function() {
-            console.log('Close popup clicked');
-            accessPopup.style.display = 'none';
-            if (popupAccessCode) popupAccessCode.value = '';
-        });
-    }
-    
-    // Close when clicking outside
-    if (accessPopup) {
-        accessPopup.addEventListener('click', function(e) {
-            if (e.target === accessPopup) {
-                console.log('Clicked outside');
-                accessPopup.style.display = 'none';
-                if (popupAccessCode) popupAccessCode.value = '';
-            }
-        });
-    }
-    
-    // Continue with free version
-    if (continueFree) {
-        continueFree.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Continue free clicked');
-            accessPopup.style.display = 'none';
-        });
-    }
-    
-    // Verify code
-    if (verifyCodeBtn) {
-        verifyCodeBtn.addEventListener('click', function() {
-            const code = popupAccessCode ? popupAccessCode.value.trim().toUpperCase() : '';
-            console.log('Verify code clicked:', code);
+    const { createClient } = supabase;
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ===== FUNCTION TO CHECK IF DOMAIN HAS BEEN AUDITED =====
+    async function checkDomainAudited(domain) {
+        try {
+            console.log('🔍 Checking domain:', domain);
             
+            const { data, error } = await supabaseClient
+                .from('audited_sites')
+                .select('domain, audited_at')
+                .eq('domain', domain);
+            
+            if (error) throw error;
+            
+            console.log('🔍 Result:', data);
+            
+            return {
+                audited: data && data.length > 0,
+                record: data && data.length > 0 ? data[0] : null
+            };
+        } catch (error) {
+            console.error('Error checking domain:', error);
+            return { audited: false, error: error.message };
+        }
+    }
+
+    // ===== FUNCTION TO CHECK ACCESS CODE =====
+    async function checkAccessCode(code) {
+        try {
+            console.log('🔍 Checking access code:', code);
+            
+            const { data, error } = await supabaseClient
+                .from('access_codes')
+                .select('*')
+                .eq('code', code.toUpperCase())
+                .eq('used', false)
+                .gt('expires_at', new Date().toISOString());
+            
+            if (error) throw error;
+            
+            console.log('🔍 Code result:', data);
+            
+            return {
+                valid: data && data.length > 0,
+                record: data && data.length > 0 ? data[0] : null
+            };
+        } catch (error) {
+            console.error('Error checking access code:', error);
+            return { valid: false, error: error.message };
+        }
+    }
+
+    // ===== FUNCTION TO MARK CODE AS USED =====
+    async function markCodeAsUsed(code, domain) {
+        try {
+            const { error } = await supabaseClient
+                .from('access_codes')
+                .update({ 
+                    used: true, 
+                    used_by_domain: domain,
+                    used_at: new Date().toISOString()
+                })
+                .eq('code', code);
+            
+            if (error) throw error;
+            return { success: true };
+        } catch (error) {
+            console.error('Error marking code as used:', error);
+            return { success: false };
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const websiteUrl = document.getElementById('websiteUrl');
+        const ppcBudget = document.getElementById('ppcBudget');
+        const exactBudget = document.getElementById('exactBudget');
+        const accessCode = document.getElementById('accessCode'); // Make sure this exists in your HTML
+        
+        analyzeBtn.addEventListener('click', async function() {
+            // Validate access code
+            const code = accessCode ? accessCode.value.trim().toUpperCase() : '';
             if (!code) {
-                alert('Please enter an access code');
+                alert('Please enter your access code');
                 return;
             }
             
-            // For now, just show success
-            alert(`✅ Code ${code} accepted! Your $99 value audit is unlocked.`);
-            accessPopup.style.display = 'none';
+            // Validate URL
+            let url = websiteUrl.value.trim();
+            if (!url) {
+                alert('Please enter your website URL');
+                return;
+            }
+            
+            // Format URL
+            if (!url.startsWith('http')) {
+                url = 'https://' + url;
+            }
+            
+            // Extract clean domain
+            let cleanDomain = url.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+            cleanDomain = cleanDomain.replace(/^www\./, '');
+            
+            // Show loading
+            const originalText = analyzeBtn.textContent;
+            analyzeBtn.textContent = '🔍 CHECKING...';
+            analyzeBtn.disabled = true;
+            
+            // CHECK 1: Is domain already audited?
+            const { audited, record } = await checkDomainAudited(cleanDomain);
+            
+            if (audited) {
+                // Domain already audited - redirect to blocked page
+                const auditDate = new Date(record.audited_at).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                window.location.href = `blocked.html?domain=${encodeURIComponent(cleanDomain)}&date=${encodeURIComponent(auditDate)}`;
+                return;
+            }
+            
+            // CHECK 2: Is access code valid?
+            const { valid, record: codeRecord } = await checkAccessCode(code);
+            
+            if (!valid) {
+                alert('Invalid or expired access code. Please contact your sales representative.');
+                analyzeBtn.textContent = originalText;
+                analyzeBtn.disabled = false;
+                return;
+            }
+            
+            // Get budget
+            let budget = '10000'; // Default
+            if (exactBudget && exactBudget.value && exactBudget.value.trim() !== '') {
+                budget = exactBudget.value.trim();
+            } else if (ppcBudget && ppcBudget.value && ppcBudget.value !== '') {
+                budget = ppcBudget.value;
+            }
+            
+            // Mark code as used
+            await markCodeAsUsed(code, cleanDomain);
+            
+            // Store in localStorage
+            localStorage.setItem('ppcBudget', budget);
+            localStorage.setItem('scannedUrl', url);
             localStorage.setItem('accessCode', code);
+            
+            // Redirect to analysis page
+            const encodedUrl = encodeURIComponent(url);
+            window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
         });
-    }
-});
+        
+        // Allow Enter key
+        websiteUrl.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                analyzeBtn.click();
+            }
+        });
+    });
 </script>
 </body>
 </html>
