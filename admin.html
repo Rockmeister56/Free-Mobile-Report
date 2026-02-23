@@ -403,16 +403,27 @@
         // ===== INITIALIZE =====
         displayCodes();
         updateStats();
-        
-        // ===== ADD SAMPLE SITES FOR DEMO (remove in production) =====
-        if (lockedSites.length === 0) {
-            lockedSites = [
-                { domain: 'example1.com', date: '2024-02-20', code: 'TOMMY2024' },
-                { domain: 'example2.com', date: '2024-02-21', code: 'PPCROCKER' },
-                { domain: 'example3.com', date: '2024-02-22', code: 'MORTGAGE24' }
-            ];
-            localStorage.setItem('lockedSites', JSON.stringify(lockedSites));
-        }
+        // REPLACE the dummy data section with this:
+async function loadRealLockedSites() {
+    const { data, error } = await supabaseClient
+        .from('audited_sites')
+        .select('*')
+        .order('audited_at', { ascending: false });
+    
+    if (error) {
+        console.error('Error loading sites:', error);
+        return;
+    }
+    
+    // Transform to match your display format
+    lockedSites = data.map(site => ({
+        domain: site.domain,
+        date: site.audited_at,
+        code: site.code_used || 'N/A'
+    }));
+    
+    displaySites(); // Your existing display function
+}
     </script>
 </body>
 </html>
