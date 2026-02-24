@@ -483,15 +483,21 @@ async function checkDomainAudited(domain) {
             localStorage.setItem('scannedUrl', url);
             localStorage.setItem('accessCode', code);
             
-            // 🔴 REDIRECT DISABLED FOR TESTING
-// const encodedUrl = encodeURIComponent(url);
-// window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
+        // 🔴 HARD BLOCK - WILL NOT REDIRECT
+// Comment out the redirect and add a return
+/*
+const encodedUrl = encodeURIComponent(url);
+window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
+*/
 
-// Show what would have been sent
-console.log('🔍 WOULD HAVE REDIRECTED TO:');
-console.log('URL:', url);
-console.log('Budget:', budget);
-console.log('Access Code:', localStorage.getItem('accessCode'));
+// This will stop everything
+console.log('🔴 BLOCKED - Page would have redirected');
+console.log('🔍 URL to send:', url);
+console.log('🔍 Budget:', budget);
+console.log('🔍 Access Code:', localStorage.getItem('accessCode'));
+analyzeBtn.textContent = 'REDIRECT BLOCKED - CHECK CONSOLE';
+analyzeBtn.disabled = false;
+return; // This stops the function completely
 
 // Keep button enabled for multiple tests
 analyzeBtn.textContent = 'TEST COMPLETE - CHECK CONSOLE';
