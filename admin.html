@@ -263,6 +263,36 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Function to load codes from Supabase
+async function loadCodesFromSupabase() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('access_codes')
+            .select('*')
+            .eq('used', false)
+            .gt('expires_at', new Date().toISOString());
+        
+        if (error) throw error;
+        
+        // Update the display
+        const grid = document.getElementById('codeGrid');
+        if (grid && data) {
+            grid.innerHTML = '';
+            data.forEach(code => {
+                const card = document.createElement('div');
+                card.className = 'code-card';
+                card.innerHTML = `
+                    <div class="code-value">${code.code}</div>
+                    <button class="delete-btn" onclick="deleteCode('${code.code}')">REMOVE</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+    } catch (error) {
+        console.error('Error loading codes:', error);
+    }
+}
+
 // Initialize arrays
 let codes = [];
 let lockedSites = [];
@@ -310,10 +340,7 @@ let lockedSites = [];
     const input = document.getElementById('newCode');
     const newCode = input.value.trim().toUpperCase();
     
-    if (!newCode) {
-        alert('Please enter a code');
-        return;
-    }
+    if (!newCode) return;
     
     try {
         const { error } = await supabaseClient
@@ -326,11 +353,11 @@ let lockedSites = [];
         
         if (error) throw error;
         
-        alert(`✅ Code ${newCode} added to database!`);
-        loadCodes(); // Refresh the list
+        await loadCodesFromSupabase();
         input.value = '';
+        
     } catch (error) {
-        alert('❌ Error adding code: ' + error.message);
+        console.error('Error adding code:', error);
     }
 }
         
@@ -349,23 +376,23 @@ let lockedSites = [];
     }
     document.getElementById('newCode').value = code;
     
-    // Auto-save to Supabase
-    if (confirm(`Save code ${code} to database?`)) {
-        try {
-            const { error } = await supabaseClient
-                .from('access_codes')
-                .insert([{
-                    code: code,
-                    expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-                    used: false
-                }]);
-            
-            if (error) throw error;
-            alert(`✅ Code ${code} saved to database!`);
-            loadCodes(); // Refresh the list
-        } catch (error) {
-            alert('❌ Error saving code: ' + error.message);
-        }
+    // Auto-save to Supabase silently
+    try {
+        const { error } = await supabaseClient
+            .from('access_codes')
+            .insert([{
+                code: code,
+                expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                used: false
+            }]);
+        
+        if (error) throw error;
+        
+        // Just refresh the display without popup
+        await loadCodesFromSupabase();
+        
+    } catch (error) {
+        console.error('Error saving code:', error);
     }
 }
         // ===== SITE FUNCTIONS =====
@@ -454,9 +481,7 @@ async function loadRealData() {
         }));
     }
     
-    displayCodes();
-    displaySites();
-    updateStats();
+   loadCodesFromSupabase();
 }
 
 // ===== INITIALIZE =====
