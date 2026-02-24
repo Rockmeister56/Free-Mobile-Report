@@ -635,7 +635,7 @@
                 font-size: 3.5rem;
             }
         }
-<style>
+
 lemon-slice-widget {
     position: fixed;
     bottom: 20px;
@@ -823,23 +823,63 @@ lemon-slice-widget[controlled-widget-state="active"] {
     </div>
 </div>
 
-<!-- LEMON SLICE WIDGET - Visible and ready to go! -->
-<lemon-slice-widget 
-    agent-id="agent_9399f094d4f819d2"
-    controlled-widget-state="active"
-    volume-enabled="true"
-    mic-enabled="true">
-</lemon-slice-widget>
-<script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
-
 <!-- LEMON SLICE WIDGET - Visible and ready -->
 <lemon-slice-widget 
     agent-id="agent_9399f094d4f819d2"
     controlled-widget-state="active"
     volume-enabled="true"
-    mic-enabled="true">
+    mic-enabled="true"
+    start-in-active-mode="true"      
+    idle-animation="subtle"           
+    show-text-bubbles="false">        <!-- NO TEXT BUBBLES! -->
 </lemon-slice-widget>
 <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
+
+<script>
+(function() {
+    // Force Tess into "clean mode" - no text bubbles, just avatar
+    const forceCleanMode = setInterval(function() {
+        const widget = document.querySelector('lemon-slice-widget');
+        if (!widget) return;
+        
+        // Method 1: Attributes
+        widget.setAttribute('show-text-bubbles', 'false');
+        widget.setAttribute('hide-chat-history', 'true');
+        widget.setAttribute('clean-mode', 'true');
+        
+        // Method 2: If there's a chat panel, hide it
+        const shadowRoot = widget.shadowRoot;
+        if (shadowRoot) {
+            // Hide any text/message elements
+            const messageElements = shadowRoot.querySelectorAll('.message, .chat-bubble, .text-message');
+            messageElements.forEach(el => {
+                el.style.display = 'none';
+                el.style.opacity = '0';
+            });
+            
+            // Keep just the avatar
+            const avatar = shadowRoot.querySelector('.avatar, .agent-video');
+            if (avatar) {
+                avatar.style.width = '100%';
+                avatar.style.height = '100%';
+            }
+        }
+        
+        // Method 3: Try API if available
+        if (typeof widget.hideTextBubbles === 'function') {
+            widget.hideTextBubbles();
+        }
+        
+        if (typeof widget.setCleanMode === 'function') {
+            widget.setCleanMode(true);
+        }
+        
+    }, 500); // Try every half second
+    
+    // Stop trying after 5 seconds
+    setTimeout(() => clearInterval(forceCleanMode), 5000);
+})();
+</script>
 
 <!-- FORCE VOLUME UP ON LOAD -->
 <script>
