@@ -842,6 +842,7 @@ async function activateTess() {
                 await widget.volumeOn();
                 console.log('✅ Volume turned on via volumeOn()');
             } 
+            
             // Method B: If setVolume method exists
             else if (typeof widget.setVolume === 'function') {
                 await widget.setVolume(1.0); // Full volume
@@ -1264,7 +1265,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Method 2: If widget needs a custom event
             const event = new CustomEvent('activateTess', {
-                detail: { mic: true, volume: true }
+                detail: { mic: true, volume: true, hideText: true}
             });
             document.dispatchEvent(event);
             
