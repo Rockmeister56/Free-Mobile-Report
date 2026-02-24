@@ -474,9 +474,19 @@ async function checkDomainAudited(domain) {
             localStorage.setItem('scannedUrl', url);
             localStorage.setItem('accessCode', code);
             
-            // Redirect to analysis page
-            const encodedUrl = encodeURIComponent(url);
-            window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
+            // 🔴 REDIRECT DISABLED FOR TESTING
+// const encodedUrl = encodeURIComponent(url);
+// window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
+
+// Show what would have been sent
+console.log('🔍 WOULD HAVE REDIRECTED TO:');
+console.log('URL:', url);
+console.log('Budget:', budget);
+console.log('Access Code:', localStorage.getItem('accessCode'));
+
+// Keep button enabled for multiple tests
+analyzeBtn.textContent = 'TEST COMPLETE - CHECK CONSOLE';
+analyzeBtn.disabled = false;
         });
         
         // Allow Enter key
