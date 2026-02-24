@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module Engine | Botemia Bridge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #000;
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Main Container */
+        .module-container {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 20px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        /* Header */
+        .module-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), 
+                        url('https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1762038349654_action-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avatar-video {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-text h1 {
+            margin: 0 0 5px 0;
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .header-text p {
+            margin: 0;
+            opacity: 0.8;
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* Buttons Grid */
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .module-button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 18px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 17px;
+            text-align: left;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            height: 84px;
+            width: 100%;
+        }
+
+        .module-button:hover {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .button-emoji {
+            font-size: 28px;
+        }
+
+        .button-text {
+            flex: 1;
+        }
+
+        /* Skip Button */
+        .skip-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .skip-button:hover {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+        }
+
+        /* Video Overlay */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease-in;
+            padding: 20px;
+        }
+
+        .video-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), 
+                        url('https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1762038349654_action-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            color: white;
+            max-width: 854px;
+            width: 100%;
+        }
+
+        .video-player-container {
+            position: relative;
+            width: 854px;
+            height: 480px;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 100%;
+            max-height: 50vh;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .back-button {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 32px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            z-index: 10001;
+        }
+
+        .back-button:hover {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateX(-50%) translateY(-2px);
+        }
+
+        /* Spinner */
+        .spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+            backdrop-filter: blur(5px);
+        }
+
+        .spinner-content {
+            text-align: center;
+            color: white;
+        }
+
+        .spinner-icon {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: #007AFF;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideInFromBottom {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .module-container {
+                padding: 15px;
+            }
+            
+            .buttons-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .module-button {
+                height: 70px;
+                padding: 15px;
+                font-size: 16px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .avatar-video {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .header-text h1 {
+                font-size: 20px;
+            }
+            
+            .video-player-container {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .module-header {
+                padding: 20px;
+            }
+            
+            .module-button {
+                height: 65px;
+                font-size: 15px;
+            }
+            
+            .button-emoji {
+                font-size: 24px;
+            }
+            
+            .video-player-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="moduleContainer" class="module-container">
+        <!-- Content will be loaded here based on module type -->
+    </div>
+
+    <script>
+        // Module Data
+        const moduleData = {
+            testimonial: {
+                title: "Client Testimonials",
+                subtitle: "Real stories from satisfied clients",
+                buttons: [
+                    { id: "skeptical", emoji: "🤔", title: "Skeptical Client", videoUrl: "https://example.com/video1.mp4" },
+                    { id: "speed", emoji: "⚡", title: "Speed Results", videoUrl: "https://example.com/video2.mp4" },
+                    { id: "convinced", emoji: "😊", title: "Convinced Client", videoUrl: "https://example.com/video3.mp4" },
+                    { id: "excited", emoji: "🎉", title: "Excited Results", videoUrl: "https://example.com/video4.mp4" }
+                ]
+            },
+            video: {
+                title: "Video Center",
+                subtitle: "Boost your conversions with our proven methods",
+                buttons: [
+                    { id: "conversion", emoji: "📈", title: "Conversion Boost", videoUrl: "https://example.com/conversion.mp4" },
+                    { id: "legal", emoji: "⚖️", title: "Legal Lead Boost", videoUrl: "https://example.com/legal.mp4" },
+                    { id: "mortgage", emoji: "🏠", title: "Mortgage Lead Boost", videoUrl: "https://example.com/mortgage.mp4" },
+                    { id: "dental", emoji: "🦷", title: "Dental Lead Boost", videoUrl: "https://example.com/dental.mp4" },
+                    { id: "medical", emoji: "🏥", title: "Medical Lead Boost", videoUrl: "https://example.com/medical.mp4" }
+                ]
+            }
+        };
+
+        // Get module type from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const moduleType = urlParams.get('module') || 'testimonial';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadModule(moduleType);
+            
+            // Listen for module changes from parent (if embedded)
+            window.addEventListener('message', function(event) {
+                if (event.data && event.data.type === 'loadModule') {
+                    loadModule(event.data.moduleType);
+                }
+            });
+        });
+
+        // Load module content
+        function loadModule(type) {
+            const container = document.getElementById('moduleContainer');
+            const data = moduleData[type] || moduleData.testimonial;
+            
+            let buttonsHTML = '';
+            data.buttons.forEach(button => {
+                buttonsHTML += `
+                    <button class="module-button" onclick="playVideo('${button.id}', '${button.videoUrl}', '${button.title}')">
+                        <div class="button-emoji">${button.emoji}</div>
+                        <div class="button-text">${button.title}</div>
+                    </button>
+                `;
+            });
+
+            // Grid columns based on number of buttons
+            const gridColumns = data.buttons.length <= 2 ? '1fr' : '1fr 1fr';
+            
+            container.innerHTML = `
+                <div class="module-header">
+                    <div class="header-content">
+                        <video class="avatar-video" autoplay loop muted playsinline>
+                            <source src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/video-avatars/video_avatar_1764614255102.mp4" type="video/mp4">
+                        </video>
+                        <div class="header-text">
+                            <h1>${data.title}</h1>
+                            <p>${data.subtitle}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="buttons-grid" style="grid-template-columns: ${gridColumns};">
+                    ${buttonsHTML}
+                </div>
+                
+                <button class="skip-button" onclick="closeModule()">
+                    <span>⏭️ Skip ${type === 'testimonial' ? 'Testimonials' : 'Videos'}</span>
+                </button>
+            `;
+            
+            console.log(`✅ Loaded module: ${type}`);
+        }
+
+        // Play video function
+        function playVideo(videoId, videoUrl, title) {
+            console.log(`🎬 Playing: ${title}`);
+            
+            // Show spinner
+            showSpinner();
+            
+            // Create video overlay after a brief delay
+            setTimeout(() => {
+                hideSpinner();
+                
+                const overlay = document.createElement('div');
+                overlay.className = 'video-overlay';
+                overlay.innerHTML = `
+                    <div class="video-header">
+                        <div class="header-content">
+                            <video class="avatar-video" autoplay loop muted playsinline>
+                                <source src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/video-avatars/video_avatar_1764614255102.mp4" type="video/mp4">
+                            </video>
+                            <div class="header-text">
+                                <h1>${title}</h1>
+                                <p>Playing now...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-player-container">
+                        <video class="video-player" id="fullscreenVideo" controls autoplay>
+                            <source src="${videoUrl}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <button class="back-button" onclick="closeVideo()">← Back to ${moduleType === 'testimonial' ? 'Testimonials' : 'Videos'}</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(overlay);
+                
+                // Handle video end
+                const video = document.getElementById('fullscreenVideo');
+                if (video) {
+                    video.addEventListener('ended', function() {
+                        setTimeout(closeVideo, 500);
+                    });
+                    
+                    video.addEventListener('error', function() {
+                        alert('Error loading video. Please try again.');
+                        closeVideo();
+                    });
+                }
+            }, 800);
+        }
+
+        // Close video overlay
+        function closeVideo() {
+            const overlay = document.querySelector('.video-overlay');
+            if (overlay) {
+                const video = overlay.querySelector('video');
+                if (video) {
+                    video.pause();
+                    video.currentTime = 0;
+                }
+                overlay.remove();
+            }
+        }
+
+        // Close module (skip)
+        function closeModule() {
+            if (window.parent !== window) {
+                // If embedded in iframe, notify parent
+                window.parent.postMessage({ type: 'moduleClosed', module: moduleType }, '*');
+            } else {
+                // If standalone, show message
+                alert('Module closed. In production, this would return to the main interface.');
+            }
+        }
+
+        // Spinner functions
+        function showSpinner() {
+            const spinner = document.createElement('div');
+            spinner.className = 'spinner';
+            spinner.id = 'loadingSpinner';
+            spinner.innerHTML = `
+                <div class="spinner-content">
+                    <div class="spinner-icon"></div>
+                    <div>Loading video...</div>
+                </div>
+            `;
+            document.body.appendChild(spinner);
+        }
+
+        function hideSpinner() {
+            const spinner = document.getElementById('loadingSpinner');
+            if (spinner) {
+                spinner.remove();
+            }
+        }
+
+        // Expose functions globally for integration
+        window.ModuleEngine = {
+            loadModule,
+            playVideo,
+            closeVideo,
+            closeModule
+        };
+    </script>
+</body>
+</html>
