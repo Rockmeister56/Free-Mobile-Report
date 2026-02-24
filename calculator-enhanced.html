@@ -635,6 +635,7 @@
                 font-size: 3.5rem;
             }
         }
+<style>
 lemon-slice-widget {
     position: fixed;
     bottom: 20px;
@@ -646,6 +647,18 @@ lemon-slice-widget {
     border-radius: 15px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.3);
     transition: all 0.3s ease;
+    /* REMOVED display: none - she's visible now! */
+}
+
+/* Optional: Add a subtle pulsing effect to show she's active */
+@keyframes gentlePulse {
+    0% { box-shadow: 0 10px 40px rgba(59,130,246,0.3); }
+    50% { box-shadow: 0 10px 50px rgba(59,130,246,0.6); }
+    100% { box-shadow: 0 10px 40px rgba(59,130,246,0.3); }
+}
+
+lemon-slice-widget[controlled-widget-state="active"] {
+    animation: gentlePulse 3s infinite;
 }
 
 @media (max-width: 768px) {
@@ -657,6 +670,7 @@ lemon-slice-widget {
         border-radius: 15px 15px 0 0;
     }
 }
+</style>
 </style>
 </head>
 <body class="report-page">
@@ -809,9 +823,63 @@ lemon-slice-widget {
     </div>
 </div>
 
-<!-- LEMON SLICE WIDGET - Hidden until activated -->
-<lemon-slice-widget agent-id="agent_9399f094d4f819d2" style="display: none;"></lemon-slice-widget>
+<!-- LEMON SLICE WIDGET - Visible and ready to go! -->
+<lemon-slice-widget 
+    agent-id="agent_9399f094d4f819d2"
+    controlled-widget-state="active"
+    volume-enabled="true"
+    mic-enabled="true">
+</lemon-slice-widget>
 <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
+
+<!-- LEMON SLICE WIDGET - Visible and ready -->
+<lemon-slice-widget 
+    agent-id="agent_9399f094d4f819d2"
+    controlled-widget-state="active"
+    volume-enabled="true"
+    mic-enabled="true">
+</lemon-slice-widget>
+<script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
+
+<!-- FORCE VOLUME UP ON LOAD -->
+<script>
+(function() {
+    // Wait for widget to load
+    setTimeout(function() {
+        const widget = document.querySelector('lemon-slice-widget');
+        if (!widget) return;
+        
+        // Method 1: Try API methods
+        if (typeof widget.volumeOn === 'function') {
+            widget.volumeOn();
+            console.log('🔊 Volume turned on via volumeOn()');
+        } 
+        else if (typeof widget.setVolume === 'function') {
+            widget.setVolume(1.0);
+            console.log('🔊 Volume set to 100%');
+        }
+        else if (typeof widget.unmute === 'function') {
+            widget.unmute();
+            console.log('🔊 Unmuted');
+        }
+        
+        // Method 2: Force attributes (backup)
+        widget.setAttribute('volume-enabled', 'true');
+        widget.setAttribute('muted', 'false');
+        widget.setAttribute('volume', '1.0');
+        
+        // Method 3: Try to find and unmute any audio elements
+        setTimeout(function() {
+            const audioElements = document.querySelectorAll('audio, video');
+            audioElements.forEach(el => {
+                el.muted = false;
+                el.volume = 1.0;
+            });
+        }, 2000);
+        
+    }, 1500); // Give widget time to initialize
+})();
+</script>
 
 <!-- TESS ACTIVATION SCRIPT -->
 <script>
