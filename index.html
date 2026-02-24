@@ -612,26 +612,38 @@ document.addEventListener('DOMContentLoaded', function() {
             // Check if code is valid in Supabase
             const { valid, record } = await checkAccessCode(code);
             
-            if (valid) {
-                // Valid code - update button
-                if (showAccessPopup) {
-                    showAccessPopup.innerHTML = '✅ CODE ACTIVE';
-                    showAccessPopup.classList.add('active');
-                }
-                
-                // Update hidden access code field
-                const accessCodeField = document.getElementById('accessCode');
-                if (accessCodeField) {
-                    accessCodeField.value = code;
-                }
-                
-                accessPopup.style.display = 'none';
-                localStorage.setItem('accessCode', code);
-            } else {
-                // Invalid code - show error
-                alert('❌ Invalid or expired access code. Please try again.');
-                popupAccessCode.value = '';
-                popupAccessCode.focus();
+         if (valid) {
+    // Valid code - update button
+    if (showAccessPopup) {
+        showAccessPopup.innerHTML = '✅ CODE ACTIVE';
+        showAccessPopup.classList.add('active');
+    }
+    
+    // Update hidden access code field
+    const accessCodeField = document.getElementById('accessCode');
+    if (accessCodeField) {
+        accessCodeField.value = code;
+    }
+    
+    accessPopup.style.display = 'none';
+    localStorage.setItem('accessCode', code);
+} else {
+    // Invalid code - show custom popup
+    accessPopup.style.display = 'none'; // Close the access code popup
+    
+    // Make sure showCustomPopup function exists
+    if (typeof showCustomPopup === 'function') {
+        showCustomPopup(
+            'Invalid Access Code',
+            'The code you entered is invalid or has already been used. Please check your code or contact admin for assistance.'
+        );
+    } else {
+        // Fallback if custom popup isn't loaded yet
+        alert('❌ Invalid or expired access code. Please try again.');
+    }
+    
+    popupAccessCode.value = '';
+    popupAccessCode.focus();
             }
             
             // Reset button
