@@ -307,27 +307,30 @@ testSupabase();
 
     // ===== FUNCTION TO CHECK IF DOMAIN HAS BEEN AUDITED =====
     async function checkDomainAudited(domain) {
-        try {
-            console.log('🔍 Checking domain:', domain);
-            
-            const { data, error } = await supabaseClient
-                .from('audited_sites')
-                .select('domain, audited_at')
-                .eq('domain', domain);
-            
-            if (error) throw error;
-            
-            console.log('🔍 Result:', data);
-            
-            return {
-                audited: data && data.length > 0,
-                record: data && data.length > 0 ? data[0] : null
-            };
-        } catch (error) {
-            console.error('Error checking domain:', error);
-            return { audited: false, error: error.message };
+    try {
+        console.log('🔍 Checking domain in Supabase:', domain);
+        
+        const { data, error } = await supabaseClient
+            .from('audited_sites')
+            .select('domain, audited_at')
+            .eq('domain', domain);
+        
+        if (error) {
+            console.error('❌ Supabase query error:', error);
+            throw error;
         }
+        
+        console.log('🔍 Query result:', data);
+        
+        return {
+            audited: data && data.length > 0,
+            record: data && data.length > 0 ? data[0] : null
+        };
+    } catch (error) {
+        console.error('❌ Error in checkDomainAudited:', error);
+        return { audited: false, error: error.message };
     }
+}
 
     // ===== FUNCTION TO CHECK ACCESS CODE =====
     async function checkAccessCode(code) {
