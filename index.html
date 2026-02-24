@@ -305,27 +305,42 @@ async function testSupabase() {
 }
 testSupabase();
 
-    // ===== FUNCTION TO CHECK IF DOMAIN HAS BEEN AUDITED =====
-    async function checkDomainAudited(domain) {
+   // ===== FUNCTION TO CHECK IF DOMAIN HAS BEEN AUDITED =====
+async function checkDomainAudited(domain) {
     try {
-        console.log('🔍 Checking domain in Supabase:', domain);
+        console.log('🔍 ===== DOMAIN CHECK STARTED =====');
+        console.log('🔍 Domain to check:', domain);
+        console.log('🔍 Supabase client exists:', !!supabaseClient);
         
         const { data, error } = await supabaseClient
             .from('audited_sites')
             .select('domain, audited_at')
             .eq('domain', domain);
         
+        console.log('🔍 Supabase response received');
+        
         if (error) {
             console.error('❌ Supabase query error:', error);
             throw error;
         }
         
-        console.log('🔍 Query result:', data);
+        console.log('🔍 Raw data from Supabase:', data);
+        console.log('🔍 Number of records found:', data ? data.length : 0);
         
-        return {
-            audited: data && data.length > 0,
-            record: data && data.length > 0 ? data[0] : null
-        };
+        if (data && data.length > 0) {
+            console.log('🔍 DOMAIN FOUND IN DATABASE!');
+            console.log('🔍 Audit date:', data[0].audited_at);
+            return {
+                audited: true,
+                record: data[0]
+            };
+        } else {
+            console.log('🔍 DOMAIN NOT FOUND in database');
+            return {
+                audited: false,
+                record: null
+            };
+        }
     } catch (error) {
         console.error('❌ Error in checkDomainAudited:', error);
         return { audited: false, error: error.message };
@@ -433,12 +448,15 @@ testSupabase();
             // CHECK 2: Is access code valid?
             const { valid, record: codeRecord } = await checkAccessCode(code);
             
-            if (!valid) {
-                alert('Invalid or expired access code. Please contact your sales representative.');
-                analyzeBtn.textContent = originalText;
-                analyzeBtn.disabled = false;
-                return;
-            }
+           if (!valid) {
+    showCustomPopup(
+        'Code Already Used',
+        'This access code has already been used. Each code can only be used once. Please contact admin for assistance.'
+    );
+    analyzeBtn.textContent = originalText;
+    analyzeBtn.disabled = false;
+    return;
+}
             
             // Get budget
             let budget = '10000'; // Default
@@ -623,6 +641,64 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }); // <-- This should be the ONLY closing bracket here
     
+</script>
+
+<!-- CUSTOM POPUP FOR MESSAGES -->
+<div id="customMessagePopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10001; align-items: center; justify-content: center;">
+    <div style="background: #0a0a0a; border: 2px solid #ffaa00; border-radius: 20px; padding: 40px; max-width: 400px; width: 90%; position: relative; box-shadow: 0 0 50px rgba(255,170,0,0.5);">
+        <button id="closeCustomPopup" style="position: absolute; top: 15px; right: 20px; background: none; border: none; color: #666; font-size: 2rem; cursor: pointer;">×</button>
+        
+        <div style="font-size: 3rem; text-align: center; margin-bottom: 15px;">⚠️</div>
+        <h3 style="color: white; margin-bottom: 15px; text-align: center;" id="customPopupTitle"></h3>
+        
+        <p style="color: #ccc; text-align: center; margin-bottom: 25px; line-height: 1.6;" id="customPopupMessage"></p>
+        
+        <div style="text-align: center;">
+            <button id="closeCustomPopupBtn" style="background: #ffaa00; color: black; border: none; padding: 12px 30px; border-radius: 30px; font-weight: 600; cursor: pointer;">
+                GOT IT
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Custom popup functionality
+function showCustomPopup(title, message) {
+    const popup = document.getElementById('customMessagePopup');
+    const titleEl = document.getElementById('customPopupTitle');
+    const messageEl = document.getElementById('customPopupMessage');
+    
+    if (titleEl) titleEl.textContent = title;
+    if (messageEl) messageEl.textContent = message;
+    if (popup) popup.style.display = 'flex';
+}
+
+// Close popup functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const closeCustomPopup = document.getElementById('closeCustomPopup');
+    const closeCustomPopupBtn = document.getElementById('closeCustomPopupBtn');
+    const customPopup = document.getElementById('customMessagePopup');
+    
+    if (closeCustomPopup) {
+        closeCustomPopup.addEventListener('click', function() {
+            customPopup.style.display = 'none';
+        });
+    }
+    
+    if (closeCustomPopupBtn) {
+        closeCustomPopupBtn.addEventListener('click', function() {
+            customPopup.style.display = 'none';
+        });
+    }
+    
+    if (customPopup) {
+        customPopup.addEventListener('click', function(e) {
+            if (e.target === customPopup) {
+                customPopup.style.display = 'none';
+            }
+        });
+    }
+});
 </script>
 <input type="hidden" id="accessCode">
 </body>

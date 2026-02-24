@@ -379,7 +379,6 @@ class AnalysisProgress {
     setTimeout(() => {
         const resultsUrl = `calculator-enhanced.html?url=${encodeURIComponent(scannedUrl)}&budget=${ppcBudget}&loss=${monthlyLoss}`;
         console.log('🚀 Redirecting to results:', resultsUrl);
-        alert('🔍 STEP 6: Redirecting to results page');
         window.location.href = resultsUrl;
     }, 2000);
 }
