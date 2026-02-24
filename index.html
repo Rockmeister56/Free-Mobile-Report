@@ -401,16 +401,7 @@ async function checkDomainAudited(domain) {
             const exactBudget = document.getElementById('exactBudget');
             const accessCode = document.getElementById('accessCode'); // Make sure this exists in your HTML
 
-             
-            
-            analyzeBtn.addEventListener('click', async function() {
-                  // 🔴 DEBUG - Capture everything at click moment
-    console.log('🔴 ===== CLICK MOMENT CAPTURE =====');
-    console.log('🔴 Raw input value:', websiteUrl.value);
-    console.log('🔴 Raw input type:', websiteUrl.type);
-    console.log('🔴 Raw input ID:', websiteUrl.id);
-    console.log('🔴 Full element:', websiteUrl);
-    console.log('🔴 ================================');
+             analyzeBtn.addEventListener('click', async function() {
             // Validate access code
             const code = accessCode ? accessCode.value.trim().toUpperCase() : '';
             if (!code) {
@@ -483,25 +474,9 @@ async function checkDomainAudited(domain) {
             localStorage.setItem('scannedUrl', url);
             localStorage.setItem('accessCode', code);
             
-        // 🔴 HARD BLOCK - WILL NOT REDIRECT
-// Comment out the redirect and add a return
-/*
-const encodedUrl = encodeURIComponent(url);
-window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
-*/
-
-// This will stop everything
-console.log('🔴 BLOCKED - Page would have redirected');
-console.log('🔍 URL to send:', url);
-console.log('🔍 Budget:', budget);
-console.log('🔍 Access Code:', localStorage.getItem('accessCode'));
-analyzeBtn.textContent = 'REDIRECT BLOCKED - CHECK CONSOLE';
-analyzeBtn.disabled = false;
-return; // This stops the function completely
-
-// Keep button enabled for multiple tests
-analyzeBtn.textContent = 'TEST COMPLETE - CHECK CONSOLE';
-analyzeBtn.disabled = false;
+            // Redirect to analysis page
+            const encodedUrl = encodeURIComponent(url);
+            window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
         });
         
         // Allow Enter key
