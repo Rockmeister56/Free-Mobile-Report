@@ -370,6 +370,11 @@ class AnalysisProgress {
         this.lossAlert.style.display = 'block';
     }
     
+    // 🔴 ADD THESE 3 LINES HERE
+    if (scannedUrl && scannedUrl !== '') {
+        await storeAuditedDomain(scannedUrl);
+    }
+    
     // Store in localStorage
     localStorage.setItem('lastScannedUrl', scannedUrl);
     localStorage.setItem('ppcBudget', ppcBudget);
