@@ -924,39 +924,6 @@
 })();
 </script>
 
-<script>
-
-document.addEventListener('DOMContentLoaded', function() {
-    const tessImage = document.getElementById('tess-activator');
-    const widget = document.querySelector('lemon-slice-widget');
-    
-    if (tessImage && widget) {
-        tessImage.addEventListener('click', function() {
-            // EXACTLY like the sales site
-            if (typeof widget.activate === 'function') {
-                widget.activate();
-            }
-            
-            widget.setAttribute('mic-enabled', 'true');
-            widget.setAttribute('volume-enabled', 'true');
-            widget.setAttribute('controlled-widget-state', 'active');
-            
-            // Enlarge
-            widget.style.width = '400px';
-            widget.style.height = '600px';
-            
-            // Send message after a delay
-            setTimeout(() => {
-                if (typeof widget.sendMessage === 'function') {
-                    widget.sendMessage('Hi! I\'m Tess. Ready to help!');
-                }
-            }, 1000);
-        });
-    }
-});
-</script>
-
-
     <!-- Blue Bottom Bar -->
     <div class="bottom-bar"></div>
 
@@ -1273,6 +1240,39 @@ window.addEventListener('load', function() {
             console.error('❌ Failed to send report:', error);
         }
     }
+    // Connect Activate button to avatar
+document.addEventListener('DOMContentLoaded', function() {
+    const activateBtn = document.querySelector('.activate-btn');
+    
+    if (activateBtn) {
+        activateBtn.addEventListener('click', function() {
+            // Method 1: If the widget has a built-in activate method
+            const widget = document.querySelector('lemon-slice-widget');
+            if (widget) {
+                // Try to activate the widget
+                if (typeof widget.activate === 'function') {
+                    widget.activate();
+                }
+                
+                // Force mic and volume on
+                widget.setAttribute('mic-enabled', 'true');
+                widget.setAttribute('volume-enabled', 'true');
+                
+                // Some widgets use 'active' state
+                widget.setAttribute('controlled-widget-state', 'active');
+                
+                // Show status
+                showStatus('Jack activated - mic on, volume on');
+            }
+            
+            // Method 2: If widget needs a custom event
+            const event = new CustomEvent('activateJack', {
+                detail: { mic: true, volume: true }
+            });
+            document.dispatchEvent(event);
+        });
+    }
+});
 
     document.addEventListener('DOMContentLoaded', function() {
         const urlParams = new URLSearchParams(window.location.search);
