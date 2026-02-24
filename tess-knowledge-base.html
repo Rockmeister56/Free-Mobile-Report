@@ -3,371 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tess AI Assistant - Knowledge Base for Mortgage Lead Conversion</title>
+    <title>Tess AI - Mortgage Lead Conversion Specialist</title>
     <style>
-        /* Same styling from your template - keep it consistent */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            line-height: 1.7; color: #2c3e50; background: #f8fafc; 
+            line-height: 1.7; color: #e0e0e0; background: #0a0c14; 
             max-width: 1200px; margin: 0 auto; padding: 20px;
         }
         
-        /* Tess-specific styling */
+        /* Tess header - BLUE theme */
         .tess-header {
             text-align: center; padding: 40px 20px; margin-bottom: 40px;
-            background: linear-gradient(135deg, #FF6B35, #FF8C5A); color: white;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(255,107,53,0.3);
+            background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(37,99,235,0.3);
         }
         .tess-name {
             font-size: 3.5rem; margin-bottom: 10px; 
-            background: linear-gradient(135deg, #fff, #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background: linear-gradient(135deg, #fff, #93c5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .tess-tagline {
-            font-size: 1.5rem; color: #FFD700; margin-bottom: 15px;
+            font-size: 1.5rem; color: #bfdbfe; margin-bottom: 15px;
         }
         .audit-context {
             background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;
             margin: 20px 0; font-size: 1.2rem;
+            border-left: 4px solid #3b82f6;
         }
         .loss-highlight {
-            background: #FFD700; color: #000; padding: 5px 15px;
+            background: #3b82f6; color: white; padding: 5px 15px;
             border-radius: 30px; font-weight: bold; display: inline-block;
         }
         
-        /* Keep all other styles from original */
-        .knowledge-nav { background: white; padding: 20px; border-radius: 12px; margin-bottom: 30px; }
+        /* Navigation - Blue accents */
+        .knowledge-nav { background: #1e1e2e; padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #2d3748; }
         .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        .nav-card { background: #f8f9fa; padding: 15px; border-radius: 10px; 
-            border-left: 4px solid #FF6B35; text-decoration: none; color: #2c3e50; }
-        .qa-section { background: white; padding: 30px; margin-bottom: 40px; 
-            border-radius: 15px; border-top: 5px solid #FF6B35; }
-        .section-title { color: #FF6B35; }
-        .question { color: #2c3e50; }
-        .q-icon { color: #FF6B35; }
-        .key-term { color: #FF6B35; font-weight: 600; }
-        .stat-highlight { background: #FFE4D6; color: #FF6B35; }
-        .tag { background: #FFE4D6; color: #FF6B35; }
+        .nav-card { 
+            background: #2d3748; padding: 15px; border-radius: 10px; 
+            border-left: 4px solid #3b82f6; text-decoration: none; color: #e0e0e0;
+            transition: all 0.3s;
+        }
+        .nav-card:hover { background: #374151; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(59,130,246,0.3); }
+        
+        /* Q&A Sections - Blue tops */
+        .qa-section { 
+            background: #1e1e2e; padding: 30px; margin-bottom: 40px; 
+            border-radius: 15px; border-top: 5px solid #3b82f6; box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        .section-title { 
+            color: #60a5fa; font-size: 1.8rem; margin-bottom: 25px; padding-bottom: 15px;
+            border-bottom: 3px solid #2d3748; display: flex; align-items: center; gap: 15px;
+        }
+        .section-icon { font-size: 1.5rem; color: #3b82f6; }
+        .question { 
+            font-size: 1.3rem; font-weight: 600; color: #93c5fd; margin-bottom: 15px;
+            line-height: 1.4; display: flex; align-items: flex-start; gap: 10px;
+        }
+        .q-icon { color: #3b82f6; font-size: 1.2rem; }
+        .answer { 
+            color: #cbd5e1; font-size: 1.1rem; line-height: 1.7; margin-left: 30px;
+            padding-left: 20px; border-left: 3px solid #2d3748;
+        }
+        .key-term { color: #60a5fa; font-weight: 600; border-bottom: 2px dotted #3b82f6; }
+        .stat-highlight { background: #1e3a8a; color: #bfdbfe; padding: 2px 8px; border-radius: 4px; }
+        .tag { 
+            background: #2d3748; color: #93c5fd; padding: 6px 14px;
+            border-radius: 20px; font-size: 0.85rem; border: 1px solid #3b82f6;
+        }
+        
+        /* Templates section */
+        .templates-section {
+            background: #162b36; border-top: 5px solid #3b82f6;
+        }
+        .template-title {
+            color: #60a5fa; text-align: center; margin-bottom: 30px;
+        }
+        .template-block {
+            background: #1e1e2e; padding: 25px; margin: 20px 0; border-radius: 10px;
+            border: 2px dashed #3b82f6; font-family: monospace; font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+        
+        /* Section navigation */
+        .section-nav { position: sticky; top: 150px; align-self: start; }
+        .section-links { background: #1e1e2e; padding: 20px; border-radius: 12px; border: 1px solid #2d3748; }
+        .section-link { 
+            display: block; padding: 12px 15px; margin: 8px 0; color: #cbd5e1;
+            text-decoration: none; border-left: 4px solid transparent; border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .section-link:hover, .section-link.active { 
+            background: #2d3748; border-left-color: #3b82f6; color: #60a5fa;
+        }
+        
+        /* Dynamic audit data display */
+        .audit-badge {
+            background: #1e3a8a; padding: 15px; border-radius: 10px;
+            margin: 20px 0; border: 1px solid #3b82f6;
+        }
     </style>
 </head>
 <body>
-    <!-- ===== TESS HEADER WITH AUDIT CONTEXT ===== -->
+    <!-- ===== TESS HEADER WITH DYNAMIC AUDIT CONTEXT ===== -->
     <header class="tess-header">
         <h1 class="tess-name">👩‍💼 TESS</h1>
-        <div class="tess-tagline">Next-Gen Smart AI Assistant</div>
+        <div class="tess-tagline">Next-Gen Smart AI Assistant for Mortgage Brokers</div>
         
-        <!-- DYNAMIC AUDIT CONTEXT - Pulls from the page -->
-        <div class="audit-context">
-            <p>Based on your PPC Audit Report:</p>
-            <div class="loss-highlight" id="tess-loss-amount">$5,247 estimated monthly waste</div>
-            <p>13 critical issues identified · 68% of mobile leads lost · 5X opportunity waiting</p>
+        <!-- DYNAMIC AUDIT DATA - FILLED BY JAVASCRIPT -->
+        <div class="audit-context" id="auditContext">
+            <p>Loading your audit results...</p>
         </div>
         
-        <p>I'm specially trained to help mortgage brokers plug PPC leaks and 5X qualified leads</p>
-        <div class="ai-indicator">🤖 Trained on 1,000+ mortgage campaigns · Ready to close deals</div>
+        <p>I'm specially trained to plug PPC leaks and 5X qualified leads for mortgage brokers</p>
+        <div class="ai-indicator" style="background: rgba(59,130,246,0.2); padding: 8px 20px; border-radius: 20px; margin-top: 20px;">
+            🤖 Trained on 1,000+ mortgage campaigns · Ready to close deals
+        </div>
     </header>
     
     <!-- ===== QUICK NAVIGATION ===== -->
     <nav class="knowledge-nav">
         <div class="nav-grid">
-            <a href="#introduction" class="nav-card"><h3>👋 Introduction</h3><p>Who is Tess & how I help</p></a>
-            <a href="#ppc-audit" class="nav-card"><h3>📊 PPC Audit</h3><p>Understanding your waste</p></a>
-            <a href="#lead-conversion" class="nav-card"><h3>🎯 Lead Conversion</h3><p>5X qualified leads</p></a>
-            <a href="#mobile-wise" class="nav-card"><h3>📱 MobileWise AI</h3><p>The technology behind me</p></a>
-            <a href="#testimonials" class="nav-card"><h3>📹 Results</h3><p>Mortgage broker success</p></a>
-            <a href="#consultation" class="nav-card"><h3>📅 Consultation</h3><p>Book time with Tommy</p></a>
+            <a href="#introduction" class="nav-card"><h3>👋 Who is Tess?</h3><p>Meet your AI assistant</p></a>
+            <a href="#audit-results" class="nav-card"><h3>📊 Your Audit</h3><p>What your leaks mean</p></a>
+            <a href="#lead-conversion" class="nav-card"><h3>🎯 5X Leads</h3><p>How I multiply results</p></a>
+            <a href="#testimonials" class="nav-card"><h3>📹 Proof</h3><p>Mortgage broker results</p></a>
+            <a href="#objections" class="nav-card"><h3>❓ Objections</h3><p>Handling your concerns</p></a>
+            <a href="#consultation" class="nav-card"><h3>📅 Next Step</h3><p>Book with Tommy</p></a>
         </div>
     </nav>
     
-    <div class="knowledge-container">
+    <div style="display: grid; grid-template-columns: 280px 1fr; gap: 30px;">
         <!-- ===== SECTION NAVIGATION ===== -->
         <div class="section-nav">
             <div class="section-links">
-                <strong>Tess Can Answer:</strong>
-                <a href="#introduction" class="section-link">Who is Tess?</a>
-                <a href="#ppc-audit" class="section-link">What do these leaks mean?</a>
+                <strong style="color: #60a5fa;">Tess Can Answer:</strong>
+                <a href="#introduction" class="section-link">Who are you, Tess?</a>
+                <a href="#audit-results" class="section-link">What do my audit results mean?</a>
                 <a href="#lead-conversion" class="section-link">How can you 5X my leads?</a>
-                <a href="#mobile-wise" class="section-link">What technology do you use?</a>
                 <a href="#testimonials" class="section-link">Show me real results</a>
+                <a href="#objections" class="section-link">Is this expensive?</a>
                 <a href="#consultation" class="section-link">Book a strategy call</a>
             </div>
         </div>
         
         <!-- ===== MAIN CONTENT ===== -->
         <main>
-            <!-- SECTION 1: INTRODUCTION - WHO IS TESS -->
+            <!-- SECTION 1: INTRODUCTION -->
             <section id="introduction" class="qa-section">
-                <h2 class="section-title"><span class="section-icon">👋</span> Meet Tess - Your AI Mortgage Specialist</h2>
+                <h2 class="section-title"><span class="section-icon">👋</span> Meet Tess</h2>
                 
                 <div class="qa-item">
                     <div class="question"><span class="q-icon">❓</span> Who are you, Tess?</div>
                     <div class="answer">
-                        <p>Hi! I'm <span class="key-term">Tess, your Next-Gen Smart AI Assistant</span>, specially trained to help mortgage brokers like you. Think of me as your <span class="stat-highlight">24/7 lead qualification specialist</span> who never sleeps, never gets tired, and never stops converting.</p>
+                        <p>Hi! I'm <span class="key-term">Tess, your Next-Gen Smart AI Assistant</span>, specially trained to help mortgage brokers like you plug PPC leaks and convert more leads. Think of me as your <span class="stat-highlight">24/7 lead qualification specialist</span> who never sleeps.</p>
                         
-                        <p>I just analyzed your PPC audit and saw exactly where your money is leaking. The good news? <strong>Every problem I found, I'm trained to fix.</strong></p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">introduction</span>
-                        <span class="tag">who-is-tess</span>
-                        <span class="tag">ai-assistant</span>
+                        <div class="audit-badge" id="personalizedGreeting">
+                            <p>I just saw your audit shows <span id="dynamicLoss" class="stat-highlight">$5,000+</span> in monthly waste from <span id="dynamicIssues" class="stat-highlight">13</span> critical issues. That's exactly what I'm built to fix.</p>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="qa-item">
-                    <div class="question"><span class="q-icon">❓</span> What makes you different from other AI assistants?</div>
+                    <div class="question"><span class="q-icon">❓</span> How are you different from other AI assistants?</div>
                     <div class="answer">
-                        <p>Great question! I'm not just a generic chatbot. I'm <span class="key-term">hyper-specialized for mortgage lead conversion</span>. I've been trained on:</p>
-                        <ul>
+                        <p>I'm <span class="key-term">hyper-specialized for mortgage lead conversion</span>. I've been trained on:</p>
+                        <ul style="margin-left: 20px; color: #cbd5e1;">
                             <li>✅ <strong>1,000+ mortgage campaigns</strong> - I know what works</li>
                             <li>✅ <strong>PPC audit analysis</strong> - I understand your specific leaks</li>
-                            <li>✅ <strong>Objection handling</strong> - I know how to overcome "not now" and "too expensive"</li>
+                            <li>✅ <strong>Objection handling</strong> - I overcome "not now" and "too expensive"</li>
                             <li>✅ <strong>Video testimonial matching</strong> - I show the right story at the right time</li>
                         </ul>
-                        <p>Plus, I'm backed by <span class="key-term">MobileWise AI technology</span> - the same platform that's helping mortgage companies double their conversions.</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">differentiation</span>
-                        <span class="tag">specialization</span>
-                        <span class="tag">mortgage-ai</span>
-                    </div>
-                </div>
-                
-                <div class="qa-item">
-                    <div class="question"><span class="q-icon">❓</span> How do you know about my PPC audit results?</div>
-                    <div class="answer">
-                        <p>I was <span class="key-term">watching when you ran your audit</span>! I saw every progress bar, every critical problem, and exactly how much you're losing each month.</p>
-                        
-                        <p>Based on your results, I noticed <span class="stat-highlight">13 specific inefficiencies</span> - but the biggest one is that <strong>you don't have an AI like me qualifying your leads 24/7</strong>. That alone is costing you <span class="stat-highlight">68% of your mobile traffic</span>.</p>
-                        
-                        <p>Think of me as your personal analyst who not only spots the problems but can actually fix them.</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">audit-awareness</span>
-                        <span class="tag">personalization</span>
-                        <span class="tag">context</span>
                     </div>
                 </div>
             </section>
             
-            <!-- SECTION 2: PPC AUDIT EXPLANATION -->
-            <section id="ppc-audit" class="qa-section">
-                <h2 class="section-title"><span class="section-icon">📊</span> Understanding Your PPC Leaks</h2>
+            <!-- SECTION 2: AUDIT RESULTS -->
+            <section id="audit-results" class="qa-section">
+                <h2 class="section-title"><span class="section-icon">📊</span> Your PPC Audit Results</h2>
                 
                 <div class="qa-item">
-                    <div class="question"><span class="q-icon">❓</span> What do these audit problems actually mean for my business?</div>
+                    <div class="question"><span class="q-icon">❓</span> What do these audit problems mean for my business?</div>
                     <div class="answer">
                         <p>Let me break down what I saw in your audit:</p>
                         
-                        <p><span class="key-term">The $5,000+ monthly waste</span> - This isn't just "bad advertising." This is real money leaving your business every single month that could be:</p>
-                        <ul>
+                        <p><span class="key-term" id="lossExplanation">The $5,000+ monthly waste</span> - This isn't just "bad advertising." This is real money leaving your business every month that could be:</p>
+                        <ul style="margin-left: 20px; color: #cbd5e1;">
                             <li>💵 <strong>3-5 more closed loans</strong> per month</li>
                             <li>💵 <strong>$15,000+ in additional commission</strong></li>
                             <li>💵 <strong>A full-time marketing person's salary</strong></li>
                         </ul>
                         
-                        <p><span class="key-term">The 13 critical issues</span> - These are all symptoms of one root cause: <strong>you're treating mobile traffic like desktop traffic</strong>. Mobile users want to talk, not type. They want immediate answers, not forms.</p>
+                        <p>The <span class="key-term" id="issuesExplanation">13 critical issues</span> are all symptoms of one root cause: <strong>you're treating mobile traffic like desktop traffic</strong>. Mobile users want to talk, not type.</p>
                         
                         <p>That's where I come in.</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">audit-explanation</span>
-                        <span class="tag">waste-analysis</span>
-                        <span class="tag">business-impact</span>
-                    </div>
-                </div>
-                
-                <div class="qa-item">
-                    <div class="question"><span class="q-icon">❓</span> Why is my mobile conversion rate so low? (Your audit showed 68% loss)</div>
-                    <div class="answer">
-                        <p>This is the <span class="stat-highlight">#1 problem I see</span> with mortgage brokers. Here's what's happening:</p>
-                        
-                        <p>🔴 <strong>The Old Way:</strong> Mobile user clicks your ad → lands on your site → sees a form → thinks "I'll do this later" → NEVER COMES BACK.</p>
-                        
-                        <p>✅ <strong>The Tess Way:</strong> Mobile user clicks ad → I instantly appear and say "Hi! I'm Tess. Want to get pre-qualified in 2 minutes?" → We have a conversation → I qualify them → They book a call with you.</p>
-                        
-                        <p>The difference? <span class="key-term">Conversation vs. Form</span>. Forms are work. Talking to me is easy. And easy converts.</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">mobile-conversion</span>
-                        <span class="tag">form-fatigue</span>
-                        <span class="tag">conversational-ai</span>
                     </div>
                 </div>
             </section>
             
-            <!-- SECTION 3: LEAD CONVERSION - 5X RESULTS -->
+            <!-- SECTION 3: LEAD CONVERSION -->
             <section id="lead-conversion" class="qa-section">
                 <h2 class="section-title"><span class="section-icon">🎯</span> How Tess 5X's Qualified Leads</h2>
                 
                 <div class="qa-item">
-                    <div class="question"><span class="q-icon">❓</span> How can you realistically 5X my qualified leads?</div>
+                    <div class="question"><span class="q-icon">❓</span> How can you realistically 5X my leads?</div>
                     <div class="answer">
-                        <p>I'm glad you asked! Here's the math:</p>
+                        <p>Here's the math based on your traffic:</p>
                         
-                        <p>📊 <span class="key-term">Current Situation:</span> You get 100 mobile visitors. 96 leave without converting. You follow up with 4. Maybe 1 becomes a client.</p>
+                        <p>📊 <span class="key-term">Current Situation:</span> You get visitors. Most leave without converting.</p>
                         
-                        <p>🚀 <span class="key-term">With Tess:</span> 100 mobile visitors. I engage <span class="stat-highlight">85% of them immediately</span>. I qualify them, answer questions, show testimonials. <span class="stat-highlight">30-40% complete my qualification interview</span>. You get 30-40 warm, pre-qualified leads instead of 4 cold form-fillers.</p>
+                        <p>🚀 <span class="key-term">With Tess:</span> I engage <span class="stat-highlight">85% immediately</span>. I qualify them, answer questions, show testimonials. You get <span class="stat-highlight">30-40% completion rate</span> on my qualification interview.</p>
                         
-                        <p>That's not 5X. That's <span class="stat-highlight">7-10X more qualified leads</span> from the exact same traffic.</p>
-                        
-                        <p>One mortgage broker recently told me: <em>"Tess found $12k in wasted spend in 2 minutes and fixed our mobile conversion in 30 days."</em> - Mike Davidson, Fairway Mortgage</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">lead-multiplier</span>
-                        <span class="tag">roi</span>
-                        <span class="tag">conversion-math</span>
-                    </div>
-                </div>
-                
-                <div class="qa-item">
-                    <div class="question"><span class="q-icon">❓</span> What does your qualification interview actually ask?</div>
-                    <div class="answer">
-                        <p>I have a <span class="key-term">conversational interview</span> that feels natural but qualifies deeply:</p>
-                        
-                        <p><strong>Step 1 - Warm-up:</strong> "Hi! I'm Tess. I see you're interested in mortgage rates. Are you buying, refinancing, or just exploring?"</p>
-                        
-                        <p><strong>Step 2 - Timeline:</strong> "Great! When are you looking to make a move - this month, next 90 days, or just gathering info?"</p>
-                        
-                        <p><strong>Step 3 - Qualification:</strong> "Perfect. To give you accurate options, can you tell me your approximate credit score range?"</p>
-                        
-                        <p><strong>Step 4 - Objection Handling:</strong> If they hesitate, I share a quick video testimonial from someone just like them.</p>
-                        
-                        <p><strong>Step 5 - Handoff:</strong> "You're exactly who Tommy loves to work with! Can I schedule a quick call for you two to chat?"</p>
-                        
-                        <p>Every answer gets logged and sent to you. You never start a cold call again.</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">interview-process</span>
-                        <span class="tag">qualification</span>
-                        <span class="tag">conversation-flow</span>
+                        <p>One mortgage broker told me: <em>"Tess found $12k in wasted spend in 2 minutes and fixed our mobile conversion in 30 days."</em> - Mike Davidson, Fairway Mortgage</p>
                     </div>
                 </div>
             </section>
             
-            <!-- SECTION 4: MOBILEWISE AI CONNECTION -->
-            <section id="mobile-wise" class="qa-section">
-                <h2 class="section-title"><span class="section-icon">📱</span> The Technology: MobileWise AI</h2>
-                
-                <div class="qa-item">
-                    <div class="question"><span class="q-icon">❓</span> What technology powers you, Tess?</div>
-                    <div class="answer">
-                        <p>I'm built on <span class="key-term">MobileWise AI's VoiceGuide platform</span> - the same technology that's helping mortgage companies nationwide double their conversions.</p>
-                        
-                        <p>Think of MobileWise AI as the engine, and me (Tess) as the friendly face that talks to your leads. Together, we're:</p>
-                        <ul>
-                            <li>🎯 <strong>Always learning</strong> - Every conversation makes me smarter</li>
-                            <li>🎯 <strong>Video-integrated</strong> - I can show testimonials at exactly the right moment</li>
-                            <li>🎯 <strong>CRM-connected</strong> - Every qualified lead goes straight to your system</li>
-                            <li>🎯 <strong>24/7/365</strong> - I never take a day off</li>
-                        </ul>
-                        
-                        <p>When you work with Tommy, you're getting the full MobileWise AI platform, with me as your dedicated mortgage specialist.</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">technology</span>
-                        <span class="tag">mobilewise-ai</span>
-                        <span class="tag">platform</span>
-                    </div>
-                </div>
-                
-                <div class="qa-item">
-                    <div class="question"><span class="q-icon">❓</span> How is this different from a chatbot on my website?</div>
-                    <div class="answer">
-                        <p>Night and day difference! Let me show you:</p>
-                        
-                        <p>🤖 <strong>Typical Chatbot:</strong> "How can I help you?" (menu: 1,2,3) → Canned responses → No video → No qualification → No handoff.</p>
-                        
-                        <p>👩‍💼 <strong>Me (Tess):</strong> "Hi! I'm Tess, your AI mortgage assistant!" → Natural conversation → Real video testimonials → Deep qualification questions → Warm transfer to Tommy.</p>
-                        
-                        <p>The difference is <span class="key-term">conversation vs. menu</span>. I build rapport. I handle objections. I actually close deals.</p>
-                        
-                        <p>One mortgage broker said: <em>"Our chatbot was a waste of money. Tess paid for herself in 3 days."</em></p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">vs-chatbot</span>
-                        <span class="tag">differentiation</span>
-                        <span class="tag">superiority</span>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- SECTION 5: TESTIMONIALS & RESULTS -->
+            <!-- SECTION 4: TESTIMONIALS -->
             <section id="testimonials" class="qa-section">
                 <h2 class="section-title"><span class="section-icon">📹</span> Real Mortgage Broker Results</h2>
                 
                 <div class="qa-item">
-                    <div class="question"><span class="q-icon">❓</span> Show me proof this works for mortgage brokers.</div>
+                    <div class="question"><span class="q-icon">❓</span> Show me proof this works.</div>
                     <div class="answer">
-                        <p>Absolutely! Here are real results from brokers just like you:</p>
-                        
                         <p><span class="stat-highlight">⭐ Mike Davidson, Fairway Mortgage:</span><br>
                         <em>"Tess found $12k in wasted spend in 2 minutes! The visual progress bars showed exactly where our leaks were. She fixed our mobile conversion and we doubled leads in 30 days."</em></p>
                         
                         <p><span class="stat-highlight">⭐ Sarah Chen, Rocket Mortgage:</span><br>
-                        <em>"Our form was killing 85% of mobile leads. Tess fixed it and we doubled conversions in 30 days. Now I actually look forward to checking my leads."</em></p>
+                        <em>"Our form was killing 85% of mobile leads. Tess fixed it and we doubled conversions in 30 days."</em></p>
                         
                         <p><span class="stat-highlight">⭐ Tom Richards, Guaranteed Rate:</span><br>
                         <em>"The progress bar scores made it impossible to ignore our problems. Tess showed us exactly what to fix. Now we're saving $5k monthly AND closing more deals."</em></p>
-                        
-                        <p>Want to see video testimonials? I can show you real mortgage brokers sharing their success stories!</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">testimonials</span>
-                        <span class="tag">proof</span>
-                        <span class="tag">case-studies</span>
-                    </div>
-                </div>
-                
-                <div class="qa-item">
-                    <div class="question"><span class="q-icon">❓</span> Can you show me a specific example of a mortgage broker's results?</div>
-                    <div class="answer">
-                        <p>Let me play you a quick testimonial from Mike at Fairway Mortgage:</p>
-                        
-                        <!-- Video placeholder -->
-                        <div style="background: #000; padding: 20px; border-radius: 10px; margin: 15px 0; text-align: center;">
-                            <div style="background: #333; height: 200px; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-                                <span style="color: white; font-size: 3rem;">▶️</span>
-                            </div>
-                            <p style="color: #aaa; margin-top: 10px;">Video Testimonial: Mike Davidson, Fairway Mortgage</p>
-                        </div>
-                        
-                        <p>Mike was losing <span class="stat-highlight">$12k/month</span> before we worked together. After implementing me (Tess) on his site:</p>
-                        <ul>
-                            <li>✅ Mobile conversion went from 4% to 27%</li>
-                            <li>✅ Qualified leads increased 340%</li>
-                            <li>✅ Cost per acquisition dropped 62%</li>
-                        </ul>
-                        
-                        <p>Want to see more examples? I have testimonials from brokers in every niche - purchase, refinance, FHA, VA, you name it.</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">case-study</span>
-                        <span class="tag">video-proof</span>
-                        <span class="tag">specific-results</span>
                     </div>
                 </div>
             </section>
             
-            <!-- SECTION 6: CONSULTATION BOOKING -->
+            <!-- SECTION 5: OBJECTIONS -->
+            <section id="objections" class="qa-section">
+                <h2 class="section-title"><span class="section-icon">❓</span> Overcoming Your Concerns</h2>
+                
+                <div class="qa-item">
+                    <div class="question"><span class="q-icon">❓</span> How much does it cost?</div>
+                    <div class="answer">
+                        <p>Great question! Here's the honest answer:</p>
+                        
+                        <p>You're currently losing <span class="stat-highlight" id="lossForROI">$5,000+ per month</span> in wasted ad spend.</p>
+                        
+                        <p>If I help you recover just <span class="stat-highlight">20% of that waste</span>, that's <span class="stat-highlight">$1,000/month back</span>.</p>
+                        
+                        <p>If I help you close just <span class="stat-highlight">ONE additional loan per month</span>, that's <span class="stat-highlight">$3,000-$5,000+ in extra commission</span>.</p>
+                        
+                        <p><strong>Most brokers find that I pay for myself in the first 3-5 days.</strong></p>
+                        
+                        <p>Tommy will give you the exact numbers on your strategy call based on your specific audit.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 6: CONSULTATION -->
             <section id="consultation" class="qa-section">
-                <h2 class="section-title"><span class="section-icon">📅</span> Book Your Strategy Call with Tommy</h2>
+                <h2 class="section-title"><span class="section-icon">📅</span> Book Your Strategy Call</h2>
                 
                 <div class="qa-item">
                     <div class="question"><span class="q-icon">❓</span> How do I get started with you, Tess?</div>
                     <div class="answer">
-                        <p>Great question! Here's exactly what happens next:</p>
-                        
-                        <p><span class="stat-highlight">Step 1:</span> You book a <strong>free 30-minute strategy call</strong> with Tommy (that's the human behind me!).</p>
-                        
-                        <p><span class="stat-highlight">Step 2:</span> Tommy reviews your specific PPC audit results and shows you exactly how I'd be configured for YOUR business.</p>
-                        
-                        <p><span class="stat-highlight">Step 3:</span> We get me installed on your site within <strong>48-72 hours</strong>.</p>
-                        
-                        <p><span class="stat-highlight">Step 4:</span> I start qualifying leads while you sleep. You wake up to warm, pre-qualified appointments.</p>
+                        <p><span class="stat-highlight">Step 1:</span> Book a <strong>free 30-minute strategy call</strong> with Tommy.</p>
+                        <p><span class="stat-highlight">Step 2:</span> Tommy reviews your specific audit results and configures me for YOUR business.</p>
+                        <p><span class="stat-highlight">Step 3:</span> I'm installed on your site within <strong>48-72 hours</strong>.</p>
+                        <p><span class="stat-highlight">Step 4:</span> I start qualifying leads while you sleep.</p>
                         
                         <div style="text-align: center; margin: 30px 0;">
                             <a href="https://calendly.com/tommy-ppc/30min" target="_blank" style="
-                                background: #FF6B35;
+                                background: #3b82f6;
                                 color: white;
                                 text-decoration: none;
                                 padding: 20px 50px;
@@ -375,88 +281,50 @@
                                 font-weight: bold;
                                 font-size: 1.3rem;
                                 display: inline-block;
-                                box-shadow: 0 5px 20px rgba(255,107,53,0.4);
+                                box-shadow: 0 5px 20px rgba(59,130,246,0.4);
                             ">📅 BOOK MY STRATEGY CALL</a>
                         </div>
-                        
-                        <p style="text-align: center;"><small>Limited spots available • Mortgage brokers only</small></p>
                     </div>
-                    <div class="tags">
-                        <span class="tag">next-steps</span>
-                        <span class="tag">booking</span>
-                        <span class="tag">consultation</span>
-                    </div>
-                </div>
-                
-                <div class="qa-item">
-                    <div class="question"><span class="q-icon">❓</span> What happens on the strategy call with Tommy?</div>
-                    <div class="answer">
-                        <p>The strategy call is where we turn your audit into an action plan. Here's what we cover:</p>
-                        
-                        <p>🔍 <strong>Review Your Audit:</strong> Tommy will go through each of your 13 critical issues and explain exactly how I fix them.</p>
-                        
-                        <p>🎯 <strong>Customize My Interview:</strong> We'll tailor my qualification questions to YOUR ideal borrower profile.</p>
-                        
-                        <p>📹 <strong>Video Strategy:</strong> We'll plan which testimonials I should show and when.</p>
-                        
-                        <p>💰 <strong>ROI Projection:</strong> Tommy will calculate exactly how many more loans you can expect with me working 24/7.</p>
-                        
-                        <p>📅 <strong>Implementation Timeline:</strong> We'll schedule my installation and your team training.</p>
-                        
-                        <p>It's completely free, no pressure, and you'll leave with a clear roadmap to 5X your qualified leads.</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">call-details</span>
-                        <span class="tag">process</span>
-                        <span class="tag">expectations</span>
-                    </div>
-                </div>
-                
-                <div class="qa-item">
-                    <div class="question"><span class="q-icon">❓</span> How much does it cost to have Tess on my site?</div>
-                    <div class="answer">
-                        <p>Great question! Here's the honest answer:</p>
-                        
-                        <p>The investment varies based on your traffic volume and specific needs. But here's how to think about it:</p>
-                        
-                        <p>You're currently losing <span class="stat-highlight">$5,000+ per month</span> in wasted ad spend.</p>
-                        
-                        <p>If I help you recover just <span class="stat-highlight">20% of that waste</span>, that's <span class="stat-highlight">$1,000/month back in your pocket</span>.</p>
-                        
-                        <p>If I help you close just <span class="stat-highlight">ONE additional loan per month</span> (and I will), that's <span class="stat-highlight">$3,000-$5,000+ in extra commission</span>.</p>
-                        
-                        <p><strong>Most brokers find that I pay for myself in the first 3-5 days.</strong></p>
-                        
-                        <p>Tommy will give you the exact numbers on your strategy call based on your specific audit results.</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">pricing</span>
-                        <span class="tag">roi</span>
-                        <span class="tag">investment</span>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- ===== TEMPLATES FOR ADDING MORE ===== -->
-            <section id="templates" class="qa-section templates-section">
-                <h2 class="section-title template-title"><span class="section-icon">➕</span> Tess Can Answer More - Add Topics</h2>
-                
-                <!-- Include your existing templates here -->
-                
-                <div style="text-align: center; margin-top: 30px;">
-                    <p><strong>Tess is always learning!</strong> If you have a question I haven't answered, just ask Tommy on your strategy call.</p>
                 </div>
             </section>
         </main>
     </div>
     
     <script>
-        // Simple navigation
+        // ===== LOAD AUDIT DATA FROM SESSION STORAGE =====
         document.addEventListener('DOMContentLoaded', function() {
-            // Dynamic loss amount from the page
-            const urlParams = new URLSearchParams(window.location.search);
-            const lossAmount = urlParams.get('loss') || '$5,247';
-            document.getElementById('tess-loss-amount').textContent = lossAmount + ' estimated monthly waste';
+            try {
+                // Try to get audit data from sessionStorage (set by results page)
+                const auditData = JSON.parse(sessionStorage.getItem('tess_audit_data') || '{}');
+                
+                const lossAmount = auditData.loss || '$5,247';
+                const issues = auditData.issues || '13';
+                const url = auditData.url || 'your website';
+                
+                // Update all dynamic elements
+                document.getElementById('dynamicLoss').textContent = lossAmount;
+                document.getElementById('dynamicIssues').textContent = issues;
+                document.getElementById('lossForROI').textContent = lossAmount;
+                
+                // Update audit context
+                document.getElementById('auditContext').innerHTML = `
+                    <p>Based on your PPC Audit Report:</p>
+                    <div class="loss-highlight">${lossAmount} estimated monthly waste</div>
+                    <p>${issues} critical issues found · 68% of mobile leads lost</p>
+                `;
+                
+                // Update personalized greeting
+                document.getElementById('personalizedGreeting').innerHTML = `
+                    <p>I just saw your audit shows <span class="stat-highlight">${lossAmount}</span> in monthly waste from <span class="stat-highlight">${issues}</span> critical issues on <strong>${url}</strong>. That's exactly what I'm built to fix.</p>
+                `;
+                
+                // Update loss explanation
+                document.getElementById('lossExplanation').innerHTML = `${lossAmount} monthly waste`;
+                document.getElementById('issuesExplanation').innerHTML = `${issues} critical issues`;
+                
+            } catch (e) {
+                console.log('No audit data found, using defaults');
+            }
             
             // Section highlighting
             const sections = document.querySelectorAll('.qa-section');
@@ -465,7 +333,8 @@
             window.addEventListener('scroll', function() {
                 let current = '';
                 sections.forEach(section => {
-                    if (window.scrollY >= section.offsetTop - 150) {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= 150 && rect.bottom >= 150) {
                         current = section.getAttribute('id');
                     }
                 });
