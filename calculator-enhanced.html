@@ -1067,5 +1067,49 @@ window.addEventListener('load', function() {
     setTimeout(animateProgressBars, 500);
 });
 </script>
+<!-- EmailJS for report delivery -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+    (function() {
+        emailjs.init("7-9oxa3UC3uKxtqGM");
+        console.log('✅ EmailJS initialized');
+    })();
+
+    async function sendReportToEmail(websiteUrl, budget, loss) {
+        const domain = websiteUrl ? websiteUrl.replace(/^https?:\/\//, '').replace(/\/.*$/, '') : 'Unknown';
+        
+        const templateParams = {
+            to_email: 'bizboost.expert@gmail.com',
+            website_url: websiteUrl || 'Not provided',
+            domain: domain,
+            budget: budget || '0',
+            loss: loss || '0',
+            score: '75%',
+            audit_date: new Date().toLocaleString()
+        };
+        
+        try {
+            const response = await emailjs.send(
+                'service_b9bppgb',
+                'template_lhlonjg',
+                templateParams
+            );
+            console.log('✅ Report sent to email');
+        } catch (error) {
+            console.error('❌ Failed to send report:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const websiteUrl = urlParams.get('url');
+        const budget = urlParams.get('budget');
+        const loss = urlParams.get('loss');
+        
+        if (websiteUrl && budget && loss) {
+            sendReportToEmail(websiteUrl, budget, loss);
+        }
+    });
+</script>
 </body>
 </html>
