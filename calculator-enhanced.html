@@ -635,41 +635,6 @@
                 font-size: 3.5rem;
             }
         }
-
-lemon-slice-widget {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
-    width: 400px;
-    height: 600px;
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
-    /* REMOVED display: none - she's visible now! */
-}
-
-/* Optional: Add a subtle pulsing effect to show she's active */
-@keyframes gentlePulse {
-    0% { box-shadow: 0 10px 40px rgba(59,130,246,0.3); }
-    50% { box-shadow: 0 10px 50px rgba(59,130,246,0.6); }
-    100% { box-shadow: 0 10px 40px rgba(59,130,246,0.3); }
-}
-
-lemon-slice-widget[controlled-widget-state="active"] {
-    animation: gentlePulse 3s infinite;
-}
-
-@media (max-width: 768px) {
-    lemon-slice-widget {
-        width: 100%;
-        height: 500px;
-        bottom: 0;
-        right: 0;
-        border-radius: 15px 15px 0 0;
-    }
-}
 </style>
 </style>
 </head>
@@ -823,223 +788,127 @@ lemon-slice-widget[controlled-widget-state="active"] {
     </div>
 </div>
 
-<!-- LEMON SLICE WIDGET - Visible and ready -->
-<lemon-slice-widget 
-    agent-id="agent_9399f094d4f819d2"
-    controlled-widget-state="active"
-    volume-enabled="true"
-    mic-enabled="true"
-    start-in-active-mode="true"      
-    idle-animation="subtle"           
-    show-text-bubbles="false">        <!-- NO TEXT BUBBLES! -->
-</lemon-slice-widget>
+<!-- LEMON SLICE WIDGET -->
+<lemon-slice-widget agent-id="agent_9399f094d4f819d2"></lemon-slice-widget>
 <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
 
+<!-- SINGLE ACTIVATION SCRIPT - Like Jack the Ripper -->
 <script>
 (function() {
-    // Force Tess into "clean mode" - no text bubbles, just avatar
-    const forceCleanMode = setInterval(function() {
-        const widget = document.querySelector('lemon-slice-widget');
-        if (!widget) return;
-        
-        // Method 1: Attributes
-        widget.setAttribute('show-text-bubbles', 'false');
-        widget.setAttribute('hide-chat-history', 'true');
-        widget.setAttribute('clean-mode', 'true');
-        
-        // Method 2: If there's a chat panel, hide it
-        const shadowRoot = widget.shadowRoot;
-        if (shadowRoot) {
-            // Hide any text/message elements
-            const messageElements = shadowRoot.querySelectorAll('.message, .chat-bubble, .text-message');
-            messageElements.forEach(el => {
-                el.style.display = 'none';
-                el.style.opacity = '0';
-            });
-            
-            // Keep just the avatar
-            const avatar = shadowRoot.querySelector('.avatar, .agent-video');
-            if (avatar) {
-                avatar.style.width = '100%';
-                avatar.style.height = '100%';
-            }
-        }
-        
-        // Method 3: Try API if available
-        if (typeof widget.hideTextBubbles === 'function') {
-            widget.hideTextBubbles();
-        }
-        
-        if (typeof widget.setCleanMode === 'function') {
-            widget.setCleanMode(true);
-        }
-        
-    }, 500); // Try every half second
-    
-    // Stop trying after 5 seconds
-    setTimeout(() => clearInterval(forceCleanMode), 5000);
-})();
-</script>
-
-<!-- FORCE VOLUME UP ON LOAD -->
-<script>
-(function() {
-    // Wait for widget to load
-    setTimeout(function() {
-        const widget = document.querySelector('lemon-slice-widget');
-        if (!widget) return;
-        
-        // Method 1: Try API methods
-        if (typeof widget.volumeOn === 'function') {
-            widget.volumeOn();
-            console.log('🔊 Volume turned on via volumeOn()');
-        } 
-        else if (typeof widget.setVolume === 'function') {
-            widget.setVolume(1.0);
-            console.log('🔊 Volume set to 100%');
-        }
-        else if (typeof widget.unmute === 'function') {
-            widget.unmute();
-            console.log('🔊 Unmuted');
-        }
-        
-        // Method 2: Force attributes (backup)
-        widget.setAttribute('volume-enabled', 'true');
-        widget.setAttribute('muted', 'false');
-        widget.setAttribute('volume', '1.0');
-        
-        // Method 3: Try to find and unmute any audio elements
-        setTimeout(function() {
-            const audioElements = document.querySelectorAll('audio, video');
-            audioElements.forEach(el => {
-                el.muted = false;
-                el.volume = 1.0;
-            });
-        }, 2000);
-        
-    }, 1500); // Give widget time to initialize
-})();
-</script>
-
-<!-- TESS ACTIVATION SCRIPT -->
-<script>
-(function() {
-    // Wait for DOM to be ready
+    // Wait for everything to load
     document.addEventListener('DOMContentLoaded', function() {
-        const tessImage = document.getElementById('tess-activator');
-        if (!tessImage) return;
         
-        // Get audit data from the page
+        // Find the widget
+        const widget = document.querySelector('lemon-slice-widget');
+        if (!widget) return;
+        
+        // STEP 1: Force widget to active state (opens it)
+        widget.setAttribute('controlled-widget-state', 'active');
+        
+        // STEP 2: Get audit data
         const lossAmount = document.getElementById('lossAmount')?.textContent || '$5,000+';
         const urlDisplay = document.getElementById('urlDisplay')?.textContent || 'your site';
         const problemItems = document.querySelectorAll('.problem-item');
         const issueCount = problemItems.length || 13;
         
-        // Get specific problems (first few)
-        const problems = [];
-        problemItems.forEach(item => {
-            const text = item.textContent || '';
-            if (text.includes('Mobile') || text.includes('Form') || text.includes('Speed')) {
-                problems.push(text.trim());
-            }
-        });
-        
-        // Store for Tess knowledge base
-        sessionStorage.setItem('tess_audit_data', JSON.stringify({
-            loss: lossAmount,
-            issues: issueCount,
-            url: urlDisplay,
-            problems: problems.slice(0, 3),
-            timestamp: new Date().toISOString()
-        }));
-        
-        // Tess click handler - ACTIVATE JACK STYLE!
-        tessImage.addEventListener('click', async function() {
-            // Find the widget
-            let widget = document.querySelector('lemon-slice-widget');
-            
-            if (!widget) {
-                console.error('Widget not found');
-                return;
-            }
-            
-            // Show the widget
-            widget.style.display = 'block';
-            
-            // Show activating status (optional)
-            const originalSrc = tessImage.src;
-            tessImage.style.opacity = '0.7';
-            
+        // STEP 3: After a delay, turn on mic and volume (like Jack)
+        setTimeout(async function() {
             try {
-                console.log('🎯 Activating Tess...');
-                
-                // Step 1: Set state to active (opens the chat)
-                widget.setAttribute('controlled-widget-state', 'active');
-                
-                // Small delay for widget to initialize
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                // Step 2: Turn on microphone
+                // Turn on microphone
                 if (typeof widget.micOn === 'function') {
                     await widget.micOn();
-                    console.log('✅ Microphone turned on');
+                    console.log('✅ Mic on');
                 }
                 
-                // Step 3: Volume up
+                // Volume up - multiple methods
                 widget.setAttribute('volume-enabled', 'true');
                 widget.setAttribute('muted', 'false');
                 
                 if (typeof widget.volumeOn === 'function') {
                     await widget.volumeOn();
-                } else if (typeof widget.setVolume === 'function') {
-                    await widget.setVolume(1.0);
                 }
                 
-                // Step 4: Send personalized message
+                // Send a silent activation to wake her up
                 if (typeof widget.sendMessage === 'function') {
-                    // Craft a personalized message based on audit
-                    let message = `Hi! I'm Tess. `;
+                    // Send empty message or just activate
+                    console.log('✅ Tess activated');
+                }
+                
+            } catch (e) {
+                console.log('Activation note:', e);
+            }
+        }, 1000);
+        
+        // STEP 4: Tess image click handler (like your button)
+        const tessImage = document.getElementById('tess-activator');
+        if (tessImage) {
+            tessImage.addEventListener('click', async function() {
+                try {
+                    // Make sure widget is active
+                    widget.setAttribute('controlled-widget-state', 'active');
                     
-                    if (issueCount > 0) {
-                        message += `I just saw your PPC audit shows ${lossAmount} in monthly waste `;
-                        
-                        if (problems.length > 0) {
-                            message += `especially the "${problems[0]}" issue. `;
-                        } else {
-                            message += `from ${issueCount} critical problems. `;
-                        }
-                    } else {
-                        message += `I see you just completed your PPC audit. `;
+                    // Small delay
+                    await new Promise(r => setTimeout(r, 500));
+                    
+                    // Mic on
+                    if (typeof widget.micOn === 'function') {
+                        await widget.micOn();
                     }
                     
-                    message += `That mobile conversion loss? I'm built to fix exactly that. `;
-                    message += `Want to see how I can 5X your qualified leads starting tonight?`;
+                    // Volume up
+                    widget.setAttribute('volume-enabled', 'true');
+                    widget.setAttribute('muted', 'false');
                     
-                    await widget.sendMessage(message);
-                    console.log('✅ Personalized message sent');
+                    if (typeof widget.volumeOn === 'function') {
+                        await widget.volumeOn();
+                    }
+                    
+                    // Send personalized message
+                    if (typeof widget.sendMessage === 'function') {
+                        let message = `Hi! I'm Tess. `;
+                        message += `I just saw your PPC audit shows ${lossAmount} in monthly waste `;
+                        message += `from ${issueCount} critical problems. `;
+                        message += `That mobile conversion loss? I'm built to fix exactly that. `;
+                        message += `Want to see how I can 5X your qualified leads starting tonight?`;
+                        
+                        await widget.sendMessage(message);
+                    }
+                    
+                    // Visual feedback
+                    tessImage.style.opacity = '1';
+                    
+                } catch (error) {
+                    console.error('Click error:', error);
                 }
-                
-                // Reset image opacity
-                tessImage.style.opacity = '1';
-                
-                // Optional: Show success briefly
-                const originalBoxShadow = tessImage.style.boxShadow;
-                tessImage.style.boxShadow = '0 0 20px #3b82f6';
-                setTimeout(() => {
-                    tessImage.style.boxShadow = originalBoxShadow;
-                }, 1000);
-                
-            } catch (error) {
-                console.error('Tess activation error:', error);
-                tessImage.style.opacity = '1';
-                
-                // Fallback - at least open the widget
-                widget.setAttribute('controlled-widget-state', 'active');
-            }
-        });
+            });
+        }
     });
 })();
 </script>
+
+<style>
+lemon-slice-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    width: 400px;
+    height: 600px;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+    lemon-slice-widget {
+        width: 100%;
+        height: 500px;
+        bottom: 0;
+        right: 0;
+        border-radius: 15px 15px 0 0;
+    }
+}
+</style>
     <!-- Blue Bottom Bar -->
     <div class="bottom-bar"></div>
 
