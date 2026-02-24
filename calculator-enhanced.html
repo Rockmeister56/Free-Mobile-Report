@@ -594,6 +594,11 @@
             transition: all 0.3s ease;
             flex: 1;
         }
+
+        /* Hide Free badge - removed completely */
+.textnow-badge {
+    display: none;
+}
         
         .start-demo-btn {
             background: linear-gradient(135deg, #0066cc, #004999);
@@ -635,24 +640,7 @@
                 font-size: 3.5rem;
             }
         }
-        /* Hide all text bubbles and badges */
-.textnow-badge,
-.message-bubble,
-.chat-message,
-.text-bubble,
-.agent-message,
-[class*="message"],
-[class*="bubble"],
-[class*="chat"] {
-    display: none !important;
-}
-
-/* Make sure avatar still shows */
-lemon-slice-widget video,
-lemon-slice-widget .avatar,
-lemon-slice-widget .agent-video {
-    display: block !important;
-}
+    
 </style>
 </style>
 </head>
