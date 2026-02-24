@@ -306,24 +306,33 @@ let lockedSites = [];
             updateStats();
         }
         
-        function addCode() {
-            const input = document.getElementById('newCode');
-            const newCode = input.value.trim().toUpperCase();
-            
-            if (!newCode) {
-                alert('Please enter a code');
-                return;
-            }
-            
-            if (codes.includes(newCode)) {
-                alert('Code already exists!');
-                return;
-            }
-            
-            codes.push(newCode);
-            displayCodes();
-            input.value = '';
-        }
+        async function addCode() {
+    const input = document.getElementById('newCode');
+    const newCode = input.value.trim().toUpperCase();
+    
+    if (!newCode) {
+        alert('Please enter a code');
+        return;
+    }
+    
+    try {
+        const { error } = await supabaseClient
+            .from('access_codes')
+            .insert([{
+                code: newCode,
+                expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                used: false
+            }]);
+        
+        if (error) throw error;
+        
+        alert(`✅ Code ${newCode} added to database!`);
+        loadCodes(); // Refresh the list
+        input.value = '';
+    } catch (error) {
+        alert('❌ Error adding code: ' + error.message);
+    }
+}
         
         function deleteCode(code) {
             if (confirm(`Delete code ${code}?`)) {
@@ -332,15 +341,33 @@ let lockedSites = [];
             }
         }
         
-        function generateRandomCode() {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-            let code = '';
-            for (let i = 0; i < 8; i++) {
-                code += chars[Math.floor(Math.random() * chars.length)];
-            }
-            document.getElementById('newCode').value = code;
+        async function generateRandomCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+    for (let i = 0; i < 8; i++) {
+        code += chars[Math.floor(Math.random() * chars.length)];
+    }
+    document.getElementById('newCode').value = code;
+    
+    // Auto-save to Supabase
+    if (confirm(`Save code ${code} to database?`)) {
+        try {
+            const { error } = await supabaseClient
+                .from('access_codes')
+                .insert([{
+                    code: code,
+                    expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                    used: false
+                }]);
+            
+            if (error) throw error;
+            alert(`✅ Code ${code} saved to database!`);
+            loadCodes(); // Refresh the list
+        } catch (error) {
+            alert('❌ Error saving code: ' + error.message);
         }
-        
+    }
+}
         // ===== SITE FUNCTIONS =====
         function displaySites() {
             const tbody = document.getElementById('sitesBody');
