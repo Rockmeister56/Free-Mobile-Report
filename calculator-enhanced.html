@@ -970,78 +970,106 @@ lemon-slice-widget {
 </style>
 
 <script>
-// Tess click handler
-tessImage.addEventListener('click', async function() {
-    try {
-        // Visual feedback
-        tessImage.style.opacity = '0.7';
+(function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        const widget = document.querySelector('lemon-slice-widget');
+        const tessImage = document.getElementById('tess-activator');
         
-        // STEP 1: Enlarge widget
-        widget.style.width = '400px';
-        widget.style.height = '600px';
+        if (!widget || !tessImage) return;
         
-        // STEP 2: Try the activate method (THIS IS KEY!)
-        if (typeof widget.activate === 'function') {
-            await widget.activate();
-            console.log('✅ Widget activated');
-        }
+        // Get audit data
+        const lossAmount = document.getElementById('lossAmount')?.textContent || '$5,000+';
+        const urlDisplay = document.getElementById('urlDisplay')?.textContent || 'your site';
+        const problemItems = document.querySelectorAll('.problem-item');
+        const issueCount = problemItems.length || 13;
         
-        // STEP 3: Force mic and volume on
-        widget.setAttribute('mic-enabled', 'true');
-        widget.setAttribute('volume-enabled', 'true');
-        widget.setAttribute('controlled-widget-state', 'active');
-        widget.setAttribute('muted', 'false');
+        // Make sure widget starts small and quiet
+        widget.style.width = '200px';
+        widget.style.height = '300px';
+        widget.setAttribute('volume-enabled', 'false');
+        widget.setAttribute('muted', 'true');
+        widget.setAttribute('mic-enabled', 'false');
         
-        // STEP 4: Try API methods
-        if (typeof widget.micOn === 'function') {
-            await widget.micOn();
-        }
-        
-        if (typeof widget.volumeOn === 'function') {
-            await widget.volumeOn();
-        }
-        
-        if (typeof widget.setVolume === 'function') {
-            await widget.setVolume(1.0);
-        }
-        
-        // STEP 5: Hide text bubbles (if they appear)
-        if (typeof widget.hideTextBubbles === 'function') {
-            widget.hideTextBubbles();
-        }
-        
-        // STEP 6: Send custom event (backup method)
-        const event = new CustomEvent('activateTess', {
-            detail: { mic: true, volume: true, hideText: true }
-        });
-        document.dispatchEvent(event);
-        
-        // STEP 7: Small delay then send message
-        setTimeout(async function() {
-            if (typeof widget.sendMessage === 'function') {
-                let message = `Hi! I'm Tess. `;
-                message += `I just saw your PPC audit shows ${lossAmount} in monthly waste `;
-                message += `from ${issueCount} critical problems. `;
-                message += `That mobile conversion loss? I'm built to fix exactly that. `;
-                message += `Want to see how I can 5X your qualified leads starting tonight?`;
+        // CLICK HANDLER - Using sales website magic
+        tessImage.addEventListener('click', async function() {
+            try {
+                // Visual feedback
+                tessImage.style.opacity = '0.7';
                 
-                await widget.sendMessage(message);
+                // STEP 1: Enlarge widget
+                widget.style.width = '400px';
+                widget.style.height = '600px';
+                
+                // STEP 2: Try the activate method (THIS IS THE KEY!)
+                if (typeof widget.activate === 'function') {
+                    await widget.activate();
+                    console.log('✅ Widget activated via activate()');
+                }
+                
+                // STEP 3: Force mic and volume on
+                widget.setAttribute('mic-enabled', 'true');
+                widget.setAttribute('volume-enabled', 'true');
+                widget.setAttribute('controlled-widget-state', 'active');
+                widget.setAttribute('muted', 'false');
+                
+                // STEP 4: Try API methods
+                if (typeof widget.micOn === 'function') {
+                    await widget.micOn();
+                    console.log('✅ Mic on');
+                }
+                
+                if (typeof widget.volumeOn === 'function') {
+                    await widget.volumeOn();
+                    console.log('✅ Volume on');
+                }
+                
+                if (typeof widget.setVolume === 'function') {
+                    await widget.setVolume(1.0);
+                }
+                
+                // STEP 5: Hide text bubbles
+                if (typeof widget.hideTextBubbles === 'function') {
+                    await widget.hideTextBubbles();
+                }
+                
+                // STEP 6: Custom event (backup)
+                const event = new CustomEvent('activateTess', {
+                    detail: { mic: true, volume: true, hideText: true }
+                });
+                document.dispatchEvent(event);
+                
+                // STEP 7: Send personalized message
+                setTimeout(async function() {
+                    if (typeof widget.sendMessage === 'function') {
+                        let message = `Hi! I'm Tess. `;
+                        message += `I just saw your PPC audit shows ${lossAmount} in monthly waste `;
+                        message += `from ${issueCount} critical problems. `;
+                        message += `That mobile conversion loss? I'm built to fix exactly that. `;
+                        message += `Want to see how I can 5X your qualified leads starting tonight?`;
+                        
+                        await widget.sendMessage(message);
+                        console.log('✅ Message sent');
+                    }
+                }, 1000);
+                
+                // Reset image opacity
+                tessImage.style.opacity = '1';
+                
+            } catch (error) {
+                console.error('Activation error:', error);
+                tessImage.style.opacity = '1';
+                
+                // Fallback - try custom event
+                const fallbackEvent = new CustomEvent('activateJack', {
+                    detail: { mic: true, volume: true }
+                });
+                document.dispatchEvent(fallbackEvent);
             }
-        }, 800);
-        
-        // Reset image opacity
-        tessImage.style.opacity = '1';
-        
-        // Show status (optional)
-        console.log('🎯 Tess activated - mic on, volume on');
-        
-    } catch (error) {
-        console.error('Activation error:', error);
-        tessImage.style.opacity = '1';
-    }
-});
-
+        });
+    });
+})();
 </script>
+
 
     <!-- Blue Bottom Bar -->
     <div class="bottom-bar"></div>
