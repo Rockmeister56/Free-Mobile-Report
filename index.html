@@ -290,6 +290,21 @@
     const { createClient } = supabase;
     const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // ===== TEST SUPABASE CONNECTION =====
+async function testSupabase() {
+    console.log('🔧 Testing Supabase connection...');
+    const { data, error } = await supabaseClient
+        .from('audited_sites')
+        .select('count', { count: 'exact', head: true });
+    
+    if (error) {
+        console.error('❌ Supabase connection failed:', error);
+    } else {
+        console.log('✅ Supabase connected successfully');
+    }
+}
+testSupabase();
+
     // ===== FUNCTION TO CHECK IF DOMAIN HAS BEEN AUDITED =====
     async function checkDomainAudited(domain) {
         try {
