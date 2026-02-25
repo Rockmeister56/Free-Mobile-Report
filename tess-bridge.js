@@ -94,7 +94,7 @@ setupButtonActivation() {
     });
 }
 
-    init() {
+   init() {
     console.log('[Tess Bridge] Initialized');
     
     // 👇 HIDE WIDGET IMMEDIATELY
@@ -104,13 +104,19 @@ setupButtonActivation() {
         this.widget.setAttribute('controlled-widget-state', 'hidden');
     }
     
-    // 👇 SHOW PRELOADER RIGHT AWAY
+    // 👇 SHOW PRELOADER
     this.showPreloader();
+    
+    // 👇 SET TIMER TO HIDE PRELOADER AND REVEAL TESS AFTER 5 SECONDS
+    setTimeout(() => {
+        console.log('[Tess Bridge] 5 seconds elapsed, revealing Tess');
+        this.hidePreloader();
+    }, 5000);
     
     // Store audit data
     window.tessAuditData = this.auditData;
     
-    // Core fixes (but don't show widget yet)
+    // Core fixes
     this.autoFixTess();
     this.setupEscapeProtection();
     this.hideTextBubbles();
@@ -222,16 +228,16 @@ hidePreloader() {
     setTimeout(() => {
         preloader.style.display = 'none';
         
-        // ✅ NOW reveal Tess
+        // ✅ Reveal Tess
         if (this.widget) {
             this.widget.style.opacity = '1';
             this.widget.style.visibility = 'visible';
             this.widget.setAttribute('controlled-widget-state', 'active');
             
-            // ✅ Force hide bubbles one more time
+            // ✅ Force hide bubbles
             this.forceHideBubbles();
             
-            console.log('[Tess Bridge] ✅ Tess revealed and ready');
+            console.log('[Tess Bridge] ✅ Tess revealed');
         }
     }, 500);
 }
