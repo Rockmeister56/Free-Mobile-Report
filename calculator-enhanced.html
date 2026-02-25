@@ -808,6 +808,25 @@
 
 <script> 
 
+// Listen for LemonSlice events
+window.addEventListener("message", function(event) {
+    // Check if it's a LemonSlice app message
+    if (event.data?.type === "app-message" && event.data?.data?.type === "bot_ready") {
+        console.log("🎯 Bot ready - suppressing intro text");
+        
+        // Find the widget
+        const widget = document.querySelector('lemon-slice-widget');
+        
+        if (widget && typeof widget.sendMessage === 'function') {
+            // Immediately send an empty message to override the intro
+            widget.sendMessage(' ');
+            
+            // Or send a silent command (check docs for specific methods)
+            // widget.skipIntro(); // If such a method exists
+        }
+    }
+});
+
 // Activate Tess with proper widget controls - MIC & VOLUME both ON
 async function activateTess() {
     const tessImage = document.getElementById('tess-activator');
