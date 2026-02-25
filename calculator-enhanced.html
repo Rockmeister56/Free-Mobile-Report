@@ -823,7 +823,7 @@ lemon-slice-widget .agent-video {
 </div>
 
 <lemon-slice-widget
-    agent-id="agent_9399f094d4f819d2"
+    agent-id="agent_c5671df90e273556"   
     id="tess-widget"
     style="position: fixed !important; bottom: 20px; right: 20px; width: 200px; height: 300px; z-index: 9999; border: none; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: width 0.3s ease, height 0.3s ease;">
 </lemon-slice-widget>
@@ -1255,142 +1255,68 @@ window.addEventListener('load', function() {
     });
 </script>
 <script>
-(function() {
-    // Wait for DOM to load
-    document.addEventListener('DOMContentLoaded', function() {
-        const widget = document.querySelector('#tess-widget');
-        const tessImage = document.getElementById('tess-activator');
-        
-        if (!widget || !tessImage) return;
-        
-        // Get audit data
-        const lossAmount = document.getElementById('lossAmount')?.textContent || '$5,000+';
-        const issueCount = document.querySelectorAll('.problem-item').length || 13;
-        
-        // ===== KILL INTRO TEXT =====
-        window.addEventListener('message', function(event) {
-            if (event.data?.type === 'app-message' && event.data?.data?.type === 'bot_ready') {
-                console.log('🎯 Bot ready — killing intro text');
-                setTimeout(() => {
-                    if (typeof widget.sendMessage === 'function') {
-                        widget.sendMessage(' ');
-                    }
-                }, 100);
-            }
-        });
-        
-        // ===== CLICK HANDLER =====
-        tessImage.addEventListener('click', async function() {
-            try {
-                // Enlarge widget
+// Connect Tess image to avatar
+document.addEventListener('DOMContentLoaded', function() {
+    const tessImage = document.getElementById('tess-activator');
+    
+    if (tessImage) {
+        tessImage.addEventListener('click', function() {
+            const widget = document.querySelector('lemon-slice-widget');
+            if (widget) {
                 widget.style.width = '400px';
                 widget.style.height = '600px';
                 
-                // Step 1: Set state to active
-                widget.setAttribute('controlled-widget-state', 'active');
-                
-                // Small delay
-                await new Promise(r => setTimeout(r, 800));
-                
-                // Step 2: Activate if method exists
                 if (typeof widget.activate === 'function') {
-                    await widget.activate();
+                    widget.activate();
                 }
                 
-                // Step 3: Turn on microphone
-                if (typeof widget.micOn === 'function') {
-                    await widget.micOn();
-                }
-                
-                // Step 4: Volume up
-                if (typeof widget.volumeOn === 'function') {
-                    await widget.volumeOn();
-                } else if (typeof widget.setVolume === 'function') {
-                    await widget.setVolume(1.0);
-                }
-                
-                // Step 5: Set attributes
                 widget.setAttribute('mic-enabled', 'true');
                 widget.setAttribute('volume-enabled', 'true');
-                widget.setAttribute('muted', 'false');
+                widget.setAttribute('controlled-widget-state', 'active');
                 
-                // ===== BRUTE-FORCE TEXT KILLER =====
-                setTimeout(() => {
-                    // Target any possible text bubble elements
-                    document.querySelectorAll(
-                        '.message, .chat-bubble, .text-bubble, ' +
-                        '[class*="message"], [class*="bubble"], ' +
-                        '.agent-message, .speech-bubble, .lemon-slice-message, ' +
-                        '.message-bubble, .talk-bubble, .msg-bubble'
-                    ).forEach(el => {
-                        el.style.display = 'none';
-                        el.style.visibility = 'hidden';
-                        el.style.opacity = '0';
-                    });
-
-                    // Also try to hide inside shadow DOM if accessible
-                    if (widget.shadowRoot) {
-                        widget.shadowRoot.querySelectorAll('[class*="message"], [class*="bubble"]').forEach(el => {
-                            el.style.display = 'none';
-                        });
-                    }
-                    
-                    console.log('🔇 Text bubbles forcibly hidden');
-                }, 300);
-                // ===== END TEXT KILLER =====
-                
-                // Step 6: Send personalized message
-                setTimeout(() => {
-                    if (typeof widget.sendMessage === 'function') {
-                        widget.sendMessage(
-                            `Hi! I'm Tess. I just saw your PPC audit shows ${lossAmount} in monthly waste from ${issueCount} critical problems. That mobile conversion loss? I'm built to fix exactly that. Want to see how I can 5X your qualified leads starting tonight?`
-                        );
-                    }
-                }, 500);
-                
-                // Step 7: Show status
-                showTessStatus('✅ Tess activated!', 'success');
-                
-            } catch (error) {
-                console.error('Activation error:', error);
-                showTessStatus('❌ Activation failed', 'error');
+                showStatus('Tess activated - mic on, volume on');
             }
+            
+            const event = new CustomEvent('activateTess', {
+                detail: { mic: true, volume: true, hideText: true }
+            });
+            document.dispatchEvent(event);
+            
+            window.event = event;
+            activateTess();
         });
-    });
-    
-    // ===== STATUS HELPER =====
-    function showTessStatus(message, type = 'success') {
-        let statusDiv = document.getElementById('tess-status');
-        if (!statusDiv) {
-            statusDiv = document.createElement('div');
-            statusDiv.id = 'tess-status';
-            document.body.appendChild(statusDiv);
-        }
-        
+    }
+});
+
+// Helper function to show status
+function showStatus(message) {
+    let statusDiv = document.getElementById('tess-status');
+    if (!statusDiv) {
+        statusDiv = document.createElement('div');
+        statusDiv.id = 'tess-status';
         statusDiv.style.cssText = `
             position: fixed;
-            bottom: 120px;
+            bottom: 100px;
             left: 50%;
             transform: translateX(-50%);
-            background: ${type === 'success' ? '#3b82f6' : '#ef4444'};
+            background: #3b82f6;
             color: white;
-            padding: 8px 20px;
-            border-radius: 30px;
+            padding: 8px 16px;
+            border-radius: 20px;
             font-size: 0.9rem;
-            z-index: 10000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            border: 1px solid ${type === 'success' ? '#60a5fa' : '#f87171'};
-            font-weight: bold;
-            display: block;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         `;
-        
-        statusDiv.textContent = message;
-        
-        setTimeout(() => {
-            statusDiv.style.display = 'none';
-        }, 3000);
+        document.body.appendChild(statusDiv);
     }
-})();
+    
+    statusDiv.textContent = message;
+    statusDiv.style.display = 'block';
+    
+    setTimeout(() => {
+        statusDiv.style.display = 'none';
+    }, 2000);
+}
 </script>
 </body>
 </html>
