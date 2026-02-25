@@ -95,25 +95,21 @@ setupButtonActivation() {
 }
 
     init() {
-        console.log('[Tess Bridge] Initialized - Avatar Controls Only');
-        console.log('[Tess Bridge] Audit Data:', this.auditData);
-        
-        // Store for other scripts
-        window.tessAuditData = this.auditData;
-        
-        // Core fixes
-        this.autoFixTess();
-        this.setupEscapeProtection();
-        this.setupClickHandler();
-        this.hideTextBubbles();
-
-          // 👈 ADD THIS LINE
-    this.setupButtonActivation();
-        
-    }
+    console.log('[Tess Bridge] Initialized - Button Only Mode');
     
+    // Store audit data
+    window.tessAuditData = this.auditData;
+    
+    // Core fixes
+    this.setupEscapeProtection();
+    this.hideTextBubbles();
+    
+    // 👈 THIS IS THE ONLY THING THAT ACTIVATES TESS
+    this.setupButtonActivation();
+}
     // 🔥 CRITICAL: Hide ALL text bubbles permanently
     hideTextBubbles() {
+        
         // Immediate hide
         this.forceHideBubbles();
         
