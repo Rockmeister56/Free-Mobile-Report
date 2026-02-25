@@ -823,7 +823,7 @@ lemon-slice-widget .agent-video {
 </div>
 
 <lemon-slice-widget
-    agent-id="agent_c5671df90e273556"   
+    agent-id="agent_9399f094d4f819d2"
     id="tess-widget"
     style="position: fixed !important; bottom: 20px; right: 20px; width: 200px; height: 300px; z-index: 9999; border: none; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: width 0.3s ease, height 0.3s ease;">
 </lemon-slice-widget>
@@ -872,7 +872,19 @@ async function activateTess() {
                 const lossAmount = document.getElementById('lossAmount')?.textContent || '$5,000+';
                 const issueCount = document.querySelectorAll('.problem-item').length || 13;
                 
-                let message = `Hi! I'm Tess. I just saw your PPC audit shows ${lossAmount} in monthly waste from ${issueCount} critical problems. That mobile conversion loss? I'm built to fix exactly that. Want to see how I can 5X your qualified leads starting tonight?`;
+               let message = `Hi! I'm Tess. `;
+message += `I just saw your PPC audit shows `;
+
+// Make the number sound natural
+if (lossAmount.includes('$5,000+')) {
+    message += `over five thousand dollars`;
+} else {
+    message += lossAmount;
+}
+
+message += ` in monthly waste from ${issueCount} critical problems. `;
+message += `That mobile conversion loss? I'm built to fix exactly that. `;
+message += `Want to see how I can 5X your qualified leads starting tonight?`;
                 
                 await widget.sendMessage(message);
                 console.log('✅ Personalized message sent');
