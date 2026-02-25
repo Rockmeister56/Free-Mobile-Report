@@ -259,7 +259,7 @@ autoFixTess() {
             } catch (error) {
                 console.warn('[Tess Bridge] Partial success:', error);
             }
-        }, 1500);
+        }, 5000);
         
     }, 1000);
 }
