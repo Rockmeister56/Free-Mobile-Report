@@ -95,25 +95,27 @@ setupButtonActivation() {
 }
 
     init() {
-        console.log('[Tess Bridge] Initialized - Avatar Controls Only');
-        console.log('[Tess Bridge] Audit Data:', this.auditData);
-
-        // 👇 SHOW PRELOADER RIGHT HERE
-        this.showPreloader();
-        
-        // Store for other scripts
-        window.tessAuditData = this.auditData;
-        
-        // Core fixes
-        this.autoFixTess();
-        this.setupEscapeProtection();
-        this.setupClickHandler();
-        this.hideTextBubbles();
-
-          // 👈 ADD THIS LINE
-    this.setupButtonActivation();
-        
+    console.log('[Tess Bridge] Initialized');
+    
+    // 👇 HIDE WIDGET IMMEDIATELY
+    if (this.widget) {
+        this.widget.style.opacity = '0';
+        this.widget.style.visibility = 'hidden';
+        this.widget.setAttribute('controlled-widget-state', 'hidden');
     }
+    
+    // 👇 SHOW PRELOADER RIGHT AWAY
+    this.showPreloader();
+    
+    // Store audit data
+    window.tessAuditData = this.auditData;
+    
+    // Core fixes (but don't show widget yet)
+    this.autoFixTess();
+    this.setupEscapeProtection();
+    this.hideTextBubbles();
+    this.setupButtonActivation();
+}
     
     // 🔥 CRITICAL: Hide ALL text bubbles permanently
     hideTextBubbles() {
@@ -210,22 +212,33 @@ showPreloader() {
     console.log('[Tess Bridge] Preloader shown');
 }
 
-// 🔥 HIDE PRELOADER - Call when Tess is ready
+// 🔥 HIDE PRELOADER AND REVEAL TESS
 hidePreloader() {
     const preloader = document.getElementById('tess-bridge-preloader');
     if (!preloader) return;
     
     preloader.style.opacity = '0';
+    
     setTimeout(() => {
         preloader.style.display = 'none';
+        
+        // ✅ NOW reveal Tess
+        if (this.widget) {
+            this.widget.style.opacity = '1';
+            this.widget.style.visibility = 'visible';
+            this.widget.setAttribute('controlled-widget-state', 'active');
+            
+            // ✅ Force hide bubbles one more time
+            this.forceHideBubbles();
+            
+            console.log('[Tess Bridge] ✅ Tess revealed and ready');
+        }
     }, 500);
-    
-    console.log('[Tess Bridge] Preloader hidden');
 }
     
-    // 🔥 AUTO-FIX: Prepare Tess on load
+    // 🔥 AUTO-FIX: Prepare Tess but KEEP HIDDEN
 autoFixTess() {
-    console.log('[Tess Bridge] Auto-fixing Tess...');
+    console.log('[Tess Bridge] Preparing Tess behind preloader...');
     
     setTimeout(() => {
         if (!this.widget) {
@@ -234,32 +247,31 @@ autoFixTess() {
             return;
         }
         
-        // Force proper state
-        this.widget.setAttribute('controlled-widget-state', 'active');
+        // ✅ Keep widget HIDDEN
+        this.widget.style.opacity = '0';
+        this.widget.style.visibility = 'hidden';
         this.widget.style.width = '200px';
         this.widget.style.height = '300px';
         
-        // Prepare mic and volume
+        // ✅ Don't set to 'active' yet — keep hidden
+        this.widget.setAttribute('controlled-widget-state', 'hidden');
+        
+        // Prepare mic and volume (behind the scenes)
         setTimeout(async () => {
             try {
                 await this.widget.micOn?.();
                 await this.widget.unmute?.();
                 
-                this.tessReady = true;
-                console.log('[Tess Bridge] ✅ Tess ready!');
+                // ✅ Tess is ready but still hidden
+                console.log('[Tess Bridge] Tess ready behind preloader');
                 
-                // 👇 HIDE PRELOADER WHEN TESS IS READY
-                this.hidePreloader();
-                
-                // 👇 FORCE HIDE TEXT BUBBLES
-                this.forceHideBubbles();
-                
-                // this.updateTessIndicator();
+                // ❌ DON'T hide preloader here — let the timer do it
+                // ❌ DON'T show Tess yet
                 
             } catch (error) {
                 console.warn('[Tess Bridge] Partial success:', error);
             }
-        }, 5000);
+        }, 1500); // Shorter delay for prep work
         
     }, 1000);
 }
