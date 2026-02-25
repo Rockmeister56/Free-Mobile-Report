@@ -96,8 +96,6 @@ setupButtonActivation() {
     init() {
         console.log('[Tess Bridge] Initialized - Avatar Controls Only');
         console.log('[Tess Bridge] Audit Data:', this.auditData);
-
-        this.showPreloader();
         
         // Store for other scripts
         window.tessAuditData = this.auditData;
