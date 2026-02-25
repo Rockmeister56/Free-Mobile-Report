@@ -793,11 +793,71 @@
     </div>
 </div>
 
-<!-- ===== LEMON SLICE WIDGET - Small and animated, volume down ===== -->
-<lemon-slice-widget agent-id="agent_9399f094d4f819d2"></lemon-slice-widget>
+<lemon-slice-widget
+    agent-id="agent_9399f094d4f819d2"
+    id="tess-widget"
+    style="position: fixed !important; bottom: 20px; right: 20px; width: 200px; height: 300px; z-index: 9999; border: none; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: width 0.3s ease, height 0.3s ease;">
+</lemon-slice-widget>
+
 <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
 
-<script> 
+<script>
+(function() {
+    const widget = document.querySelector('#tess-widget');
+    const tessImage = document.getElementById('tess-activator');
+
+    if (!widget || !tessImage) return;
+
+    // Get audit data
+    const lossAmount = document.getElementById('lossAmount')?.textContent || '$5,000+';
+    const issueCount = document.querySelectorAll('.problem-item').length || 13;
+
+    // ===== SUPPRESS INTRO TEXT =====
+    window.addEventListener('message', function(event) {
+        // Catch the bot_ready event
+        if (event.data?.type === 'app-message' && event.data?.data?.type === 'bot_ready') {
+            console.log('🎯 Bot ready — killing intro text');
+
+            // Small delay to ensure widget is ready, then send empty message to override
+            setTimeout(() => {
+                if (typeof widget.sendMessage === 'function') {
+                    widget.sendMessage(' ');
+                }
+            }, 100);
+        }
+    });
+
+    // ===== CLICK HANDLER =====
+    tessImage.addEventListener('click', async function() {
+        try {
+            // Enlarge widget
+            widget.style.width = '400px';
+            widget.style.height = '600px';
+
+            // Activate mic and volume
+            if (typeof widget.activate === 'function') widget.activate();
+
+            widget.setAttribute('mic-enabled', 'true');
+            widget.setAttribute('volume-enabled', 'true');
+            widget.setAttribute('controlled-widget-state', 'active');
+            widget.setAttribute('muted', 'false');
+
+            // Send personalized message
+            setTimeout(() => {
+                if (typeof widget.sendMessage === 'function') {
+                    widget.sendMessage(
+                        `Hi! I'm Tess. I just saw your PPC audit shows ${lossAmount} in monthly waste from ${issueCount} critical problems. That mobile conversion loss? I'm built to fix exactly that. Want to see how I can 5X your qualified leads starting tonight?`
+                    );
+                }
+            }, 800);
+        } catch (error) {
+            console.error('Tess activation error:', error);
+        }
+    });
+})();
+</script>
+
+<script>
 
 // Activate Tess with proper widget controls - MIC & VOLUME both ON
 async function activateTess() {
