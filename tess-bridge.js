@@ -153,40 +153,38 @@ setupButtonActivation() {
     }
     
     // 🔥 AUTO-FIX: Prepare Tess on load
-autoFixTess() {
-    console.log('[Tess Bridge] Auto-fixing Tess...');
-    
-    setTimeout(() => {
-        if (!this.widget) {
-            console.warn('[Tess Bridge] Widget not ready, retrying...');
-            setTimeout(() => this.autoFixTess(), 2000);
-            return;
-        }
+    autoFixTess() {
+        console.log('[Tess Bridge] Auto-fixing Tess...');
         
-        // Force proper state
-        this.widget.setAttribute('controlled-widget-state', 'active');
-        this.widget.style.width = '200px';
-        this.widget.style.height = '300px';
-        
-        // Prepare mic and volume
-        setTimeout(async () => {
-            try {
-                await this.widget.micOn?.();
-                await this.widget.unmute?.();
-                
-                this.tessReady = true;
-                console.log('[Tess Bridge] ✅ Tess ready!');
-                
-                // 👈 ADD THIS ONE LINE
-                this.forceHideBubbles();
-                
-            } catch (error) {
-                console.warn('[Tess Bridge] Partial success:', error);
+        setTimeout(() => {
+            if (!this.widget) {
+                console.warn('[Tess Bridge] Widget not ready, retrying...');
+                setTimeout(() => this.autoFixTess(), 2000);
+                return;
             }
-        }, 1500);
-        
-    }, 1000);
-}
+            
+            // Force proper state
+            this.widget.setAttribute('controlled-widget-state', 'active');
+            this.widget.style.width = '200px';
+            this.widget.style.height = '300px';
+            
+            // Prepare mic and volume
+            setTimeout(async () => {
+                try {
+                    await this.widget.micOn?.();
+                    await this.widget.unmute?.();
+                    
+                    this.tessReady = true;
+                    console.log('[Tess Bridge] ✅ Tess ready!');
+                    // this.updateTessIndicator();
+                    
+                } catch (error) {
+                    console.warn('[Tess Bridge] Partial success:', error);
+                }
+            }, 1500);
+            
+        }, 1000);
+    }
     
     // 🔥 Format currency for natural speech
     formatCurrency(amount) {
