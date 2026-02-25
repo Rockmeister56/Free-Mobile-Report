@@ -152,9 +152,9 @@ setupButtonActivation() {
         }
     }
     
-    // 🔥 AUTO-FIX: Prepare Tess but DON'T activate mic/volume
+    // 🔥 AUTO-FIX: Prepare Tess on load
 autoFixTess() {
-    console.log('[Tess Bridge] Preparing Tess...');
+    console.log('[Tess Bridge] Auto-fixing Tess...');
     
     setTimeout(() => {
         if (!this.widget) {
@@ -163,19 +163,27 @@ autoFixTess() {
             return;
         }
         
-        // Set size and state but DON'T turn on mic/volume
+        // Force proper state
+        this.widget.setAttribute('controlled-widget-state', 'active');
         this.widget.style.width = '200px';
         this.widget.style.height = '300px';
-        this.widget.setAttribute('controlled-widget-state', 'active');
         
-        // 🚫 REMOVED: micOn, unmute, etc.
-        // Let the button handle all activation
-        
-        this.tessReady = true;
-        console.log('[Tess Bridge] ✅ Tess ready - waiting for button');
-        
-        // Hide any bubbles that might appear during preparation
-        this.forceHideBubbles();
+        // Prepare mic and volume
+        setTimeout(async () => {
+            try {
+                await this.widget.micOn?.();
+                await this.widget.unmute?.();
+                
+                this.tessReady = true;
+                console.log('[Tess Bridge] ✅ Tess ready!');
+                
+                // 👈 ADD THIS ONE LINE
+                this.forceHideBubbles();
+                
+            } catch (error) {
+                console.warn('[Tess Bridge] Partial success:', error);
+            }
+        }, 1500);
         
     }, 1000);
 }
