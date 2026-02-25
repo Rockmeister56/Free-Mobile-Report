@@ -127,6 +127,26 @@ setupButtonActivation() {
             }
         }, 2000);
     }
+    
+    forceHideBubbles() {
+        // Hide in main document
+        document.querySelectorAll(
+            '[class*="bubble"], [class*="message"], [class*="chat"], ' +
+            '.message-bubble, .chat-bubble, .text-bubble, ' +
+            '.agent-message, .speech-bubble'
+        ).forEach(el => {
+            el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+        });
+        
+        // Hide in widget shadow DOM
+        if (this.widget?.shadowRoot) {
+            this.widget.shadowRoot.querySelectorAll(
+                '[class*="bubble"], [class*="message"], [class*="chat"]'
+            ).forEach(el => {
+                el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+            });
+        }
+    }
 
     // 🔥 AUTO-FIX: Prepare Tess on load
 autoFixTess() {
@@ -153,13 +173,8 @@ autoFixTess() {
                 this.tessReady = true;
                 console.log('[Tess Bridge] ✅ Tess ready!');
                 
-                // 👇 HIDE PRELOADER WHEN TESS IS READY
-                this.hidePreloader();
-                
-                // 👇 FORCE HIDE TEXT BUBBLES
+                // 👈 ADD THIS ONE LINE
                 this.forceHideBubbles();
-                
-                // this.updateTessIndicator();
                 
             } catch (error) {
                 console.warn('[Tess Bridge] Partial success:', error);
@@ -168,26 +183,6 @@ autoFixTess() {
         
     }, 1000);
 }
-    
-    forceHideBubbles() {
-        // Hide in main document
-        document.querySelectorAll(
-            '[class*="bubble"], [class*="message"], [class*="chat"], ' +
-            '.message-bubble, .chat-bubble, .text-bubble, ' +
-            '.agent-message, .speech-bubble'
-        ).forEach(el => {
-            el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-        });
-        
-        // Hide in widget shadow DOM
-        if (this.widget?.shadowRoot) {
-            this.widget.shadowRoot.querySelectorAll(
-                '[class*="bubble"], [class*="message"], [class*="chat"]'
-            ).forEach(el => {
-                el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-            });
-        }
-    }
     
     // 🔥 Format currency for natural speech
     formatCurrency(amount) {
