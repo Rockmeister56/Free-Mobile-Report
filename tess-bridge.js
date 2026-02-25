@@ -23,6 +23,76 @@ class TessBridge {
         this.init();
     }
 
+    // 🔥 SETUP BUTTON ACTIVATION
+setupButtonActivation() {
+    const tessButton = document.getElementById('tess-activator');
+    
+    if (!tessButton) {
+        console.warn('[Tess Bridge] Button not found - check ID');
+        return;
+    }
+    
+    tessButton.addEventListener('click', async () => {
+        try {
+            console.log('[Tess Bridge] Button clicked');
+            
+            // Get fresh data
+            const freshLoss = document.getElementById('lossAmount')?.textContent || '$5,000+';
+            const freshIssues = document.querySelectorAll('.problem-item').length || 13;
+            
+            // Enlarge widget
+            this.widget.style.width = '400px';
+            this.widget.style.height = '600px';
+            
+            // Activate
+            this.widget.setAttribute('controlled-widget-state', 'active');
+            await new Promise(r => setTimeout(r, 800));
+            
+            if (typeof this.widget.activate === 'function') {
+                await this.widget.activate();
+            }
+            
+            // Mic on
+            if (typeof this.widget.micOn === 'function') {
+                await this.widget.micOn();
+            }
+            
+            // Volume up
+            if (typeof this.widget.volumeOn === 'function') {
+                await this.widget.volumeOn();
+            } else if (typeof this.widget.setVolume === 'function') {
+                await this.widget.setVolume(1.0);
+            }
+            
+            // Force attributes
+            this.widget.setAttribute('mic-enabled', 'true');
+            this.widget.setAttribute('volume-enabled', 'true');
+            this.widget.setAttribute('muted', 'false');
+            
+            // Hide bubbles
+            this.forceHideBubbles();
+            
+            // Send message
+            setTimeout(() => {
+                if (typeof this.widget.sendMessage === 'function') {
+                    const formattedLoss = this.formatCurrency(freshLoss);
+                    
+                    let message = `Hi! I'm Tess. `;
+                    message += `I just saw your PPC audit shows ${formattedLoss} `;
+                    message += `in monthly waste from ${freshIssues} critical problems. `;
+                    message += `That mobile conversion loss? I'm built to fix exactly that. `;
+                    message += `Want to see how I can 5X your qualified leads starting tonight?`;
+                    
+                    this.widget.sendMessage(message);
+                }
+            }, 500);
+            
+        } catch (error) {
+            console.error('[Tess Bridge] Error:', error);
+        }
+    });
+}
+
     init() {
         console.log('[Tess Bridge] Initialized - Avatar Controls Only');
         console.log('[Tess Bridge] Audit Data:', this.auditData);
@@ -37,6 +107,9 @@ class TessBridge {
         this.setupEscapeProtection();
         this.setupClickHandler();
         this.hideTextBubbles();
+
+          // 👈 ADD THIS LINE
+    this.setupButtonActivation();
         
     }
     
