@@ -133,83 +133,73 @@ class TessBridge {
         return `${num} dollars`;
     }
     
-    // 🔥 CLICK HANDLER - Get fresh data every time
-setupClickHandler() {
-    const tessImage = document.getElementById('tess-activator');
-    if (!tessImage) return;
-    
-    tessImage.addEventListener('click', async () => {
-        try {
-            // 👇 GET FRESH DATA RIGHT BEFORE SPEAKING
-            const freshLossAmount = document.getElementById('lossAmount')?.textContent || '$5,000+';
-            const freshIssueCount = document.querySelectorAll('.problem-item').length || 13;
-            
-            // Collect fresh problems
-            const freshProblems = [];
-            document.querySelectorAll('.problem-item').forEach(item => {
-                freshProblems.push(item.textContent.trim());
-            });
-            
-            // Enlarge widget
-            this.widget.style.width = '400px';
-            this.widget.style.height = '600px';
-            
-            // Activate
-            this.widget.setAttribute('controlled-widget-state', 'active');
-            await new Promise(r => setTimeout(r, 800));
-            
-            if (typeof this.widget.activate === 'function') {
-                await this.widget.activate();
-            }
-            
-            // Turn on mic
-            if (typeof this.widget.micOn === 'function') {
-                await this.widget.micOn();
-            }
-            
-            // Volume up
-            if (typeof this.widget.volumeOn === 'function') {
-                await this.widget.volumeOn();
-            } else if (typeof this.widget.setVolume === 'function') {
-                await this.widget.setVolume(1.0);
-            }
-            
-            // Set attributes
-            this.widget.setAttribute('mic-enabled', 'true');
-            this.widget.setAttribute('volume-enabled', 'true');
-            this.widget.setAttribute('muted', 'false');
-            
-            // Force hide bubbles again
-            this.forceHideBubbles();
-            
-            // Send personalized message with FRESH data
-            setTimeout(() => {
-                if (typeof this.widget.sendMessage === 'function') {
-                    const formattedLoss = this.formatCurrency(freshLossAmount);
-                    
-                    let message = `Hi! I'm Tess. `;
-                    message += `I just saw your PPC audit shows ${formattedLoss} `;
-                    message += `in monthly waste from ${freshIssueCount} critical problems. `;
-                    
-                    if (freshProblems.length > 0) {
-                        message += `Especially the "${freshProblems[0]}" issue. `;
-                    }
-                    
-                    message += `That mobile conversion loss? I'm built to fix exactly that. `;
-                    message += `Want to see how I can 5X your qualified leads starting tonight?`;
-                    
-                    this.widget.sendMessage(message);
+    // 🔥 CLICK HANDLER: Enlarge and speak
+    setupClickHandler() {
+        const tessImage = document.getElementById('tess-activator');
+        if (!tessImage) return;
+        
+        tessImage.addEventListener('click', async () => {
+            try {
+                // Enlarge widget
+                this.widget.style.width = '400px';
+                this.widget.style.height = '600px';
+                
+                // Activate
+                this.widget.setAttribute('controlled-widget-state', 'active');
+                await new Promise(r => setTimeout(r, 800));
+                
+                if (typeof this.widget.activate === 'function') {
+                    await this.widget.activate();
                 }
-            }, 500);
-            
-            this.showNotification('✅ Tess activated!', 'success');
-            
-        } catch (error) {
-            console.error('[Tess Bridge] Activation error:', error);
-            this.showNotification('❌ Activation failed', 'error');
-        }
-    });
-}
+                
+                // Turn on mic
+                if (typeof this.widget.micOn === 'function') {
+                    await this.widget.micOn();
+                }
+                
+                // Volume up
+                if (typeof this.widget.volumeOn === 'function') {
+                    await this.widget.volumeOn();
+                } else if (typeof this.widget.setVolume === 'function') {
+                    await this.widget.setVolume(1.0);
+                }
+                
+                // Set attributes
+                this.widget.setAttribute('mic-enabled', 'true');
+                this.widget.setAttribute('volume-enabled', 'true');
+                this.widget.setAttribute('muted', 'false');
+                
+                // Force hide bubbles again
+                this.forceHideBubbles();
+                
+                // Send personalized message with formatted currency
+                setTimeout(() => {
+                    if (typeof this.widget.sendMessage === 'function') {
+                        const formattedLoss = this.formatCurrency(this.auditData.lossAmount);
+                        
+                        let message = `Hi! I'm Tess. `;
+                        message += `I just saw your PPC audit shows ${formattedLoss} `;
+                        message += `in monthly waste from ${this.auditData.issueCount} critical problems. `;
+                        
+                        if (this.auditData.problems.length > 0) {
+                            message += `Especially the "${this.auditData.problems[0]}" issue. `;
+                        }
+                        
+                        message += `That mobile conversion loss? I'm built to fix exactly that. `;
+                        message += `Want to see how I can 5X your qualified leads starting tonight?`;
+                        
+                        this.widget.sendMessage(message);
+                    }
+                }, 500);
+                
+                this.showNotification('✅ Tess activated!', 'success');
+                
+            } catch (error) {
+                console.error('[Tess Bridge] Activation error:', error);
+                this.showNotification('❌ Activation failed', 'error');
+            }
+        });
+    }
     
     // 🔥 ESCAPE PROTECTION: Prevent widget from stealing Escape key
     setupEscapeProtection() {
