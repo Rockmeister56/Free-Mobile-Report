@@ -35,10 +35,11 @@ setupButtonActivation() {
     tessButton.addEventListener('click', async () => {
         try {
             console.log('[Tess Bridge] Button clicked');
-            
-            // Get fresh data
-            const freshLoss = document.getElementById('lossAmount')?.textContent || '$5,000+';
-            const freshIssues = document.querySelectorAll('.problem-item').length || 13;
+
+             // 👇 ADD THESE 3 LINES HERE - REPLACING OLD DATA COLLECTION
+            const auditData = window.latestAuditData || {};
+            const freshLoss = auditData.loss || '$5,000+';
+            const freshIssues = auditData.issues || 13;
             
             // Enlarge widget
             this.widget.style.width = '400px';

@@ -379,6 +379,13 @@ class AnalysisProgress {
     localStorage.setItem('lastScannedUrl', scannedUrl);
     localStorage.setItem('ppcBudget', ppcBudget);
     localStorage.setItem('monthlyLoss', monthlyLoss);
+
+    // 👇 ADD THIS GLOBAL VARIABLE HERE
+window.latestAuditData = {
+    loss: monthlyLoss,
+    issues: problemCount,  // Make sure you have this variable
+    url: scannedUrl
+};
     
     // Redirect to results page
     setTimeout(() => {
@@ -388,6 +395,8 @@ class AnalysisProgress {
     }, 2000);
 }
 }
+
+
 
 // Initialize everything when the page loads
 document.addEventListener('DOMContentLoaded', async function() {
