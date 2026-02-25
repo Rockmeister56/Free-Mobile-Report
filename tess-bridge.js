@@ -28,15 +28,15 @@ setupButtonActivation() {
     const tessButton = document.getElementById('tess-activator');
     
     if (!tessButton) {
-        console.warn('[Tess Bridge] Button not found - check ID');
+        console.warn('[Tess Bridge] Button not found');
         return;
     }
     
     tessButton.addEventListener('click', async () => {
         try {
             console.log('[Tess Bridge] Button clicked');
-
-             // 👇 ADD THESE 3 LINES HERE - REPLACING OLD DATA COLLECTION
+            
+            // Get data (fixed)
             const auditData = window.latestAuditData || {};
             const freshLoss = auditData.loss || '$5,000+';
             const freshIssues = auditData.issues || 13;
@@ -53,7 +53,7 @@ setupButtonActivation() {
                 await this.widget.activate();
             }
             
-            // Mic on
+            // Turn on mic
             if (typeof this.widget.micOn === 'function') {
                 await this.widget.micOn();
             }
@@ -63,20 +63,42 @@ setupButtonActivation() {
                 await this.widget.volumeOn();
             } else if (typeof this.widget.setVolume === 'function') {
                 await this.widget.setVolume(1.0);
+            } else if (typeof this.widget.unmute === 'function') {
+                await this.widget.unmute();
             }
             
             // Force attributes
             this.widget.setAttribute('mic-enabled', 'true');
             this.widget.setAttribute('volume-enabled', 'true');
             this.widget.setAttribute('muted', 'false');
+            this.widget.setAttribute('volume', '1.0');
             
-            // Hide bubbles
+            // 🔥 CRITICAL: Hide text bubbles (this was missing)
             this.forceHideBubbles();
+            
+            // Also try immediate DOM cleanup
+            setTimeout(() => {
+                document.querySelectorAll('[class*="bubble"], [class*="message"]').forEach(el => {
+                    el.style.display = 'none';
+                });
+            }, 100);
             
             // Send message
             setTimeout(() => {
                 if (typeof this.widget.sendMessage === 'function') {
-                    const formattedLoss = this.formatCurrency(freshLoss);
+                    // Format number
+                    let formattedLoss = freshLoss;
+                    const numStr = freshLoss.replace(/[^0-9.]/g, '');
+                    const num = parseFloat(numStr);
+                    
+                    if (!isNaN(num)) {
+                        if (num >= 1000) {
+                            const thousands = (num / 1000).toFixed(1);
+                            formattedLoss = `${thousands} thousand dollars`;
+                        } else {
+                            formattedLoss = `${num} dollars`;
+                        }
+                    }
                     
                     let message = `Hi! I'm Tess. `;
                     message += `I just saw your PPC audit shows ${formattedLoss} `;
