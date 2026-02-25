@@ -268,45 +268,6 @@ setupButtonActivation() {
         }, true);
     }
     
-    // 🔥 VISUAL INDICATOR
-    addTessIndicator() {
-        const indicator = document.createElement('div');
-        indicator.id = 'tess-status-indicator';
-        indicator.style.cssText = `
-            position: fixed;
-            bottom: 350px;
-            right: 30px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 10000;
-            background: rgba(255,68,68,0.9);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            cursor: pointer;
-            transition: all 0.3s;
-        `;
-        
-        indicator.innerHTML = `🔴 Tess · $${this.auditData.lossAmount}`;
-        indicator.title = 'Click to prepare Tess';
-        
-        indicator.onclick = () => {
-            this.autoFixTess();
-        };
-        
-        document.body.appendChild(indicator);
-        this.indicator = indicator;
-    }
-    
-    updateTessIndicator() {
-        if (!this.indicator) return;
-        
-        this.indicator.style.background = 'rgba(0,204,0,0.9)';
-        this.indicator.innerHTML = `✅ Tess · $${this.auditData.lossAmount}`;
-        this.indicator.title = 'Tess ready';
-    }
-    
     // 🔥 NOTIFICATION HELPER
     showNotification(message, type = 'info') {
         const notification = document.createElement('div');
