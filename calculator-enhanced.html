@@ -818,121 +818,18 @@ lemon-slice-widget .agent-video {
     </div>
 </div>
 
+<!-- Widget (KEEP THIS) -->
 <lemon-slice-widget
     agent-id="agent_9399f094d4f819d2"
     id="tess-widget"
     style="position: fixed !important; bottom: 20px; right: 20px; width: 200px; height: 300px; z-index: 9999; border: none; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: width 0.3s ease, height 0.3s ease;">
 </lemon-slice-widget>
 
+<!-- Widget import (KEEP THIS) -->
 <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
 
-<script>
-// Activate Tess with proper widget controls - MIC & VOLUME both ON
-async function activateTess() {
-    const tessImage = document.getElementById('tess-activator');
-    const originalSrc = tessImage.src;
-    
-    try {
-        const widget = document.querySelector('lemon-slice-widget');
-        
-        if (widget) {
-            console.log('✅ Widget found, activating Tess...');
-            
-            widget.style.width = '400px';
-            widget.style.height = '600px';
-            
-            widget.setAttribute('controlled-widget-state', 'active');
-            await new Promise(resolve => setTimeout(resolve, 800));
-            
-            if (typeof widget.micOn === 'function') {
-                await widget.micOn();
-                console.log('✅ Microphone turned on');
-            }
-            
-            if (typeof widget.volumeOn === 'function') {
-                await widget.volumeOn();
-                console.log('✅ Volume turned on via volumeOn()');
-            } else if (typeof widget.setVolume === 'function') {
-                await widget.setVolume(1.0);
-                console.log('✅ Volume set to 100%');
-            } else if (typeof widget.unmute === 'function') {
-                await widget.unmute();
-                console.log('✅ Unmuted via unmute()');
-            }
-            
-            widget.setAttribute('volume-enabled', 'true');
-            widget.setAttribute('muted', 'false');
-            widget.setAttribute('volume', '1.0');
-            
-            if (typeof widget.sendMessage === 'function') {
-                const lossAmount = document.getElementById('lossAmount')?.textContent || '$5,000+';
-                const issueCount = document.querySelectorAll('.problem-item').length || 13;
-                
-               let message = `Hi! I'm Tess. `;
-message += `I just saw your PPC audit shows `;
-
-// Make the number sound natural
-if (lossAmount.includes('$5,000+')) {
-    message += `over five thousand dollars`;
-} else {
-    message += lossAmount;
-}
-
-message += ` in monthly waste from ${issueCount} critical problems. `;
-message += `That mobile conversion loss? I'm built to fix exactly that. `;
-message += `Want to see how I can 5X your qualified leads starting tonight?`;
-                
-                await widget.sendMessage(message);
-                console.log('✅ Personalized message sent');
-            }
-            
-            console.log('🎯 Tess activated - mic ON and volume UP!');
-            showStatus('🎙️🔊 Tess ready - mic & volume ON');
-        } else {
-            console.error('❌ Widget not found');
-            showStatus('❌ Widget not found', 'error');
-        }
-    } catch (error) {
-        console.error('Error activating Tess:', error);
-        showStatus('❌ Activation failed', 'error');
-    }
-}
-
-// Helper function for status messages
-function showStatus(message, type = 'success') {
-    let statusDiv = document.getElementById('tess-status');
-    if (!statusDiv) {
-        statusDiv = document.createElement('div');
-        statusDiv.id = 'tess-status';
-        statusDiv.style.cssText = `
-            position: fixed;
-            bottom: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: ${type === 'success' ? '#3b82f6' : '#ef4444'};
-            color: white;
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            z-index: 10000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            border: 1px solid ${type === 'success' ? '#60a5fa' : '#f87171'};
-            font-weight: bold;
-        `;
-        document.body.appendChild(statusDiv);
-    } else {
-        statusDiv.style.background = type === 'success' ? '#3b82f6' : '#ef4444';
-        statusDiv.style.borderColor = type === 'success' ? '#60a5fa' : '#f87171';
-    }
-    
-    statusDiv.textContent = message;
-    statusDiv.style.display = 'block';
-    
-    setTimeout(() => {
-        statusDiv.style.display = 'none';
-    }, 3000);
-}
-</script>
+<!-- NEW BRIDGE (ADD THIS) -->
+<script src="tess-bridge.js"></script>
 
     <!-- Blue Bottom Bar -->
     <div class="bottom-bar"></div>
@@ -1261,71 +1158,6 @@ window.addEventListener('load', function() {
             sendReportToEmail(websiteUrl, budget, loss);
         }
     });
-</script>
-
-<script>
-// Connect Tess image to avatar
-document.addEventListener('DOMContentLoaded', function() {
-    const tessImage = document.getElementById('tess-activator');
-    
-    if (tessImage) {
-        tessImage.addEventListener('click', function() {
-            const widget = document.querySelector('lemon-slice-widget');
-            if (widget) {
-                widget.style.width = '400px';
-                widget.style.height = '600px';
-                
-                if (typeof widget.activate === 'function') {
-                    widget.activate();
-                }
-                
-                widget.setAttribute('mic-enabled', 'true');
-                widget.setAttribute('volume-enabled', 'true');
-                widget.setAttribute('controlled-widget-state', 'active');
-                
-                showStatus('Tess activated - mic on, volume on');
-            }
-            
-            const event = new CustomEvent('activateTess', {
-                detail: { mic: true, volume: true, hideText: true }
-            });
-            document.dispatchEvent(event);
-            
-            window.event = event;
-            activateTess();
-        });
-    }
-});
-
-// Helper function to show status
-function showStatus(message) {
-    let statusDiv = document.getElementById('tess-status');
-    if (!statusDiv) {
-        statusDiv = document.createElement('div');
-        statusDiv.id = 'tess-status';
-        statusDiv.style.cssText = `
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #3b82f6;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        `;
-        document.body.appendChild(statusDiv);
-    }
-    
-    statusDiv.textContent = message;
-    statusDiv.style.display = 'block';
-    
-    setTimeout(() => {
-        statusDiv.style.display = 'none';
-    }, 2000);
-}
 </script>
 </body>
 </html>
