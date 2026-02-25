@@ -23,24 +23,96 @@ class TessBridge {
         this.init();
     }
 
-    setupButtonActivation
+     // 🔥 SETUP BUTTON ACTIVATION
+setupButtonActivation() {
+    const tessButton = document.getElementById('tess-activator');
+    
+    if (!tessButton) {
+        console.warn('[Tess Bridge] Button not found - check ID');
+        return;
+    }
+    
+    tessButton.addEventListener('click', async () => {
+        try {
+            console.log('[Tess Bridge] Button clicked');
+
+             // 👇 ADD THESE 3 LINES HERE - REPLACING OLD DATA COLLECTION
+            const auditData = window.latestAuditData || {};
+            const freshLoss = auditData.loss || '$5,000+';
+            const freshIssues = auditData.issues || 13;
+            
+            // Enlarge widget
+            this.widget.style.width = '400px';
+            this.widget.style.height = '600px';
+            
+            // Activate
+            this.widget.setAttribute('controlled-widget-state', 'active');
+            await new Promise(r => setTimeout(r, 800));
+            
+            if (typeof this.widget.activate === 'function') {
+                await this.widget.activate();
+            }
+            
+            // Mic on
+            if (typeof this.widget.micOn === 'function') {
+                await this.widget.micOn();
+            }
+            
+            // Volume up
+            if (typeof this.widget.volumeOn === 'function') {
+                await this.widget.volumeOn();
+            } else if (typeof this.widget.setVolume === 'function') {
+                await this.widget.setVolume(1.0);
+            }
+            
+            // Force attributes
+            this.widget.setAttribute('mic-enabled', 'true');
+            this.widget.setAttribute('volume-enabled', 'true');
+            this.widget.setAttribute('muted', 'false');
+            
+            // Hide bubbles
+            this.forceHideBubbles();
+            
+            // Send message
+            setTimeout(() => {
+                if (typeof this.widget.sendMessage === 'function') {
+                    const formattedLoss = this.formatCurrency(freshLoss);
+                    
+                    let message = `Hi! I'm Tess. `;
+                    message += `I just saw your PPC audit shows ${formattedLoss} `;
+                    message += `in monthly waste from ${freshIssues} critical problems. `;
+                    message += `That mobile conversion loss? I'm built to fix exactly that. `;
+                    message += `Want to see how I can 5X your qualified leads starting tonight?`;
+                    
+                    this.widget.sendMessage(message);
+                }
+            }, 500);
+            
+        } catch (error) {
+            console.error('[Tess Bridge] Error:', error);
+        }
+    });
+}
 
     init() {
-    console.log('[Tess Bridge] Initialized - Button Only Mode');
+        console.log('[Tess Bridge] Initialized - Avatar Controls Only');
+        console.log('[Tess Bridge] Audit Data:', this.auditData);
+        
+        // Store for other scripts
+        window.tessAuditData = this.auditData;
+        
+        // Core fixes
+        this.autoFixTess();
+        this.setupEscapeProtection();
+        this.setupClickHandler();
+        this.hideTextBubbles();
+        
+        // Add visual indicator
+        this.addTessIndicator();
+    }
     
-    // Store audit data
-    window.tessAuditData = this.auditData;
-    
-    // Core fixes
-    this.setupEscapeProtection();
-    this.hideTextBubbles();
-    
-    // 👈 THIS IS THE ONLY THING THAT ACTIVATES TESS
-    this.setupButtonActivation();
-}
     // 🔥 CRITICAL: Hide ALL text bubbles permanently
     hideTextBubbles() {
-        
         // Immediate hide
         this.forceHideBubbles();
         
@@ -78,60 +150,39 @@ class TessBridge {
             });
         }
     }
-
+    
     // 🔥 AUTO-FIX: Prepare Tess on load
-autoFixTess() {
-    console.log('[Tess Bridge] Auto-fixing Tess...');
-    
-    setTimeout(() => {
-        if (!this.widget) {
-            console.warn('[Tess Bridge] Widget not ready, retrying...');
-            setTimeout(() => this.autoFixTess(), 2000);
-            return;
-        }
+    autoFixTess() {
+        console.log('[Tess Bridge] Auto-fixing Tess...');
         
-        // Force proper state
-        this.widget.setAttribute('controlled-widget-state', 'active');
-        this.widget.style.width = '200px';
-        this.widget.style.height = '300px';
-        
-        // Prepare mic and volume
-        setTimeout(async () => {
-            try {
-                await this.widget.micOn?.();
-                await this.widget.unmute?.();
-                
-                this.tessReady = true;
-                console.log('[Tess Bridge] ✅ Tess ready!');
-                
-                // 👈 ADD THIS ONE LINE
-                this.forceHideBubbles();
-                
-            } catch (error) {
-                console.warn('[Tess Bridge] Partial success:', error);
+        setTimeout(() => {
+            if (!this.widget) {
+                console.warn('[Tess Bridge] Widget not ready, retrying...');
+                setTimeout(() => this.autoFixTess(), 2000);
+                return;
             }
-        }, 1500);
-        
-    }, 1000);
-}
-    
-    // 🔥 Format currency for natural speech
-    formatCurrency(amount) {
-        // Extract numbers only
-        const numStr = amount.replace(/[^0-9]/g, '');
-        const num = parseInt(numStr);
-        
-        if (isNaN(num)) return amount;
-        
-        if (num >= 1000) {
-            const thousands = num / 1000;
-            if (Number.isInteger(thousands)) {
-                return `${thousands} thousand dollars`;
-            } else {
-                return `${thousands.toFixed(1)} thousand dollars`;
-            }
-        }
-        return `${num} dollars`;
+            
+            // Force proper state
+            this.widget.setAttribute('controlled-widget-state', 'active');
+            this.widget.style.width = '200px';
+            this.widget.style.height = '300px';
+            
+            // Prepare mic and volume
+            setTimeout(async () => {
+                try {
+                    await this.widget.micOn?.();
+                    await this.widget.unmute?.();
+                    
+                    this.tessReady = true;
+                    console.log('[Tess Bridge] ✅ Tess ready!');
+                    this.updateTessIndicator();
+                    
+                } catch (error) {
+                    console.warn('[Tess Bridge] Partial success:', error);
+                }
+            }, 1500);
+            
+        }, 1000);
     }
     
     // 🔥 CLICK HANDLER: Enlarge and speak
@@ -173,13 +224,11 @@ autoFixTess() {
                 // Force hide bubbles again
                 this.forceHideBubbles();
                 
-                // Send personalized message with formatted currency
+                // Send personalized message
                 setTimeout(() => {
                     if (typeof this.widget.sendMessage === 'function') {
-                        const formattedLoss = this.formatCurrency(this.auditData.lossAmount);
-                        
                         let message = `Hi! I'm Tess. `;
-                        message += `I just saw your PPC audit shows ${formattedLoss} `;
+                        message += `I just saw your PPC audit shows ${this.auditData.lossAmount} `;
                         message += `in monthly waste from ${this.auditData.issueCount} critical problems. `;
                         
                         if (this.auditData.problems.length > 0) {
@@ -219,48 +268,43 @@ autoFixTess() {
         }, true);
     }
     
-    // 🔥 VISUAL INDICATOR - Now in header
+    // 🔥 VISUAL INDICATOR
     addTessIndicator() {
-        // Find the header or create a place for it
-        const header = document.querySelector('.tess-header') || document.querySelector('header') || document.body;
-        
         const indicator = document.createElement('div');
         indicator.id = 'tess-status-indicator';
         indicator.style.cssText = `
-            display: inline-block;
-            margin-left: 15px;
-            padding: 6px 15px;
-            border-radius: 30px;
-            font-size: 14px;
+            position: fixed;
+            bottom: 350px;
+            right: 30px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: bold;
+            z-index: 10000;
             background: rgba(255,68,68,0.9);
             color: white;
             border: 1px solid rgba(255,255,255,0.3);
-            vertical-align: middle;
+            cursor: pointer;
+            transition: all 0.3s;
         `;
         
-        // Format the loss amount nicely
-        const formattedLoss = this.formatCurrency(this.auditData.lossAmount);
-        indicator.innerHTML = `🔴 Tess Active · ${formattedLoss} saved`;
+        indicator.innerHTML = `🔴 Tess · $${this.auditData.lossAmount}`;
+        indicator.title = 'Click to prepare Tess';
         
-        // Find the header title/name to insert next to
-        const headerTitle = document.querySelector('.tess-name, h1');
-        if (headerTitle) {
-            headerTitle.appendChild(indicator);
-        } else {
-            // Fallback - add to top of page
-            document.body.insertBefore(indicator, document.body.firstChild);
-        }
+        indicator.onclick = () => {
+            this.autoFixTess();
+        };
         
+        document.body.appendChild(indicator);
         this.indicator = indicator;
     }
     
     updateTessIndicator() {
         if (!this.indicator) return;
         
-        const formattedLoss = this.formatCurrency(this.auditData.lossAmount);
         this.indicator.style.background = 'rgba(0,204,0,0.9)';
-        this.indicator.innerHTML = `✅ Tess Active · ${formattedLoss} recovered`;
+        this.indicator.innerHTML = `✅ Tess · $${this.auditData.lossAmount}`;
+        this.indicator.title = 'Tess ready';
     }
     
     // 🔥 NOTIFICATION HELPER
