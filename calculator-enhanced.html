@@ -638,6 +638,35 @@
             .loss-number {
                 font-size: 3.5rem;
             }
+
+            /* Hide ALL text bubbles and messages */
+.message-bubble,
+.chat-bubble,
+.agent-message,
+.text-bubble,
+[class*="message"],
+[class*="bubble"],
+[class*="chat"],
+.lemon-slice-message,
+.agent-speech,
+.speech-bubble {
+    display: none !important;
+}
+
+/* Hide any status popups that might appear */
+#jack-status,
+#tess-status,
+.status-popup {
+    display: none !important;
+}
+
+/* Make sure only the avatar video shows */
+lemon-slice-widget video,
+lemon-slice-widget .avatar,
+lemon-slice-widget .agent-video {
+    display: block !important;
+    visibility: visible !important;
+}
         }
     
 </style>
