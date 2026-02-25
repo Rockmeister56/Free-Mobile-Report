@@ -28,15 +28,15 @@ setupButtonActivation() {
     const tessButton = document.getElementById('tess-activator');
     
     if (!tessButton) {
-        console.warn('[Tess Bridge] Button not found');
+        console.warn('[Tess Bridge] Button not found - check ID');
         return;
     }
     
     tessButton.addEventListener('click', async () => {
         try {
             console.log('[Tess Bridge] Button clicked');
-            
-            // Get data (fixed)
+
+             // 👇 ADD THESE 3 LINES HERE - REPLACING OLD DATA COLLECTION
             const auditData = window.latestAuditData || {};
             const freshLoss = auditData.loss || '$5,000+';
             const freshIssues = auditData.issues || 13;
@@ -53,7 +53,7 @@ setupButtonActivation() {
                 await this.widget.activate();
             }
             
-            // Turn on mic
+            // Mic on
             if (typeof this.widget.micOn === 'function') {
                 await this.widget.micOn();
             }
@@ -63,42 +63,20 @@ setupButtonActivation() {
                 await this.widget.volumeOn();
             } else if (typeof this.widget.setVolume === 'function') {
                 await this.widget.setVolume(1.0);
-            } else if (typeof this.widget.unmute === 'function') {
-                await this.widget.unmute();
             }
             
             // Force attributes
             this.widget.setAttribute('mic-enabled', 'true');
             this.widget.setAttribute('volume-enabled', 'true');
             this.widget.setAttribute('muted', 'false');
-            this.widget.setAttribute('volume', '1.0');
             
-            // 🔥 CRITICAL: Hide text bubbles (this was missing)
+            // Hide bubbles
             this.forceHideBubbles();
-            
-            // Also try immediate DOM cleanup
-            setTimeout(() => {
-                document.querySelectorAll('[class*="bubble"], [class*="message"]').forEach(el => {
-                    el.style.display = 'none';
-                });
-            }, 100);
             
             // Send message
             setTimeout(() => {
                 if (typeof this.widget.sendMessage === 'function') {
-                    // Format number
-                    let formattedLoss = freshLoss;
-                    const numStr = freshLoss.replace(/[^0-9.]/g, '');
-                    const num = parseFloat(numStr);
-                    
-                    if (!isNaN(num)) {
-                        if (num >= 1000) {
-                            const thousands = (num / 1000).toFixed(1);
-                            formattedLoss = `${thousands} thousand dollars`;
-                        } else {
-                            formattedLoss = `${num} dollars`;
-                        }
-                    }
+                    const formattedLoss = this.formatCurrency(freshLoss);
                     
                     let message = `Hi! I'm Tess. `;
                     message += `I just saw your PPC audit shows ${formattedLoss} `;
@@ -116,24 +94,23 @@ setupButtonActivation() {
     });
 }
 
-   init() {
-    console.log('[Tess Bridge] Initialized - Avatar Controls Only');
-    console.log('[Tess Bridge] Audit Data:', this.auditData);
-    
-    // Store for other scripts
-    window.tessAuditData = this.auditData;
-    
-    // Core fixes
-    this.autoFixTess();
-    this.setupEscapeProtection();
-    this.hideTextBubbles();
+    init() {
+        console.log('[Tess Bridge] Initialized - Avatar Controls Only');
+        console.log('[Tess Bridge] Audit Data:', this.auditData);
+        
+        // Store for other scripts
+        window.tessAuditData = this.auditData;
+        
+        // Core fixes
+        this.autoFixTess();
+        this.setupEscapeProtection();
+        this.setupClickHandler();
+        this.hideTextBubbles();
 
-    // ✅ ONLY ONE ACTIVATION METHOD - THE BUTTON
+          // 👈 ADD THIS LINE
     this.setupButtonActivation();
-    
-    // Optional: Remove if you don't want the indicator
-    // this.addTessIndicator();
-}
+        
+    }
     
     // 🔥 CRITICAL: Hide ALL text bubbles permanently
     hideTextBubbles() {
@@ -175,29 +152,39 @@ setupButtonActivation() {
         }
     }
     
-    // 🔥 AUTO-FIX: Prepare Tess but DON'T activate
-autoFixTess() {
-    setTimeout(() => {
-        if (!this.widget) {
-            console.warn('[Tess Bridge] Widget not ready, retrying...');
-            setTimeout(() => this.autoFixTess(), 2000);
-            return;
-        }
+    // 🔥 AUTO-FIX: Prepare Tess on load
+    autoFixTess() {
+        console.log('[Tess Bridge] Auto-fixing Tess...');
         
-        // Set size but KEEP IT MINIMIZED/HIDDEN
-        this.widget.style.width = '200px';
-        this.widget.style.height = '300px';
-        
-        // CRITICAL: Keep it minimized until button click
-        this.widget.setAttribute('controlled-widget-state', 'minimized');
-        
-        // Don't turn on mic, don't send messages, don't activate
-        
-        this.tessReady = true;
-        console.log('[Tess Bridge] ✅ Tess ready - waiting for button');
-        
-    }, 1000);
-}
+        setTimeout(() => {
+            if (!this.widget) {
+                console.warn('[Tess Bridge] Widget not ready, retrying...');
+                setTimeout(() => this.autoFixTess(), 2000);
+                return;
+            }
+            
+            // Force proper state
+            this.widget.setAttribute('controlled-widget-state', 'active');
+            this.widget.style.width = '200px';
+            this.widget.style.height = '300px';
+            
+            // Prepare mic and volume
+            setTimeout(async () => {
+                try {
+                    await this.widget.micOn?.();
+                    await this.widget.unmute?.();
+                    
+                    this.tessReady = true;
+                    console.log('[Tess Bridge] ✅ Tess ready!');
+                    // this.updateTessIndicator();
+                    
+                } catch (error) {
+                    console.warn('[Tess Bridge] Partial success:', error);
+                }
+            }, 1500);
+            
+        }, 1000);
+    }
     
     // 🔥 Format currency for natural speech
     formatCurrency(amount) {
