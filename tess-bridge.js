@@ -36,7 +36,7 @@ class TessBridge {
         this.setupClickHandler();
         this.hideTextBubbles();
         
-        // Add visual indicator
+        // Add visual indicator in header
         this.addTessIndicator();
     }
     
@@ -114,6 +114,25 @@ class TessBridge {
         }, 1000);
     }
     
+    // 🔥 Format currency for natural speech
+    formatCurrency(amount) {
+        // Extract numbers only
+        const numStr = amount.replace(/[^0-9]/g, '');
+        const num = parseInt(numStr);
+        
+        if (isNaN(num)) return amount;
+        
+        if (num >= 1000) {
+            const thousands = num / 1000;
+            if (Number.isInteger(thousands)) {
+                return `${thousands} thousand dollars`;
+            } else {
+                return `${thousands.toFixed(1)} thousand dollars`;
+            }
+        }
+        return `${num} dollars`;
+    }
+    
     // 🔥 CLICK HANDLER: Enlarge and speak
     setupClickHandler() {
         const tessImage = document.getElementById('tess-activator');
@@ -153,11 +172,13 @@ class TessBridge {
                 // Force hide bubbles again
                 this.forceHideBubbles();
                 
-                // Send personalized message
+                // Send personalized message with formatted currency
                 setTimeout(() => {
                     if (typeof this.widget.sendMessage === 'function') {
+                        const formattedLoss = this.formatCurrency(this.auditData.lossAmount);
+                        
                         let message = `Hi! I'm Tess. `;
-                        message += `I just saw your PPC audit shows ${this.auditData.lossAmount} `;
+                        message += `I just saw your PPC audit shows ${formattedLoss} `;
                         message += `in monthly waste from ${this.auditData.issueCount} critical problems. `;
                         
                         if (this.auditData.problems.length > 0) {
@@ -197,43 +218,48 @@ class TessBridge {
         }, true);
     }
     
-    // 🔥 VISUAL INDICATOR
+    // 🔥 VISUAL INDICATOR - Now in header
     addTessIndicator() {
+        // Find the header or create a place for it
+        const header = document.querySelector('.tess-header') || document.querySelector('header') || document.body;
+        
         const indicator = document.createElement('div');
         indicator.id = 'tess-status-indicator';
         indicator.style.cssText = `
-            position: fixed;
-            bottom: 350px;
-            right: 30px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            display: inline-block;
+            margin-left: 15px;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 14px;
             font-weight: bold;
-            z-index: 10000;
             background: rgba(255,68,68,0.9);
             color: white;
             border: 1px solid rgba(255,255,255,0.3);
-            cursor: pointer;
-            transition: all 0.3s;
+            vertical-align: middle;
         `;
         
-        indicator.innerHTML = `🔴 Tess · $${this.auditData.lossAmount}`;
-        indicator.title = 'Click to prepare Tess';
+        // Format the loss amount nicely
+        const formattedLoss = this.formatCurrency(this.auditData.lossAmount);
+        indicator.innerHTML = `🔴 Tess Active · ${formattedLoss} saved`;
         
-        indicator.onclick = () => {
-            this.autoFixTess();
-        };
+        // Find the header title/name to insert next to
+        const headerTitle = document.querySelector('.tess-name, h1');
+        if (headerTitle) {
+            headerTitle.appendChild(indicator);
+        } else {
+            // Fallback - add to top of page
+            document.body.insertBefore(indicator, document.body.firstChild);
+        }
         
-        document.body.appendChild(indicator);
         this.indicator = indicator;
     }
     
     updateTessIndicator() {
         if (!this.indicator) return;
         
+        const formattedLoss = this.formatCurrency(this.auditData.lossAmount);
         this.indicator.style.background = 'rgba(0,204,0,0.9)';
-        this.indicator.innerHTML = `✅ Tess · $${this.auditData.lossAmount}`;
-        this.indicator.title = 'Tess ready';
+        this.indicator.innerHTML = `✅ Tess Active · ${formattedLoss} recovered`;
     }
     
     // 🔥 NOTIFICATION HELPER
