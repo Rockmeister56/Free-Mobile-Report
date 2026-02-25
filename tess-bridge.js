@@ -36,8 +36,6 @@ class TessBridge {
         this.setupClickHandler();
         this.hideTextBubbles();
         
-        // Add visual indicator in header
-        this.addTessIndicator();
     }
     
     // 🔥 CRITICAL: Hide ALL text bubbles permanently
@@ -104,7 +102,7 @@ class TessBridge {
                     
                     this.tessReady = true;
                     console.log('[Tess Bridge] ✅ Tess ready!');
-                    this.updateTessIndicator();
+                    // this.updateTessIndicator();
                     
                 } catch (error) {
                     console.warn('[Tess Bridge] Partial success:', error);
