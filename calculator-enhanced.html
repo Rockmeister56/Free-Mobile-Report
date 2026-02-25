@@ -831,6 +831,29 @@ lemon-slice-widget .agent-video {
 <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
 
 <script>
+// Force hide text bubbles after everything loads
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        // Find and hide any text bubbles
+        document.querySelectorAll('[class*="bubble"], [class*="message"], [class*="chat"]').forEach(el => {
+            el.style.display = 'none';
+            el.style.visibility = 'hidden';
+            el.style.opacity = '0';
+        });
+        
+        // Also try to hide in shadow DOM
+        const widget = document.querySelector('lemon-slice-widget');
+        if (widget && widget.shadowRoot) {
+            widget.shadowRoot.querySelectorAll('[class*="bubble"], [class*="message"]').forEach(el => {
+                el.style.display = 'none';
+            });
+        }
+        console.log('🔇 Text bubbles hidden on load');
+    }, 1000); // Wait 1 second for widget to render
+});
+</script>
+
+<script>
 // Activate Tess with proper widget controls - MIC & VOLUME both ON
 async function activateTess() {
     const tessImage = document.getElementById('tess-activator');
@@ -1266,6 +1289,15 @@ window.addEventListener('load', function() {
         }
     });
 </script>
+
+<script>
+
+// Auto-hide filename badges (they're not in HTML anymore)
+    window.onload = function() {
+        // Any initialization needed
+    };
+</script>
+
 <script>
 // Connect Tess image to avatar
 document.addEventListener('DOMContentLoaded', function() {
