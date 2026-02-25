@@ -94,34 +94,23 @@ setupButtonActivation() {
     });
 }
 
-   init() {
-    console.log('[Tess Bridge] Initialized');
-    
-    // 👇 HIDE WIDGET IMMEDIATELY
-    if (this.widget) {
-        this.widget.style.opacity = '0';
-        this.widget.style.visibility = 'hidden';
-        this.widget.setAttribute('controlled-widget-state', 'hidden');
-    }
-    
-    // 👇 SHOW PRELOADER
-    this.showPreloader();
-    
-    // 👇 SET TIMER TO HIDE PRELOADER AND REVEAL TESS AFTER 5 SECONDS
-    setTimeout(() => {
-        console.log('[Tess Bridge] 5 seconds elapsed, revealing Tess');
-        this.hidePreloader();
-    }, 5000);
-    
-    // Store audit data
-    window.tessAuditData = this.auditData;
-    
-    // Core fixes
-    this.autoFixTess();
-    this.setupEscapeProtection();
-    this.hideTextBubbles();
+    init() {
+        console.log('[Tess Bridge] Initialized - Avatar Controls Only');
+        console.log('[Tess Bridge] Audit Data:', this.auditData);
+        
+        // Store for other scripts
+        window.tessAuditData = this.auditData;
+        
+        // Core fixes
+        this.autoFixTess();
+        this.setupEscapeProtection();
+        this.setupClickHandler();
+        this.hideTextBubbles();
+
+          // 👈 ADD THIS LINE
     this.setupButtonActivation();
-}
+        
+    }
     
     // 🔥 CRITICAL: Hide ALL text bubbles permanently
     hideTextBubbles() {
@@ -162,125 +151,6 @@ setupButtonActivation() {
             });
         }
     }
-
-    // 🔥 PRELOADER - Shows while Tess loads
-showPreloader() {
-    // Don't show if already exists
-    if (document.getElementById('tess-bridge-preloader')) return;
-    
-    const preloader = document.createElement('div');
-    preloader.id = 'tess-bridge-preloader';
-    preloader.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        backdrop-filter: blur(4px);
-        z-index: 1000000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: opacity 0.5s ease;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    `;
-    
-    preloader.innerHTML = `
-        <div style="text-align: center; color: white; max-width: 500px; padding: 20px;">
-            <div style="font-size: 4rem; margin-bottom: 20px; animation: bridgeFloat 2s infinite;">👩‍💼</div>
-            <div style="font-size: 2rem; font-weight: 300; margin-bottom: 15px;">Tess is connecting</div>
-            <div style="font-size: 1.1rem; margin-bottom: 30px; opacity: 0.8;">Your smart AI assistant is analyzing your results</div>
-            <div style="width: 50px; height: 50px; margin: 0 auto; border: 3px solid rgba(59,130,246,0.3); border-top-color: #3b82f6; border-radius: 50%; animation: bridgeSpin 1s linear infinite;"></div>
-        </div>
-    `;
-    
-    document.body.appendChild(preloader);
-    
-    // Add animations
-    if (!document.getElementById('bridge-preloader-styles')) {
-        const style = document.createElement('style');
-        style.id = 'bridge-preloader-styles';
-        style.textContent = `
-            @keyframes bridgeFloat {
-                0% { transform: translateY(0px); }
-                50% { transform: translateY(-10px); }
-                100% { transform: translateY(0px); }
-            }
-            @keyframes bridgeSpin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-    
-    console.log('[Tess Bridge] Preloader shown');
-}
-
-// 🔥 HIDE PRELOADER AND REVEAL TESS
-hidePreloader() {
-    const preloader = document.getElementById('tess-bridge-preloader');
-    if (!preloader) return;
-    
-    preloader.style.opacity = '0';
-    
-    setTimeout(() => {
-        preloader.style.display = 'none';
-        
-        // ✅ Reveal Tess
-        if (this.widget) {
-            this.widget.style.opacity = '1';
-            this.widget.style.visibility = 'visible';
-            this.widget.setAttribute('controlled-widget-state', 'active');
-            
-            // ✅ Force hide bubbles
-            this.forceHideBubbles();
-            
-            console.log('[Tess Bridge] ✅ Tess revealed');
-        }
-    }, 500);
-}
-    
-    // 🔥 AUTO-FIX: Prepare Tess but KEEP HIDDEN
-autoFixTess() {
-    console.log('[Tess Bridge] Preparing Tess behind preloader...');
-    
-    setTimeout(() => {
-        if (!this.widget) {
-            console.warn('[Tess Bridge] Widget not ready, retrying...');
-            setTimeout(() => this.autoFixTess(), 2000);
-            return;
-        }
-        
-        // ✅ Keep widget HIDDEN
-        this.widget.style.opacity = '0';
-        this.widget.style.visibility = 'hidden';
-        this.widget.style.width = '200px';
-        this.widget.style.height = '300px';
-        
-        // ✅ Don't set to 'active' yet — keep hidden
-        this.widget.setAttribute('controlled-widget-state', 'hidden');
-        
-        // Prepare mic and volume (behind the scenes)
-        setTimeout(async () => {
-            try {
-                await this.widget.micOn?.();
-                await this.widget.unmute?.();
-                
-                // ✅ Tess is ready but still hidden
-                console.log('[Tess Bridge] Tess ready behind preloader');
-                
-                // ❌ DON'T hide preloader here — let the timer do it
-                // ❌ DON'T show Tess yet
-                
-            } catch (error) {
-                console.warn('[Tess Bridge] Partial success:', error);
-            }
-        }, 1500); // Shorter delay for prep work
-        
-    }, 1000);
-}
     
     // 🔥 Format currency for natural speech
     formatCurrency(amount) {
