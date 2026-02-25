@@ -550,6 +550,10 @@
             z-index: 1000;
             backdrop-filter: blur(5px);
         }
+                /* Hide Free badge - removed completely */
+.textnow-badge {
+    display: none;
+}
         
         .popup-content {
             background: #0a0a0a;
@@ -594,11 +598,6 @@
             transition: all 0.3s ease;
             flex: 1;
         }
-
-        /* Hide Free badge - removed completely */
-.textnow-badge {
-    display: none;
-}
         
         .start-demo-btn {
             background: linear-gradient(135deg, #0066cc, #004999);
@@ -795,37 +794,10 @@
 </div>
 
 <!-- ===== LEMON SLICE WIDGET - Small and animated, volume down ===== -->
-<lemon-slice-widget 
-    agent-id="agent_9399f094d4f819d2"
-    controlled-widget-state="active"
-    volume-enabled="false"
-    mic-enabled="false"
-    muted="true"
-    style="width: 200px; height: 300px; transition: all 0.3s ease; position: fixed; bottom: 20px; right: 20px; z-index: 9999; border: none; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
-</lemon-slice-widget>
-
+<lemon-slice-widget agent-id="agent_9399f094d4f819d2"></lemon-slice-widget>
 <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
 
 <script> 
-
-// Listen for LemonSlice events
-window.addEventListener("message", function(event) {
-    // Check if it's a LemonSlice app message
-    if (event.data?.type === "app-message" && event.data?.data?.type === "bot_ready") {
-        console.log("🎯 Bot ready - suppressing intro text");
-        
-        // Find the widget
-        const widget = document.querySelector('lemon-slice-widget');
-        
-        if (widget && typeof widget.sendMessage === 'function') {
-            // Immediately send an empty message to override the intro
-            widget.sendMessage(' ');
-            
-            // Or send a silent command (check docs for specific methods)
-            // widget.skipIntro(); // If such a method exists
-        }
-    }
-});
 
 // Activate Tess with proper widget controls - MIC & VOLUME both ON
 async function activateTess() {
