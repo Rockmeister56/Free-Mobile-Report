@@ -168,61 +168,45 @@ showPauseIndicator() {
     }
 }
     
-// 🔥 CRITICAL: ONE bubble hiding function to rule them all
-forceHideBubbles() {
-    // Hide in main document
-    document.querySelectorAll(
-        '[class*="bubble"], [class*="message"], [class*="chat"], ' +
-        '.message-bubble, .chat-bubble, .text-bubble, ' +
-        '.agent-message, .speech-bubble'
-    ).forEach(el => {
-        el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-    });
+    // 🔥 CRITICAL: Hide ALL text bubbles permanently
+    hideTextBubbles() {
+        // Immediate hide
+        this.forceHideBubbles();
+        
+        // Keep hiding them as they appear
+        const observer = new MutationObserver(() => {
+            this.forceHideBubbles();
+        });
+        
+        observer.observe(document.body, { childList: true, subtree: true });
+        
+        // Also watch shadow DOM
+        setTimeout(() => {
+            if (this.widget?.shadowRoot) {
+                observer.observe(this.widget.shadowRoot, { childList: true, subtree: true });
+            }
+        }, 2000);
+    }
     
-    // Hide in widget shadow DOM
-    if (this.widget?.shadowRoot) {
-        this.widget.shadowRoot.querySelectorAll(
-            '[class*="bubble"], [class*="message"], [class*="chat"]'
+    forceHideBubbles() {
+        // Hide in main document
+        document.querySelectorAll(
+            '[class*="bubble"], [class*="message"], [class*="chat"], ' +
+            '.message-bubble, .chat-bubble, .text-bubble, ' +
+            '.agent-message, .speech-bubble'
         ).forEach(el => {
             el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
         });
-    }
-}
-
-// 🔥 Get formatted audit data (single source of truth)
-getAuditData() {
-    try {
-        const loss = localStorage.getItem('tess_loss') || '$5,000+';
-        const issues = localStorage.getItem('tess_issues') || '13';
         
-        // Format the loss properly
-        let formattedLoss = loss;
-        const numStr = loss.replace(/[^0-9.]/g, '');
-        const num = parseFloat(numStr);
-        
-        if (!isNaN(num)) {
-            if (num >= 1000) {
-                const thousands = (num / 1000).toFixed(1);
-                formattedLoss = `${thousands} thousand dollars`;
-            } else {
-                formattedLoss = `${num} dollars`;
-            }
+        // Hide in widget shadow DOM
+        if (this.widget?.shadowRoot) {
+            this.widget.shadowRoot.querySelectorAll(
+                '[class*="bubble"], [class*="message"], [class*="chat"]'
+            ).forEach(el => {
+                el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+            });
         }
-        
-        return {
-            raw: loss,
-            formatted: formattedLoss,
-            issues: issues
-        };
-    } catch (e) {
-        console.warn('[Tess Bridge] Error reading audit data:', e);
-        return {
-            raw: '$5,000+',
-            formatted: 'five thousand dollars',
-            issues: '13'
-        };
     }
-}
     
 // 🔥 AUTO-FIX: Prepare Tess on load
 autoFixTess() {
@@ -249,22 +233,40 @@ autoFixTess() {
                 this.tessReady = true;
                 console.log('[Tess Bridge] ✅ Tess ready!');
                 
-                // 👇 USE getAuditData() AS SINGLE SOURCE OF TRUTH
-                const data = this.getAuditData();
+                // 👇 GET DATA FROM LOCALSTORAGE (PREFERRED) OR DOM
+                const storedLoss = localStorage.getItem('tess_loss');
+                const storedIssues = localStorage.getItem('tess_issues');
                 
-                // 👇 KILL BUBBLES BEFORE MESSAGE
-                this.forceHideBubbles();
+                // Use stored data or fallback to DOM
+                let lossAmount = storedLoss || document.getElementById('lossAmount')?.textContent || '$5,000+';
+                let issueCount = storedIssues || document.querySelectorAll('.problem-item').length || 13;
                 
-                // 👇 SEND MESSAGE WITH PROPERLY FORMATTED DATA
-                const message = `Hi! I'm Tess. I just saw your PPC audit shows ${data.formatted} in monthly waste from ${data.issues} critical problems. That mobile conversion loss? I'm built to fix exactly that. Want to see how I can 5X your qualified leads?`;
+                // 👇 FORMAT THE NUMBER PROPERLY
+                let formattedLoss = lossAmount;
+                const numStr = lossAmount.replace(/[^0-9.]/g, '');
+                const num = parseFloat(numStr);
+                
+                if (!isNaN(num)) {
+                    if (num >= 1000) {
+                        const thousands = (num / 1000).toFixed(1);
+                        formattedLoss = `${thousands} thousand dollars`;
+                    } else {
+                        formattedLoss = `${num} dollars`;
+                    }
+                }
+                
+                // 👇 BUILD AND SEND MESSAGE
+                const message = `Hi! I'm Tess. I just saw your PPC audit shows ${formattedLoss} in monthly waste from ${issueCount} critical problems. That mobile conversion loss? I'm built to fix exactly that. Want to see how I can 5X your qualified leads?`;
                 
                 if (typeof this.widget.sendMessage === 'function') {
                     this.widget.sendMessage(message);
-                    console.log('[Tess Bridge] Speaking:', data);
+                    console.log('[Tess Bridge] Speaking:', { loss: formattedLoss, issues: issueCount });
                 }
                 
-                // 👇 KILL BUBBLES IMMEDIATELY AFTER (NO DELAY)
-                this.forceHideBubbles();
+                // 👇 FORCE HIDE BUBBLES AFTER MESSAGE
+                setTimeout(() => {
+                    this.forceHideBubbles();
+                }, 100);
                 
             } catch (error) {
                 console.warn('[Tess Bridge] Partial success:', error);
