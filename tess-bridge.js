@@ -257,10 +257,6 @@ showPauseIndicator() {
                     
                     this.tessReady = true;
                     console.log('[Tess Bridge] ✅ Tess ready!');
-
-                    // 👇 ADD THESE LINES HERE
-                const data = this.getAuditData();
-                const message = `[TESS]: Hi! I'm Tess. I just saw your PPC audit shows ${data.formatted} in monthly waste from ${data.issues} critical problems. That mobile conversion loss? I'm built to fix exactly that. Want to see how I can 5X your qualified leads?`;
                     
                 } catch (error) {
                     console.warn('[Tess Bridge] Partial success:', error);
