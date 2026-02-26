@@ -751,13 +751,14 @@ lemon-slice-widget .agent-video {
         <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Animate%20this%20uploaded%20photo%20o_483250727007375369.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fQW5pbWF0ZSB0aGlzIHVwbG9hZGVkIHBob3RvIG9fNDgzMjUwNzI3MDA3Mzc1MzY5Lm1wNCIsImlhdCI6MTc3MjA3MjMxOCwiZXhwIjoxODAzNjA4MzE4fQ.ku46C2hu5rpZ3U3xKMmA0tzv4NrTI4N-zWuZwUZFIiw" type="video/mp4">
     </video>
 
-   <!-- TESS STILL IMAGE - Fades in, links to report -->
+   <!-- TESS STILL IMAGE - Fades in, links to report, pauses Tess on click -->
 <a href="https://free-mobile-report.netlify.app/zoom-scheduler" target="_blank" style="text-decoration: none; display: none;" id="tess-image-link">
     <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/just-ask-tess.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvanVzdC1hc2stdGVzcy5wbmciLCJpYXQiOjE3NzE4NDMyMDcsImV4cCI6MTgwMzM3OTIwN30._3mtAkUNc3PhaXosNS8e9pEiIHjLE7AQP2MPqOBHYFs" 
          alt="Just Ask Tess - Get Your Free Mobile Report" 
          style="width: 100%; height: auto; display: block; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s; opacity: 0; animation: fadeInImage 0.8s ease forwards;"
          onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
-         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
+         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';"
+         onclick="pauseTess(event)">
 </a>
 
     <!-- TESTIMONIALS SECTION -->
@@ -862,6 +863,72 @@ lemon-slice-widget .agent-video {
     100% { opacity: 1; }
 }
 </style>
+
+<script>
+// Function to pause Tess when image is clicked
+function pauseTess(event) {
+    // Let the link still work
+    // Don't prevent default
+    
+    console.log('🎯 Tess image clicked - pausing avatar');
+    
+    // Find the widget
+    const widget = document.querySelector('lemon-slice-widget');
+    if (widget) {
+        // Mute Tess
+        if (typeof widget.mute === 'function') {
+            widget.mute();
+        }
+        widget.setAttribute('muted', 'true');
+        widget.setAttribute('volume-enabled', 'false');
+        
+        // Optional: Minimize widget slightly to indicate paused state
+        widget.style.opacity = '0.7';
+        
+        // Show paused indicator (optional)
+        const pauseIndicator = document.createElement('div');
+        pauseIndicator.id = 'tess-paused-indicator';
+        pauseIndicator.style.cssText = `
+            position: fixed;
+            bottom: 350px;
+            right: 30px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 10001;
+            border: 1px solid #3b82f6;
+        `;
+        pauseIndicator.textContent = '⏸️ Tess paused';
+        document.body.appendChild(pauseIndicator);
+        
+        setTimeout(() => {
+            const indicator = document.getElementById('tess-paused-indicator');
+            if (indicator) indicator.remove();
+        }, 2000);
+    }
+}
+
+// Resume Tess when AI Assistant button is clicked
+document.addEventListener('DOMContentLoaded', function() {
+    const aiAssistantBtn = document.getElementById('aiAssistantBtn');
+    if (aiAssistantBtn) {
+        aiAssistantBtn.addEventListener('click', function() {
+            const widget = document.querySelector('lemon-slice-widget');
+            if (widget) {
+                if (typeof widget.unmute === 'function') {
+                    widget.unmute();
+                }
+                widget.setAttribute('muted', 'false');
+                widget.setAttribute('volume-enabled', 'true');
+                widget.style.opacity = '1';
+                console.log('🎯 Tess resumed');
+            }
+        });
+    }
+});
+</script>
 
 <script>
 // Get elements

@@ -70,8 +70,103 @@ getAuditData() {
         this.setupEscapeProtection();
         this.setupClickHandler();
         this.hideTextBubbles();
+
+        // 👇 ADD THIS LINE
+    this.setupTessControls();
         
     }
+
+    // Inside your TessBridge class, add this method:
+
+// 🔥 CONTROL TESS FROM BUTTONS
+setupTessControls() {
+    // Pause Tess when image is clicked
+    const tessImage = document.querySelector('#tess-image-link img');
+    if (tessImage) {
+        tessImage.addEventListener('click', (e) => {
+            console.log('[Tess Bridge] Image clicked - pausing Tess');
+            
+            if (this.widget) {
+                // Mute Tess
+                if (typeof this.widget.mute === 'function') {
+                    this.widget.mute();
+                }
+                this.widget.setAttribute('muted', 'true');
+                this.widget.setAttribute('volume-enabled', 'false');
+                this.widget.style.opacity = '0.7';
+                
+                // Show pause indicator
+                this.showPauseIndicator();
+            }
+        });
+    }
+    
+    // Resume with AI Assistant button
+    const aiAssistantBtn = document.getElementById('aiAssistantBtn');
+    if (aiAssistantBtn) {
+        aiAssistantBtn.addEventListener('click', () => {
+            console.log('[Tess Bridge] AI Assistant clicked - resuming Tess');
+            
+            if (this.widget) {
+                if (typeof this.widget.unmute === 'function') {
+                    this.widget.unmute();
+                }
+                this.widget.setAttribute('muted', 'false');
+                this.widget.setAttribute('volume-enabled', 'true');
+                this.widget.style.opacity = '1';
+            }
+        });
+    }
+    
+    // Schedule call button - minimize Tess
+    const scheduleCallBtn = document.getElementById('scheduleCallBtn');
+    if (scheduleCallBtn) {
+        scheduleCallBtn.addEventListener('click', () => {
+            console.log('[Tess Bridge] Schedule call - minimizing Tess');
+            if (this.widget) {
+                this.widget.setAttribute('controlled-widget-state', 'minimized');
+            }
+        });
+    }
+    
+    // Close modal - restore Tess
+    const closeModalBtn = document.getElementById('closeAIModal');
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', () => {
+            console.log('[Tess Bridge] Modal closed - restoring Tess');
+            if (this.widget) {
+                this.widget.setAttribute('controlled-widget-state', 'active');
+            }
+        });
+    }
+}
+
+// Helper for pause indicator
+showPauseIndicator() {
+    let indicator = document.getElementById('tess-paused-indicator');
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'tess-paused-indicator';
+        indicator.style.cssText = `
+            position: fixed;
+            bottom: 350px;
+            right: 30px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 10001;
+            border: 1px solid #3b82f6;
+        `;
+        indicator.textContent = '⏸️ Tess paused';
+        document.body.appendChild(indicator);
+        
+        setTimeout(() => {
+            if (indicator) indicator.remove();
+        }, 2000);
+    }
+}
     
     // 🔥 CRITICAL: Hide ALL text bubbles permanently
     hideTextBubbles() {
