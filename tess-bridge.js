@@ -71,8 +71,6 @@ getAuditData() {
         this.setupClickHandler();
         this.hideTextBubbles();
         
-        // Add visual indicator
-        this.addTessIndicator();
     }
     
     // 🔥 CRITICAL: Hide ALL text bubbles permanently
@@ -139,7 +137,6 @@ getAuditData() {
                     
                     this.tessReady = true;
                     console.log('[Tess Bridge] ✅ Tess ready!');
-                    this.updateTessIndicator();
                     
                 } catch (error) {
                     console.warn('[Tess Bridge] Partial success:', error);
