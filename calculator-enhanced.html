@@ -681,13 +681,6 @@ lemon-slice-widget .agent-video {
                      class="logo-image">
             </div>
             
-            <!-- GLOWING AI ASSISTANT BUTTON -->
-            <button class="ai-glow-button" id="aiAssistantBtn">
-                <i class="fas fa-robot"></i>
-                SMART AI PHONE ASSIST
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
     </header>
 
     <div class="main-container">
@@ -744,7 +737,7 @@ lemon-slice-widget .agent-video {
 
         <!-- RIGHT COLUMN - SIDEBAR -->
 <div class="right-column">
-    <!-- TESS VIDEO - Plays once then replaced -->
+    <!-- TESS VIDEO - Plays once then fades out -->
     <video id="tess-preloader-video" autoplay muted playsinline style="
         width: 100%;
         height: auto;
@@ -753,18 +746,20 @@ lemon-slice-widget .agent-video {
         border-radius: 15px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         cursor: pointer;
-        transition: transform 0.2s;
+        transition: opacity 0.8s ease, transform 0.2s;
     " onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
         <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Animate%20this%20uploaded%20photo%20o_483250727007375369.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fQW5pbWF0ZSB0aGlzIHVwbG9hZGVkIHBob3RvIG9fNDgzMjUwNzI3MDA3Mzc1MzY5Lm1wNCIsImlhdCI6MTc3MjA3MjMxOCwiZXhwIjoxODAzNjA4MzE4fQ.ku46C2hu5rpZ3U3xKMmA0tzv4NrTI4N-zWuZwUZFIiw" type="video/mp4">
     </video>
 
-    <!-- TESS STILL IMAGE - Hidden initially, appears after video -->
-    <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/just-ask-tess.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvanVzdC1hc2stdGVzcy5wbmciLCJpYXQiOjE3NzE4NDMyMDcsImV4cCI6MTgwMzM3OTIwN30._3mtAkUNc3PhaXosNS8e9pEiIHjLE7AQP2MPqOBHYFs" 
-         alt="Just Ask Tess" 
-         id="tess-activator"
-         style="width: 100%; height: auto; display: none; margin-bottom: 25px; cursor: pointer; transition: transform 0.2s;"
-         onmouseover="this.style.transform='scale(1.02)'"
-         onmouseout="this.style.transform='scale(1)'">
+    <!-- TESS STILL IMAGE - Fades in, links to report -->
+    <a href="https://free-mobile-report.netlify.app/zoom-scheduler" target="_blank" style="text-decoration: none; display: none;" id="tess-image-link">
+        <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/just-ask-tess.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvanVzdC1hc2stdGVzcy5wbmciLCJpYXQiOjE3NzE4NDMyMDcsImV4cCI6MTgwMzM3OTIwN30._3mtAkUNc3PhaXosNS8e9pEiIHjLE7AQP2MPqOBHYFs" 
+             alt="Just Ask Tess - Get Your Free Mobile Report" 
+             id="tess-activator"
+             style="width: 100%; height: auto; display: block; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s; opacity: 0; animation: fadeInImage 0.8s ease forwards;"
+             onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
+             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
+    </a>
 
     <!-- TESTIMONIALS SECTION -->
     <div style="margin-bottom: 25px;">
@@ -862,32 +857,46 @@ lemon-slice-widget .agent-video {
         </div>
     </div>
 
-   <script>
+   <style>
+@keyframes fadeInImage {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+</style>
+
+<script>
 // Get elements
 const video = document.getElementById('tess-preloader-video');
-const image = document.getElementById('tess-activator');
+const imageLink = document.getElementById('tess-image-link');
 
 // Make sure it doesn't loop
 video.loop = false;
 
 // Slow it down
-video.playbackRate = 0.6;
+video.playbackRate = 0.7;
 
-// When video ends, replace with still image
+// When video ends, fade in image link
 video.addEventListener('ended', function() {
-    video.style.display = 'none';  // Hide video
-    image.style.display = 'block';  // Show still image
-    console.log('✅ Video replaced with still image');
+    // Fade out video
+    video.style.opacity = '0';
+    
+    setTimeout(() => {
+        video.style.display = 'none';  // Hide video
+        imageLink.style.display = 'block';  // Show image link (already has fade animation)
+        console.log('✅ Video faded out, image link faded in');
+    }, 800); // Match transition time
 });
 
-// Fallback in case video never ends (safety)
+// Safety timeout
 setTimeout(function() {
     if (video.style.display !== 'none') {
-        video.style.display = 'none';
-        image.style.display = 'block';
-        console.log('✅ Timeout: Video replaced with still image');
+        video.style.opacity = '0';
+        setTimeout(() => {
+            video.style.display = 'none';
+            imageLink.style.display = 'block';
+        }, 800);
     }
-}, 10000); // 10 second safety
+}, 10000);
 </script>
    
    <script>
