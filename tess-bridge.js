@@ -258,18 +258,23 @@ showPauseIndicator() {
                 this.tessReady = true;
                 console.log('[Tess Bridge] ✅ Tess ready!');
                 
-                // 👇 WAIT LONGER FOR CONNECTION (3 seconds)
+                // 👇 STEP 1: Hide preloader
+                this.hidePreloader();
+                
+                // 👇 STEP 2: Get audit data (USING THE WORKING getAuditData)
+                const data = this.getAuditData();
+                const message = `Hi! I'm Tess. I just saw your PPC audit shows ${data.formatted} in monthly waste from ${data.issues} critical problems. That mobile conversion loss? I'm built to fix exactly that. Want to see how I can 5X your qualified leads?`;
+                
+                // 👇 STEP 3: Send message
+                if (typeof this.widget.sendMessage === 'function') {
+                    this.widget.sendMessage(message);
+                    console.log('[Tess Bridge] Speaking audit data:', data);
+                }
+                
+                // 👇 STEP 4: Force hide bubbles AFTER message
                 setTimeout(() => {
-                    const data = this.getAuditData();
-                    const message = `Hi! I'm Tess. I just saw your PPC audit shows ${data.formatted} in monthly waste from ${data.issues} critical problems.`;
-                    
-                    if (typeof this.widget.sendMessage === 'function') {
-                        this.widget.sendMessage(message);
-                        console.log('[Tess Bridge] Speaking:', data);
-                    }
-                    
                     this.forceHideBubbles();
-                }, 3000); // 3 second delay
+                }, 100);
                 
             } catch (error) {
                 console.warn('[Tess Bridge] Partial success:', error);
