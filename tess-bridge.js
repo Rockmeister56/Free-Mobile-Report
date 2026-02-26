@@ -36,15 +36,10 @@ getAuditData() {
         
         if (!isNaN(num)) {
             if (num >= 1000) {
-                const thousands = Math.floor(num / 1000);
-                const remainder = num % 1000;
-                if (remainder === 0) {
-                    formattedLoss = `approximately ${thousands} thousand dollars`;
-                } else {
-                    formattedLoss = `approximately ${thousands} thousand ${remainder} dollars`;
-                }
+                const thousands = (num / 1000).toFixed(1);
+                formattedLoss = `${thousands} thousand dollars`;
             } else {
-                formattedLoss = `approximately ${num} dollars`;
+                formattedLoss = `${num} dollars`;
             }
         }
         
@@ -57,17 +52,10 @@ getAuditData() {
         console.warn('[Tess Bridge] Error reading audit data:', e);
         return {
             raw: '$5,000+',
-            formatted: 'approximately five thousand dollars',
+            formatted: 'five thousand dollars',
             issues: '13'
         };
     }
-}
-
-// 🔥 Hide preloader (placeholder - keeps timing intact)
-hidePreloader() {
-    // This function exists only to maintain timing
-    // Actual preloader hiding happens elsewhere
-    console.log('[Tess Bridge] Preloader step complete');
 }
 
     init() {
@@ -221,55 +209,37 @@ showPauseIndicator() {
     }
     
     // 🔥 AUTO-FIX: Prepare Tess on load
-autoFixTess() {
-    console.log('[Tess Bridge] Auto-fixing Tess...');
-    
-    setTimeout(() => {
-        if (!this.widget) {
-            console.warn('[Tess Bridge] Widget not ready, retrying...');
-            setTimeout(() => this.autoFixTess(), 2000);
-            return;
-        }
+    autoFixTess() {
+        console.log('[Tess Bridge] Auto-fixing Tess...');
         
-        // Force proper state
-        this.widget.setAttribute('controlled-widget-state', 'active');
-        this.widget.style.width = '200px';
-        this.widget.style.height = '300px';
-        
-        // Prepare mic and volume
-        setTimeout(async () => {
-            try {
-                await this.widget.micOn?.();
-                await this.widget.unmute?.();
-                
-                this.tessReady = true;
-                console.log('[Tess Bridge] ✅ Tess ready!');
-                
-                // 👇 STEP 1: Hide preloader
-                this.hidePreloader();
-                
-                // 👇 STEP 2: Get audit data
-                const data = this.getAuditData();
-                const message = `Hi! I'm Tess. I just saw your PPC audit shows ${data.formatted} in monthly waste from ${data.issues} critical problems. That mobile conversion loss? I'm built to fix exactly that. Want to see how I can 5X your qualified leads?`;
-                
-                // 👇 STEP 3: Send message
-                if (typeof this.widget.sendMessage === 'function') {
-                    this.widget.sendMessage(message);
-                    console.log('[Tess Bridge] Speaking audit data:', data);
-                }
-                
-                // 👇 STEP 4: Force hide bubbles AFTER message
-                setTimeout(() => {
-                    this.forceHideBubbles();
-                }, 100); // Small delay to catch any text bubbles
-                
-            } catch (error) {
-                console.warn('[Tess Bridge] Partial success:', error);
+        setTimeout(() => {
+            if (!this.widget) {
+                console.warn('[Tess Bridge] Widget not ready, retrying...');
+                setTimeout(() => this.autoFixTess(), 2000);
+                return;
             }
-        }, 1500);
-        
-    }, 1000);
-}
+            
+            // Force proper state
+            this.widget.setAttribute('controlled-widget-state', 'active');
+            this.widget.style.width = '200px';
+            this.widget.style.height = '300px';
+            
+            // Prepare mic and volume
+            setTimeout(async () => {
+                try {
+                    await this.widget.micOn?.();
+                    await this.widget.unmute?.();
+                    
+                    this.tessReady = true;
+                    console.log('[Tess Bridge] ✅ Tess ready!');
+                    
+                } catch (error) {
+                    console.warn('[Tess Bridge] Partial success:', error);
+                }
+            }, 1500);
+            
+        }, 1000);
+    }
     
     // 🔥 CLICK HANDLER: Enlarge and speak
     setupClickHandler() {
