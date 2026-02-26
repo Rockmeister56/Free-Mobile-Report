@@ -388,7 +388,6 @@ class AnalysisProgress {
     // 👇 ADD THIS GLOBAL VARIABLE HERE
 window.latestAuditData = {
     loss: monthlyLoss,
-    issues: problemCount,  // Make sure you have this variable
     url: scannedUrl
 };
 
