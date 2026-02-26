@@ -23,6 +23,13 @@ class TessBridge {
         this.init();
     }
 
+    // 🔥 Hide preloader (placeholder - keeps timing intact)
+hidePreloader() {
+    // This function exists only to maintain timing
+    // Actual preloader hiding happens elsewhere
+    console.log('[Tess Bridge] Preloader step complete');
+}
+
 // 🔥 GET AUDIT DATA FROM LOCALSTORAGE
 getAuditData() {
     try {
