@@ -234,37 +234,50 @@ showPauseIndicator() {
     }
     
     // 🔥 AUTO-FIX: Prepare Tess on load
-    autoFixTess() {
-        console.log('[Tess Bridge] Auto-fixing Tess...');
+   autoFixTess() {
+    console.log('[Tess Bridge] Auto-fixing Tess...');
+    
+    setTimeout(() => {
+        if (!this.widget) {
+            console.warn('[Tess Bridge] Widget not ready, retrying...');
+            setTimeout(() => this.autoFixTess(), 2000);
+            return;
+        }
         
-        setTimeout(() => {
-            if (!this.widget) {
-                console.warn('[Tess Bridge] Widget not ready, retrying...');
-                setTimeout(() => this.autoFixTess(), 2000);
-                return;
+        // Force proper state
+        this.widget.setAttribute('controlled-widget-state', 'active');
+        this.widget.style.width = '200px';
+        this.widget.style.height = '300px';
+        
+        // Prepare mic and volume
+        setTimeout(async () => {
+            try {
+                await this.widget.micOn?.();
+                await this.widget.unmute?.();
+                
+                this.tessReady = true;
+                console.log('[Tess Bridge] ✅ Tess ready!');
+                
+                // 👇 WAIT LONGER FOR CONNECTION (3 seconds)
+                setTimeout(() => {
+                    const data = this.getAuditData();
+                    const message = `Hi! I'm Tess. I just saw your PPC audit shows ${data.formatted} in monthly waste from ${data.issues} critical problems.`;
+                    
+                    if (typeof this.widget.sendMessage === 'function') {
+                        this.widget.sendMessage(message);
+                        console.log('[Tess Bridge] Speaking:', data);
+                    }
+                    
+                    this.forceHideBubbles();
+                }, 3000); // 3 second delay
+                
+            } catch (error) {
+                console.warn('[Tess Bridge] Partial success:', error);
             }
-            
-            // Force proper state
-            this.widget.setAttribute('controlled-widget-state', 'active');
-            this.widget.style.width = '200px';
-            this.widget.style.height = '300px';
-            
-            // Prepare mic and volume
-            setTimeout(async () => {
-                try {
-                    await this.widget.micOn?.();
-                    await this.widget.unmute?.();
-                    
-                    this.tessReady = true;
-                    console.log('[Tess Bridge] ✅ Tess ready!');
-                    
-                } catch (error) {
-                    console.warn('[Tess Bridge] Partial success:', error);
-                }
-            }, 1500);
-            
-        }, 1000);
-    }
+        }, 1500);
+        
+    }, 1000);
+}
     
     // 🔥 CLICK HANDLER: Enlarge and speak
     setupClickHandler() {
