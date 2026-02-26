@@ -208,7 +208,7 @@ showPauseIndicator() {
         }
     }
     
-    // 🔥 AUTO-FIX: Prepare Tess on load
+   // 🔥 AUTO-FIX: Prepare Tess on load
 autoFixTess() {
     console.log('[Tess Bridge] Auto-fixing Tess...');
     
@@ -233,23 +233,22 @@ autoFixTess() {
                 this.tessReady = true;
                 console.log('[Tess Bridge] ✅ Tess ready!');
                 
-                // 👇 STEP 1: Hide preloader
-                this.hidePreloader();
-                
-                // 👇 STEP 2: Get audit data
+                // 👇 USE getAuditData() (THIS IS THE ONLY CHANGE)
                 const data = this.getAuditData();
+                
+                // 👇 KILL BUBBLES BEFORE MESSAGE
+                this.forceHideBubbles();
+                
+                // 👇 SEND MESSAGE WITH PROPERLY FORMATTED DATA
                 const message = `Hi! I'm Tess. I just saw your PPC audit shows ${data.formatted} in monthly waste from ${data.issues} critical problems. That mobile conversion loss? I'm built to fix exactly that. Want to see how I can 5X your qualified leads?`;
                 
-                // 👇 STEP 3: Send message
                 if (typeof this.widget.sendMessage === 'function') {
                     this.widget.sendMessage(message);
-                    console.log('[Tess Bridge] Speaking audit data:', data);
+                    console.log('[Tess Bridge] Speaking:', data);
                 }
                 
-                // 👇 STEP 4: Force hide bubbles AFTER message
-                setTimeout(() => {
-                    this.forceHideBubbles();
-                }, 100); // Small delay to catch any text bubbles
+                // 👇 KILL BUBBLES IMMEDIATELY AFTER
+                this.forceHideBubbles();
                 
             } catch (error) {
                 console.warn('[Tess Bridge] Partial success:', error);
