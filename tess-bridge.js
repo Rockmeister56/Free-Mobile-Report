@@ -6,21 +6,14 @@ class TessBridge {
         this.isMuted = false;
         this.isWidgetActive = true;
         this.tessReady = false;
+        this.auditData = null;  // Don't read DOM here
         
-        // Page analysis data
-        this.auditData = {
-            lossAmount: document.getElementById('lossAmount')?.textContent || '$5,000+',
-            issueCount: document.querySelectorAll('.problem-item').length || 13,
-            url: document.getElementById('urlDisplay')?.textContent || 'your site',
-            problems: []
-        };
-        
-        // Collect specific problems
-        document.querySelectorAll('.problem-item').forEach(item => {
-            this.auditData.problems.push(item.textContent.trim());
-        });
-        
-        this.init();
+        // Wait for DOM to be ready before initializing
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(() => this.init(), 100);
+        } else {
+            document.addEventListener('DOMContentLoaded', () => setTimeout(() => this.init(), 100));
+        }
     }
 
     // 🔥 Hide preloader (placeholder - keeps timing intact)
@@ -70,25 +63,32 @@ getAuditData() {
     }
 }
 
-    init() {
-        console.log('[Tess Bridge] Initialized - Avatar Controls Only');
-        console.log('[Tess Bridge] Audit Data:', this.auditData);
-        
-        // Store for other scripts
-        window.tessAuditData = this.auditData;
-        
-        // Core fixes
-        this.autoFixTess();
-        this.setupEscapeProtection();
-        this.setupClickHandler();
-        this.hideTextBubbles();
-
-        // 👇 ADD THIS LINE
+   init() {
+    console.log('[Tess Bridge] Initialized - Avatar Controls Only');
+    
+    // Now read DOM safely (since DOM is ready)
+    this.auditData = {
+        lossAmount: document.getElementById('lossAmount')?.textContent || '$5,000+',
+        issueCount: document.querySelectorAll('.problem-item').length || 13,
+        url: document.getElementById('urlDisplay')?.textContent || 'your site',
+        problems: []
+    };
+    
+    document.querySelectorAll('.problem-item').forEach(item => {
+        this.auditData.problems.push(item.textContent.trim());
+    });
+    
+    console.log('[Tess Bridge] Audit Data:', this.auditData);
+    
+    // Store for other scripts
+    window.tessAuditData = this.auditData;
+    
+    // Core fixes
+    this.autoFixTess();
+    this.setupEscapeProtection();
+    this.hideTextBubbles();
     this.setupTessControls();
-        
-    }
-
-    // Inside your TessBridge class, add this method:
+}
 
 // 🔥 CONTROL TESS FROM BUTTONS
 setupTessControls() {

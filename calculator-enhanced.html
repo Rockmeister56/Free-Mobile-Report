@@ -837,6 +837,13 @@ lemon-slice-widget .agent-video {
 <!-- Widget import (KEEP THIS) -->
 <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
 
+<script>
+// Ensure DOM is ready before bridge initializes
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ Results page DOM ready');
+});
+</script>
+
 <!-- NEW BRIDGE (ADD THIS) -->
 <script src="tess-bridge.js"></script>
 
