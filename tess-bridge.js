@@ -23,7 +23,7 @@ class TessBridge {
         this.init();
     }
 
-    // 🔥 GET AUDIT DATA FROM LOCALSTORAGE
+// 🔥 GET AUDIT DATA FROM LOCALSTORAGE
 getAuditData() {
     try {
         const loss = localStorage.getItem('tess_loss') || '$5,000+';
@@ -36,10 +36,15 @@ getAuditData() {
         
         if (!isNaN(num)) {
             if (num >= 1000) {
-                const thousands = (num / 1000).toFixed(1);
-                formattedLoss = `${thousands} thousand dollars`;
+                const thousands = Math.floor(num / 1000);
+                const remainder = num % 1000;
+                if (remainder === 0) {
+                    formattedLoss = `approximately ${thousands} thousand dollars`;
+                } else {
+                    formattedLoss = `approximately ${thousands} thousand ${remainder} dollars`;
+                }
             } else {
-                formattedLoss = `${num} dollars`;
+                formattedLoss = `approximately ${num} dollars`;
             }
         }
         
@@ -52,7 +57,7 @@ getAuditData() {
         console.warn('[Tess Bridge] Error reading audit data:', e);
         return {
             raw: '$5,000+',
-            formatted: 'five thousand dollars',
+            formatted: 'approximately five thousand dollars',
             issues: '13'
         };
     }
