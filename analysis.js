@@ -173,6 +173,8 @@ const monthlyLoss = Math.round(ppcBudget * 0.625); // 62.5% waste rate
 localStorage.setItem('tess_loss', monthlyLoss);
 localStorage.setItem('tess_issues', 13); // or your actual issue count variable
 
+console.log('STORED:', monthlyLoss, problemCount);
+
 console.log('Final PPC Budget:', ppcBudget);
 console.log('Monthly Loss:', monthlyLoss);
 
