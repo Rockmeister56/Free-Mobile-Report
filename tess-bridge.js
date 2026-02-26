@@ -36,10 +36,15 @@ getAuditData() {
         
         if (!isNaN(num)) {
             if (num >= 1000) {
-                const thousands = (num / 1000).toFixed(1);
-                formattedLoss = `${thousands} thousand dollars`;
+                const thousands = Math.floor(num / 1000);
+                const remainder = num % 1000;
+                if (remainder === 0) {
+                    formattedLoss = `approximately ${thousands} thousand dollars`;
+                } else {
+                    formattedLoss = `approximately ${thousands} thousand ${remainder} dollars`;
+                }
             } else {
-                formattedLoss = `${num} dollars`;
+                formattedLoss = `approximately ${num} dollars`;
             }
         }
         
@@ -52,10 +57,17 @@ getAuditData() {
         console.warn('[Tess Bridge] Error reading audit data:', e);
         return {
             raw: '$5,000+',
-            formatted: 'five thousand dollars',
+            formatted: 'approximately five thousand dollars',
             issues: '13'
         };
     }
+}
+
+// 🔥 Hide preloader (placeholder - keeps timing intact)
+hidePreloader() {
+    // This function exists only to maintain timing
+    // Actual preloader hiding happens elsewhere
+    console.log('[Tess Bridge] Preloader step complete');
 }
 
     init() {
@@ -208,7 +220,7 @@ showPauseIndicator() {
         }
     }
     
-   // 🔥 AUTO-FIX: Prepare Tess on load
+    // 🔥 AUTO-FIX: Prepare Tess on load
 autoFixTess() {
     console.log('[Tess Bridge] Auto-fixing Tess...');
     
@@ -233,22 +245,23 @@ autoFixTess() {
                 this.tessReady = true;
                 console.log('[Tess Bridge] ✅ Tess ready!');
                 
-                // 👇 USE getAuditData() (THIS IS THE ONLY CHANGE)
+                // 👇 STEP 1: Hide preloader
+                this.hidePreloader();
+                
+                // 👇 STEP 2: Get audit data
                 const data = this.getAuditData();
-                
-                // 👇 KILL BUBBLES BEFORE MESSAGE
-                this.forceHideBubbles();
-                
-                // 👇 SEND MESSAGE WITH PROPERLY FORMATTED DATA
                 const message = `Hi! I'm Tess. I just saw your PPC audit shows ${data.formatted} in monthly waste from ${data.issues} critical problems. That mobile conversion loss? I'm built to fix exactly that. Want to see how I can 5X your qualified leads?`;
                 
+                // 👇 STEP 3: Send message
                 if (typeof this.widget.sendMessage === 'function') {
                     this.widget.sendMessage(message);
-                    console.log('[Tess Bridge] Speaking:', data);
+                    console.log('[Tess Bridge] Speaking audit data:', data);
                 }
                 
-                // 👇 KILL BUBBLES IMMEDIATELY AFTER
-                this.forceHideBubbles();
+                // 👇 STEP 4: Force hide bubbles AFTER message
+                setTimeout(() => {
+                    this.forceHideBubbles();
+                }, 100); // Small delay to catch any text bubbles
                 
             } catch (error) {
                 console.warn('[Tess Bridge] Partial success:', error);
