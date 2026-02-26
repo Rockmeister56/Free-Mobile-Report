@@ -169,11 +169,10 @@ function getMidpointFromRange(range) {
 const ppcBudget = getMidpointFromRange(budgetRange);
 const monthlyLoss = Math.round(ppcBudget * 0.625); // 62.5% waste rate
 
-// 👇 ADD THESE TWO LINES HERE
+// 👇 STORE FOR TESS (ADD THESE 3 LINES)
 localStorage.setItem('tess_loss', monthlyLoss);
-localStorage.setItem('tess_issues', 13); // or your actual issue count variable
-
-console.log('STORED:', monthlyLoss, problemCount);
+localStorage.setItem('tess_issues', '13'); // Hardcoded for now
+console.log('✅ Tess data stored:', monthlyLoss, '13');
 
 console.log('Final PPC Budget:', ppcBudget);
 console.log('Monthly Loss:', monthlyLoss);
