@@ -861,10 +861,12 @@ const video = document.getElementById('tess-preloader-video');
 // Make sure it doesn't loop
 video.loop = false;
 
+// Slow it down to 0.7x speed (adjust as needed)
+video.playbackRate = 0.5;  // 0.5 = half speed, 0.7 = 30% slower, 0.8 = 20% slower
+
 // When video ends, it automatically freezes on last frame
 video.addEventListener('ended', function() {
     console.log('✅ Tess video finished - frozen on last frame');
-    // Optional: Add a subtle effect when video ends
     video.style.boxShadow = '0 10px 40px rgba(59,130,246,0.4)';
 });
 </script>
