@@ -744,13 +744,19 @@ lemon-slice-widget .agent-video {
 
         <!-- RIGHT COLUMN - SIDEBAR -->
 <div class="right-column">
-    <!-- TESS IMAGE - CLICK TO ACTIVATE -->
-    <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/just-ask-tess.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvanVzdC1hc2stdGVzcy5wbmciLCJpYXQiOjE3NzE4NDMyMDcsImV4cCI6MTgwMzM3OTIwN30._3mtAkUNc3PhaXosNS8e9pEiIHjLE7AQP2MPqOBHYFs" 
-         alt="Just Ask Tess" 
-         id="tess-activator"
-         style="width: 100%; height: auto; display: block; margin-bottom: 25px; cursor: pointer; transition: transform 0.2s;"
-         onmouseover="this.style.transform='scale(1.02)'"
-         onmouseout="this.style.transform='scale(1)'">
+    <!-- TESS VIDEO - Plays once and stops -->
+    <video id="tess-preloader-video" autoplay muted playsinline style="
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        cursor: pointer;
+        transition: transform 0.2s;
+    " onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+        <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Animate%20this%20uploaded%20photo%20o_483250727007375369.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fQW5pbWF0ZSB0aGlzIHVwbG9hZGVkIHBob3RvIG9fNDgzMjUwNzI3MDA3Mzc1MzY5Lm1wNCIsImlhdCI6MTc3MjA3MjMxOCwiZXhwIjoxODAzNjA4MzE4fQ.ku46C2hu5rpZ3U3xKMmA0tzv4NrTI4N-zWuZwUZFIiw" type="video/mp4">
+    </video>
 
     <!-- TESTIMONIALS SECTION -->
     <div style="margin-bottom: 25px;">
@@ -848,7 +854,22 @@ lemon-slice-widget .agent-video {
         </div>
     </div>
 
-    <script>
+   <script>
+// Get the video element
+const video = document.getElementById('tess-preloader-video');
+
+// Make sure it doesn't loop
+video.loop = false;
+
+// When video ends, it automatically freezes on last frame
+video.addEventListener('ended', function() {
+    console.log('✅ Tess video finished - frozen on last frame');
+    // Optional: Add a subtle effect when video ends
+    video.style.boxShadow = '0 10px 40px rgba(59,130,246,0.4)';
+});
+</script>
+   
+   <script>
     // Get data from URL or localStorage
     const urlParams = new URLSearchParams(window.location.search);
     const scannedUrl = urlParams.get('url') || localStorage.getItem('lastScannedUrl') || 'yourwebsite.com';
