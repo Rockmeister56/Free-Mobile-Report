@@ -255,7 +255,10 @@ autoFixTess() {
                     }
                 }
                 
-                // 👇 BUILD AND SEND MESSAGE
+                // 👇 STEP 1: FORCE HIDE BUBBLES FIRST (BEFORE MESSAGE)
+                this.forceHideBubbles();
+                
+                // 👇 STEP 2: BUILD AND SEND MESSAGE
                 const message = `Hi! I'm Tess. I just saw your PPC audit shows ${formattedLoss} in monthly waste from ${issueCount} critical problems. That mobile conversion loss? I'm built to fix exactly that. Want to see how I can 5X your qualified leads?`;
                 
                 if (typeof this.widget.sendMessage === 'function') {
@@ -263,10 +266,10 @@ autoFixTess() {
                     console.log('[Tess Bridge] Speaking:', { loss: formattedLoss, issues: issueCount });
                 }
                 
-                // 👇 FORCE HIDE BUBBLES AFTER MESSAGE
+                // 👇 STEP 3: HIDE BUBBLES AGAIN AFTER MESSAGE (JUST IN CASE)
                 setTimeout(() => {
                     this.forceHideBubbles();
-                }, 100);
+                }, 50);
                 
             } catch (error) {
                 console.warn('[Tess Bridge] Partial success:', error);
