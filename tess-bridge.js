@@ -66,28 +66,31 @@ getAuditData() {
    init() {
     console.log('[Tess Bridge] Initialized - Avatar Controls Only');
     
-    // Now read DOM safely (since DOM is ready)
-    this.auditData = {
-        lossAmount: document.getElementById('lossAmount')?.textContent || '$5,000+',
-        issueCount: document.querySelectorAll('.problem-item').length || 13,
-        url: document.getElementById('urlDisplay')?.textContent || 'your site',
-        problems: []
-    };
-    
-    document.querySelectorAll('.problem-item').forEach(item => {
-        this.auditData.problems.push(item.textContent.trim());
-    });
-    
-    console.log('[Tess Bridge] Audit Data:', this.auditData);
-    
-    // Store for other scripts
-    window.tessAuditData = this.auditData;
-    
-    // Core fixes
-    this.autoFixTess();
-    this.setupEscapeProtection();
-    this.hideTextBubbles();
-    this.setupTessControls();
+    // Wait for DOM to be fully ready
+    setTimeout(() => {
+        // Now read DOM safely
+        this.auditData = {
+            lossAmount: document.getElementById('lossAmount')?.textContent || '$5,000+',
+            issueCount: document.querySelectorAll('.problem-item').length || 13,
+            url: document.getElementById('urlDisplay')?.textContent || 'your site',
+            problems: []
+        };
+        
+        document.querySelectorAll('.problem-item').forEach(item => {
+            this.auditData.problems.push(item.textContent.trim());
+        });
+        
+        console.log('[Tess Bridge] Audit Data:', this.auditData);
+        
+        // Store for other scripts
+        window.tessAuditData = this.auditData;
+        
+        // Core fixes
+        this.autoFixTess();
+        this.setupEscapeProtection();
+        this.hideTextBubbles();
+        this.setupTessControls();
+    }, 500); // 500ms delay ensures DOM is ready
 }
 
 // 🔥 CONTROL TESS FROM BUTTONS
