@@ -386,6 +386,15 @@ window.latestAuditData = {
     issues: problemCount,  // Make sure you have this variable
     url: scannedUrl
 };
+
+// Store in localStorage
+localStorage.setItem('lastScannedUrl', scannedUrl);
+localStorage.setItem('ppcBudget', ppcBudget);
+localStorage.setItem('monthlyLoss', monthlyLoss);
+
+// 👇 ADD THIS FOR TESS
+localStorage.setItem('tess_loss', monthlyLoss);
+localStorage.setItem('tess_issues', '5000'); // or whatever your actual issue count is
     
     // Redirect to results page
     setTimeout(() => {

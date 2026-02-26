@@ -23,6 +23,41 @@ class TessBridge {
         this.init();
     }
 
+    // 🔥 GET AUDIT DATA FROM LOCALSTORAGE
+getAuditData() {
+    try {
+        const loss = localStorage.getItem('tess_loss') || '$5,000+';
+        const issues = localStorage.getItem('tess_issues') || '13';
+        
+        // Format the loss properly
+        let formattedLoss = loss;
+        const numStr = loss.replace(/[^0-9.]/g, '');
+        const num = parseFloat(numStr);
+        
+        if (!isNaN(num)) {
+            if (num >= 1000) {
+                const thousands = (num / 1000).toFixed(1);
+                formattedLoss = `${thousands} thousand dollars`;
+            } else {
+                formattedLoss = `${num} dollars`;
+            }
+        }
+        
+        return {
+            raw: loss,
+            formatted: formattedLoss,
+            issues: issues
+        };
+    } catch (e) {
+        console.warn('[Tess Bridge] Error reading audit data:', e);
+        return {
+            raw: '$5,000+',
+            formatted: 'five thousand dollars',
+            issues: '13'
+        };
+    }
+}
+
     init() {
         console.log('[Tess Bridge] Initialized - Avatar Controls Only');
         console.log('[Tess Bridge] Audit Data:', this.auditData);
