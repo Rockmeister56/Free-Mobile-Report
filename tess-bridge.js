@@ -7,6 +7,16 @@ class TessBridge {
         this.isWidgetActive = true;
         this.tessReady = false;
         this.auditData = null;  // Don't read DOM here
+
+        // Add to constructor
+const originalSend = this.widget?.sendMessage;
+if (originalSend) {
+    this.widget.sendMessage = function(msg) {
+        console.log('🚨 MESSAGE INTERCEPTED:', msg);
+        console.trace(); // Shows who called it
+        return originalSend.apply(this, arguments);
+    };
+}
         
         // Wait for DOM to be ready before initializing
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
@@ -247,6 +257,10 @@ showPauseIndicator() {
                     
                     this.tessReady = true;
                     console.log('[Tess Bridge] ✅ Tess ready!');
+
+                    // 👇 ADD THESE LINES HERE
+                const data = this.getAuditData();
+                const message = `[TESS]: Hi! I'm Tess. I just saw your PPC audit shows ${data.formatted} in monthly waste from ${data.issues} critical problems. That mobile conversion loss? I'm built to fix exactly that. Want to see how I can 5X your qualified leads?`;
                     
                 } catch (error) {
                     console.warn('[Tess Bridge] Partial success:', error);
