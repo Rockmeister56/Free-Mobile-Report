@@ -1,47 +1,51 @@
-// tess-bridge.js - SURGICAL FIX
-// Modeled after your working TV Network Bridge
-// No aggressive DOM hacking, proper async/await flow
+// tess-bridge.js - FINAL UI FIX
+// Designed to work with the 'hide-ui' attribute
 
 class TessBridge {
     constructor() {
         this.widget = document.querySelector('lemon-slice-widget');
-        this.isMicOn = false;
-        this.isMuted = false;
-        this.init();
+        this.tessReady = false;
+
+        if (document.readyState === 'complete') {
+            this.init();
+        } else {
+            document.addEventListener('DOMContentLoaded', () => this.init());
+        }
     }
 
     init() {
         console.log('[Tess Bridge] Initialized');
         
-        // 1. Run the Auto-Fix sequence (Mic/Volume/Speak)
-        this.autoFixTess();
-        
-        // 2. Setup Controls
+        // 1. Setup UI interactions
         this.setupTessControls();
         this.setupEscapeProtection();
+
+        // 2. Run the Auto-Fix sequence
+        this.autoFixTess();
     }
 
     // --- DATA LOGIC: READ FROM SCREEN ---
     getAuditData() {
+        // 1. Try to read what the USER sees on the screen
         const lossEl = document.getElementById('lossAmount');
         const urlEl = document.getElementById('urlDisplay');
 
-        // Fallback to localStorage if elements missing
+        // 2. Fallback to localStorage if DOM isn't ready
         const lossText = lossEl ? lossEl.textContent : (localStorage.getItem('monthlyLoss') || '$5,000');
         const urlText = urlEl ? urlEl.textContent : (localStorage.getItem('lastScannedUrl') || 'your website');
 
-        // Clean up URL text
+        // 3. Clean up URL text
         const cleanUrl = urlText.replace('Website: ', '').replace('Scanning: ', '');
 
         return {
-            loss: lossText,
+            loss: lossText, 
             url: cleanUrl
         };
     }
 
-    // --- WIDGET CONTROL: GENTLE & EFFECTIVE ---
+    // --- WIDGET CONTROL ---
     autoFixTess() {
-        console.log('[Tess Bridge] Preparing Tess...');
+        console.log('[Tess Bridge] Auto-fixing Tess...');
         
         setTimeout(() => {
             if (!this.widget) {
@@ -50,16 +54,16 @@ class TessBridge {
                 return;
             }
             
-            // Force proper state
+            // Ensure active state
             this.widget.setAttribute('controlled-widget-state', 'active');
             
             // Prepare mic and volume
             setTimeout(async () => {
                 try {
-                    // 1. Turn on Mic (Starts the room)
+                    // 1. Turn on Mic
                     await this.widget.micOn?.();
                     
-                    // 2. Unmute (Ensures volume)
+                    // 2. Unmute
                     await this.widget.unmute?.();
                     
                     console.log('[Tess Bridge] ✅ Tess ready!');
@@ -94,11 +98,9 @@ class TessBridge {
 
     // --- UI CONTROLS ---
     setupTessControls() {
-        // Pause when image is clicked
         const tessImage = document.querySelector('#tess-image-link img');
         if (tessImage) {
             tessImage.addEventListener('click', (e) => {
-                console.log('[Tess Bridge] Image clicked - pausing');
                 this.pauseTess();
             });
         }
@@ -109,25 +111,6 @@ class TessBridge {
             if (typeof this.widget.mute === 'function') this.widget.mute();
             this.widget.setAttribute('muted', 'true');
             this.widget.style.opacity = '0.7';
-            this.showPauseIndicator();
-        }
-    }
-
-    showPauseIndicator() {
-        let indicator = document.getElementById('tess-paused-indicator');
-        if (!indicator) {
-            indicator = document.createElement('div');
-            indicator.id = 'tess-paused-indicator';
-            indicator.style.cssText = `
-                position: fixed; bottom: 350px; right: 30px;
-                background: rgba(0,0,0,0.7); color: white;
-                padding: 4px 10px; border-radius: 20px;
-                font-size: 12px; z-index: 10001;
-                border: 1px solid #3b82f6;
-            `;
-            indicator.textContent = '⏸️ Tess paused';
-            document.body.appendChild(indicator);
-            setTimeout(() => indicator.remove(), 2000);
         }
     }
 
@@ -136,7 +119,6 @@ class TessBridge {
             if (e.key === 'Escape') {
                 const anyOverlayVisible = document.querySelector('.modal, .popup, [style*="display: flex"]');
                 if (anyOverlayVisible) {
-                    console.log('[Tess Bridge] Blocking Escape from widget');
                     e.stopPropagation();
                 }
             }
