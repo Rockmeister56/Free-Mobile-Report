@@ -1,10 +1,11 @@
-// tess-bridge.js - FINAL UI FIX
-// Designed to work with the 'hide-ui' attribute
+// tess-bridge.js - FINAL PRODUCTION VERSION
+// Features: Hide-UI Compatible, Natural Speech, External Controls
 
 class TessBridge {
     constructor() {
         this.widget = document.querySelector('lemon-slice-widget');
         this.tessReady = false;
+        this.isMuted = false; // Track mute state
 
         if (document.readyState === 'complete') {
             this.init();
@@ -20,6 +21,9 @@ class TessBridge {
         this.setupTessControls();
         this.setupEscapeProtection();
 
+        // 👇 FIX #1: We were missing this line! It tells the bridge to run the button setup.
+        this.setupExternalControls();
+
         // 2. Run the Auto-Fix sequence
         this.autoFixTess();
     }
@@ -29,7 +33,12 @@ class TessBridge {
         // Show the control panel with a fade-in
         setTimeout(() => {
             const panel = document.getElementById('tess-control-panel');
-            if (panel) panel.style.opacity = '1';
+            if (panel) {
+                panel.style.opacity = '1';
+                console.log('[Tess Bridge] Control panel visible');
+            } else {
+                console.warn('[Tess Bridge] Control panel HTML not found!');
+            }
         }, 3000);
 
         // MUTE BUTTON LOGIC
@@ -65,7 +74,7 @@ class TessBridge {
                 const panel = document.getElementById('tess-control-panel');
                 if (panel) panel.style.display = 'none';
                 
-                // Show a small "Restart" floating button in case they want her back
+                // Show a small "Restart" floating button
                 this.showRestartButton();
             });
         }
@@ -73,7 +82,6 @@ class TessBridge {
 
     // Helper to show a tiny restart button if they stop her
     showRestartButton() {
-        // Check if restart button already exists
         if (document.getElementById('tess-restart-btn')) return;
 
         const restartBtn = document.createElement('button');
@@ -105,21 +113,49 @@ class TessBridge {
 
     // --- DATA LOGIC: READ FROM SCREEN ---
     getAuditData() {
-        // 1. Try to read what the USER sees on the screen
         const lossEl = document.getElementById('lossAmount');
         const urlEl = document.getElementById('urlDisplay');
 
-        // 2. Fallback to localStorage if DOM isn't ready
+        // Fallback to localStorage if DOM isn't ready
         const lossText = lossEl ? lossEl.textContent : (localStorage.getItem('monthlyLoss') || '$5,000');
         const urlText = urlEl ? urlEl.textContent : (localStorage.getItem('lastScannedUrl') || 'your website');
 
-        // 3. Clean up URL text
+        // Clean up URL text
         const cleanUrl = urlText.replace('Website: ', '').replace('Scanning: ', '');
 
         return {
             loss: lossText, 
             url: cleanUrl
         };
+    }
+
+    // --- FIX #2: NATURAL NUMBER PRONUNCIATION ---
+    // This converts "$5,830" into "five thousand, eight hundred thirty"
+    // so she sounds more natural and less robotic.
+    formatNumberForSpeech(text) {
+        // Extract number from text like "$5,830" or "$1200"
+        const cleanText = text.replace(/[$,]/g, ''); // Remove $ and commas
+        const num = parseFloat(cleanText);
+
+        if (isNaN(num)) return text; // If not a number, return original
+
+        // Simple number to words converter
+        const ones = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+        const teens = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+        const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+
+        if (num === 0) return 'zero';
+
+        function numToWords(n) {
+            if (n < 10) return ones[n];
+            if (n < 20) return teens[n - 10];
+            if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? '-' + ones[n % 10] : '');
+            if (n < 1000) return ones[Math.floor(n / 100)] + ' hundred' + (n % 100 !== 0 ? ' and ' + numToWords(n % 100) : '');
+            if (n < 1000000) return ones[Math.floor(n / 1000)] + ' thousand' + (n % 1000 !== 0 ? ' ' + numToWords(n % 1000) : '');
+            return n.toString(); // Fallback for millions
+        }
+
+        return numToWords(Math.floor(num)) + (num % 1 !== 0 ? ' point ' + num.toString().split('.')[1] : '');
     }
 
     // --- WIDGET CONTROL ---
@@ -133,21 +169,14 @@ class TessBridge {
                 return;
             }
             
-            // Ensure active state
             this.widget.setAttribute('controlled-widget-state', 'active');
             
-            // Prepare mic and volume
             setTimeout(async () => {
                 try {
-                    // 1. Turn on Mic
                     await this.widget.micOn?.();
-                    
-                    // 2. Unmute
                     await this.widget.unmute?.();
                     
                     console.log('[Tess Bridge] ✅ Tess ready!');
-                    
-                    // 3. Speak Data
                     this.speakAuditData();
                     
                 } catch (error) {
@@ -162,7 +191,11 @@ class TessBridge {
     speakAuditData() {
         const data = this.getAuditData();
         
-        const message = `Hi! I'm Tess. I just finished the audit for ${data.url}. It looks like you're losing around ${data.loss} per month in PPC waste. That's exactly what I'm built to fix. Would you like to see how we can recover that revenue?`;
+        // 👇 FORMAT THE NUMBER FOR NATURAL SPEECH
+        const spokenLoss = this.formatNumberForSpeech(data.loss);
+        
+        // Construct message using the SPOKEN version of the number
+        const message = `Hi! I'm Tess. I just finished the audit for ${data.url}. It looks like you're losing around ${spokenLoss} dollars per month in PPC waste. That's exactly what I'm built to fix. Would you like to see how we can recover that revenue?`;
 
         console.log('[Tess Bridge] Speaking:', message);
 
