@@ -684,10 +684,10 @@ lemon-slice-widget .agent-video {
             <!-- REAL TIME LOSS TICKER (Fixed Top Right) -->
 <div id="loss-ticker" style="
     position: fixed;       /* Locks it to the window */
-    top: 10px;             /* Pushes it below the blue top bar */
-    right: 80px;           /* Aligns to the right */
+    top: 15px;             /* Pushes it below the blue top bar */
+    right: 300px;           /* Aligns to the right */
     z-index: 9999;         /* Keeps it on top of everything */
-    background: linear-gradient(135deg, #ff4444, #cc0000);
+    background: linear-gradient(135deg, #ff4444ac, #cc0000);
     color: white;
     padding: 10px 25px;
     border-radius: 50px;
@@ -697,7 +697,7 @@ lemon-slice-widget .agent-video {
     border: 2px solid rgba(255, 255, 255, 0.3);
 ">
     <div style="font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.9;">
-        💸 LEAKING RIGHT NOW
+        💸 CURRANT PPC LEAKAGE 
     </div>
     <div id="ticker-amount" style="font-size: 2rem; font-weight: 800; line-height: 1;">
         $0.00
@@ -1782,7 +1782,7 @@ function startLossTicker() {
         
         // Add the loss for this fraction of a second
         // (lossPerMinute / 600) converts "Per Minute" to "Per 1/10th Second"
-        currentLoss += (lossPerMinute / 60);
+        currentLoss += (lossPerMinute / 120);
         
         // 👇 ADD THE MINUS SIGN HERE
         tickerElement.textContent = '-$' + currentLoss.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
