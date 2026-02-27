@@ -1775,14 +1775,14 @@ function startLossTicker() {
     const tickerElement = document.getElementById('ticker-amount');
     if (!tickerElement) return;
 
-    let currentLoss = 0;
+    let currentLoss = 120;
     
     // We update every 100ms (1/10th of a second) for smooth animation
     setInterval(() => {
         
         // Add the loss for this fraction of a second
         // (lossPerMinute / 600) converts "Per Minute" to "Per 1/10th Second"
-        currentLoss += (lossPerMinute / 600);
+        currentLoss += (lossPerMinute / 60);
         
         // 👇 ADD THE MINUS SIGN HERE
         tickerElement.textContent = '-$' + currentLoss.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
