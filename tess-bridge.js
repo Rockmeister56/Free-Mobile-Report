@@ -1,11 +1,11 @@
-// tess-bridge.js - FINAL PRODUCTION VERSION
-// Features: Hide-UI Compatible, Natural Speech, External Controls
+// tess-bridge.js - FINAL POLISHED VERSION
+// Features: Natural Speech ("Five thousand four hundred dollars"), Proper Minimize
 
 class TessBridge {
     constructor() {
         this.widget = document.querySelector('lemon-slice-widget');
         this.tessReady = false;
-        this.isMuted = false; // Track mute state
+        this.isMuted = false; 
 
         if (document.readyState === 'complete') {
             this.init();
@@ -17,91 +17,68 @@ class TessBridge {
     init() {
         console.log('[Tess Bridge] Initialized');
         
-        // 1. Setup UI interactions
         this.setupTessControls();
         this.setupEscapeProtection();
-
-        // 👇 FIX #1: We were missing this line! It tells the bridge to run the button setup.
         this.setupExternalControls();
-
-        // 2. Run the Auto-Fix sequence
         this.autoFixTess();
     }
 
-    // --- NEW FUNCTION: FLOATING CONTROLS ---
+    // --- EXTERNAL CONTROLS ---
     setupExternalControls() {
-        // Show the control panel with a fade-in
         setTimeout(() => {
             const panel = document.getElementById('tess-control-panel');
-            if (panel) {
-                panel.style.opacity = '1';
-                console.log('[Tess Bridge] Control panel visible');
-            } else {
-                console.warn('[Tess Bridge] Control panel HTML not found!');
-            }
+            if (panel) panel.style.opacity = '1';
         }, 3000);
 
-        // MUTE BUTTON LOGIC
+        // MUTE BUTTON
         const muteBtn = document.getElementById('tess-mute-btn');
         if (muteBtn) {
             muteBtn.addEventListener('click', async () => {
                 if (this.isMuted) {
-                    // Unmute
                     await this.widget.unmute?.();
                     this.isMuted = false;
                     muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-                    muteBtn.style.borderColor = '#0066cc'; // Blue
+                    muteBtn.style.borderColor = '#0066cc';
                 } else {
-                    // Mute
                     await this.widget.mute?.();
                     this.isMuted = true;
                     muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-                    muteBtn.style.borderColor = '#ff9900'; // Orange when muted
+                    muteBtn.style.borderColor = '#ff9900';
                 }
             });
         }
 
-          // STOP BUTTON LOGIC
+        // STOP BUTTON - FIXED TO MINIMIZE PROPERLY
         const stopBtn = document.getElementById('tess-stop-btn');
         if (stopBtn) {
             stopBtn.addEventListener('click', async () => {
-                console.log('[Tess Bridge] Stop clicked - Killing session');
+                console.log('[Tess Bridge] Stop clicked - Minimizing');
                 
                 try {
-                    // 1. INTERRUPT: Stop any current speech
-                    // Note: 'interrupt' might not exist on all versions, so we try/catch
+                    // Try to stop speech if method exists
                     if (typeof this.widget.interrupt === 'function') {
                         await this.widget.interrupt();
                     }
-
-                    // 2. MIC OFF: Stop listening
-                    await this.widget.micOff?.();
-
-                    // 3. MUTE: Ensure no audio escapes
-                    await this.widget.mute?.();
-                    
-                    // 4. CLEAR CHAT (Optional): Some widgets reset with an empty message
-                    // This is a hack to "clear the buffer"
-                    // await this.widget.sendMessage(''); 
-                    
                 } catch (e) {
-                    console.warn('[Tess Bridge] Cleanup warning:', e);
+                    // Ignore errors
                 }
 
-                // 5. HIDE the widget completely
-                this.widget.setAttribute('controlled-widget-state', 'hidden');
+                // 1. Turn off Mic (Stop listening)
+                await this.widget.micOff?.();
+
+                // 2. SET TO MINIMIZED (She goes to corner, stays visible)
+                this.widget.setAttribute('controlled-widget-state', 'minimized');
                 
-                // 6. Hide the control panel
+                // 3. Hide control panel
                 const panel = document.getElementById('tess-control-panel');
                 if (panel) panel.style.display = 'none';
                 
-                // 7. Show restart button
+                // 4. Show restart button
                 this.showRestartButton();
             });
         }
     }
 
-    // Helper to show a tiny restart button if they stop her
     showRestartButton() {
         if (document.getElementById('tess-restart-btn')) return;
 
@@ -117,66 +94,64 @@ class TessBridge {
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         `;
 
-        restartBtn.addEventListener('click', () => {
-            // Restore widget
+        restartBtn.addEventListener('click', async () => {
+            // 1. Restore widget to active
             this.widget.setAttribute('controlled-widget-state', 'active');
             
-            // Show controls again
+            // 2. Turn mic back on
+            await this.widget.micOn?.();
+
+            // 3. Unmute
+            await this.widget.unmute?.();
+            
+            // 4. Show controls again
             const panel = document.getElementById('tess-control-panel');
             if (panel) panel.style.display = 'flex';
             
-            // Remove this restart button
             restartBtn.remove();
         });
 
         document.body.appendChild(restartBtn);
     }
 
-    // --- DATA LOGIC: READ FROM SCREEN ---
+    // --- DATA LOGIC ---
     getAuditData() {
         const lossEl = document.getElementById('lossAmount');
         const urlEl = document.getElementById('urlDisplay');
 
-        // Fallback to localStorage if DOM isn't ready
         const lossText = lossEl ? lossEl.textContent : (localStorage.getItem('monthlyLoss') || '$5,000');
         const urlText = urlEl ? urlEl.textContent : (localStorage.getItem('lastScannedUrl') || 'your website');
-
-        // Clean up URL text
         const cleanUrl = urlText.replace('Website: ', '').replace('Scanning: ', '');
 
-        return {
-            loss: lossText, 
-            url: cleanUrl
-        };
+        return { loss: lossText, url: cleanUrl };
     }
 
-    // --- FIX #2: NATURAL NUMBER PRONUNCIATION ---
-    // This converts "$5,830" into "five thousand, eight hundred thirty"
-    // so she sounds more natural and less robotic.
+    // --- FIX #2: NATURAL SPEECH LOGIC ---
     formatNumberForSpeech(text) {
-        // Extract number from text like "$5,830" or "$1200"
-        const cleanText = text.replace(/[$,]/g, ''); // Remove $ and commas
-        const num = parseFloat(cleanText);
+        // 1. Remove $ and commas so TTS doesn't read "dollar sign"
+        // Input: "$5,430" -> Output: "5430"
+        const cleanNum = text.replace(/[$,]/g, '');
+        
+        // 2. Convert to words (simple version)
+        const num = parseFloat(cleanNum);
+        if (isNaN(num)) return text; // Safety check
 
-        if (isNaN(num)) return text; // If not a number, return original
-
-        // Simple number to words converter
+        // Simple spoken converter
         const ones = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
         const teens = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
         const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
 
-        if (num === 0) return 'zero';
-
-        function numToWords(n) {
+        function toWords(n) {
             if (n < 10) return ones[n];
             if (n < 20) return teens[n - 10];
-            if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? '-' + ones[n % 10] : '');
-            if (n < 1000) return ones[Math.floor(n / 100)] + ' hundred' + (n % 100 !== 0 ? ' and ' + numToWords(n % 100) : '');
-            if (n < 1000000) return ones[Math.floor(n / 1000)] + ' thousand' + (n % 1000 !== 0 ? ' ' + numToWords(n % 1000) : '');
-            return n.toString(); // Fallback for millions
+            if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + ones[n % 10] : '');
+            if (n < 1000) return ones[Math.floor(n / 100)] + ' hundred' + (n % 100 !== 0 ? ' ' + toWords(n % 100) : '');
+            if (n < 1000000) return ones[Math.floor(n / 1000)] + ' thousand' + (n % 1000 !== 0 ? ' ' + toWords(n % 1000) : '');
+            return n.toString();
         }
 
-        return numToWords(Math.floor(num)) + (num % 1 !== 0 ? ' point ' + num.toString().split('.')[1] : '');
+        // Returns "five thousand four hundred thirty"
+        return toWords(Math.floor(num));
     }
 
     // --- WIDGET CONTROL ---
@@ -208,14 +183,13 @@ class TessBridge {
         }, 1000);
     }
 
-    // --- SPEECH LOGIC ---
     speakAuditData() {
         const data = this.getAuditData();
         
-        // 👇 FORMAT THE NUMBER FOR NATURAL SPEECH
+        // FORMAT THE NUMBER
         const spokenLoss = this.formatNumberForSpeech(data.loss);
         
-        // Construct message using the SPOKEN version of the number
+        // Construct message with "dollars" at the end
         const message = `Hi! I'm Tess. I just finished the audit for ${data.url}. It looks like you're losing around ${spokenLoss} dollars per month in PPC waste. That's exactly what I'm built to fix. Would you like to see how we can recover that revenue?`;
 
         console.log('[Tess Bridge] Speaking:', message);
@@ -229,13 +203,10 @@ class TessBridge {
         }
     }
 
-    // --- UI CONTROLS ---
     setupTessControls() {
         const tessImage = document.querySelector('#tess-image-link img');
         if (tessImage) {
-            tessImage.addEventListener('click', (e) => {
-                this.pauseTess();
-            });
+            tessImage.addEventListener('click', (e) => this.pauseTess());
         }
     }
 
@@ -251,9 +222,7 @@ class TessBridge {
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const anyOverlayVisible = document.querySelector('.modal, .popup, [style*="display: flex"]');
-                if (anyOverlayVisible) {
-                    e.stopPropagation();
-                }
+                if (anyOverlayVisible) e.stopPropagation();
             }
         }, true);
     }
