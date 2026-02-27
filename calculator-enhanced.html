@@ -827,38 +827,16 @@ lemon-slice-widget .agent-video {
     </div>
 </div>
 
-<!-- Widget (UPDATED WITH TRIPLE PROTECTION) -->
+<!-- Widget (CLEAN VERSION) -->
 <lemon-slice-widget
     agent-id="agent_9399f094d4f819d2"
-    id="tess-widget"         
-    class="no-text-bubble"
+    id="tess-widget"
     suppress-initial-message="true"
-    speech-bubble="false"
-    style="position: fixed !important; bottom: 20px; right: 20px; width: 200px; height: 300px; z-index: 9999; border: none; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: width 0.3s ease, height 0.3s ease;">
+    style="position: fixed !important; bottom: 20px; right: 20px; width: 200px; height: 300px; z-index: 9999; border: none; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
 </lemon-slice-widget>
 
-<!-- CSS SNIPER: Targets this specific widget ID -->
-<style>
-    /* Kill bubbles via CSS in the main DOM */
-    #tess-widget [class*="bubble"],
-    #tess-widget [class*="message"],
-    #tess-widget .text-bubble {
-        display: none !important; 
-        visibility: hidden !important; 
-        opacity: 0 !important;
-        pointer-events: none !important;
-    }
-</style>
-
-<!-- Widget import -->
+<!-- Widget Import -->
 <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
-
-<script>
-// Ensure DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ Results page DOM ready');
-});
-</script>
 
 <!-- NEW BRIDGE (ADD THIS) -->
 <script src="tess-bridge.js"></script>

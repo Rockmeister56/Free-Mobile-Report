@@ -1,56 +1,27 @@
-// tess-bridge.js - FINAL STABLE VERSION
-// Fixes: 1. Right Numbers, 2. Volume Up, 3. NO Text Bubbles
+// tess-bridge.js - SURGICAL FIX
+// Modeled after your working TV Network Bridge
+// No aggressive DOM hacking, proper async/await flow
 
 class TessBridge {
     constructor() {
         this.widget = document.querySelector('lemon-slice-widget');
-        this.tessReady = false;
-
-        // 👇 STEP 1: KILL BUBBLES IMMEDIATELY (CSS Injection)
-        // This runs before the widget even finishes loading
-        this.injectBubbleKiller();
-
-        if (document.readyState === 'complete') {
-            this.init();
-        } else {
-            document.addEventListener('DOMContentLoaded', () => this.init());
-        }
-    }
-
-    // 🛑 NEW: Inject CSS that forces bubbles to never display
-    injectBubbleKiller() {
-        const style = document.createElement('style');
-        style.id = 'tess-bubble-killer';
-        style.innerHTML = `
-            /* Target ALL possible bubble classes in Shadow DOM and Light DOM */
-            lemon-slice-widget [class*="bubble"],
-            lemon-slice-widget [class*="message"],
-            lemon-slice-widget [class*="chat"],
-            lemon-slice-widget .text-bubble,
-            lemon-slice-widget .speech-bubble,
-            lemon-slice-widget .agent-message {
-                display: none !important; 
-                visibility: hidden !important; 
-                opacity: 0 !important;
-                pointer-events: none !important;
-            }
-        `;
-        document.head.appendChild(style);
-        console.log('[Tess Bridge] Bubble Killer CSS Injected');
+        this.isMicOn = false;
+        this.isMuted = false;
+        this.init();
     }
 
     init() {
-        console.log('[Tess Bridge] Initializing...');
+        console.log('[Tess Bridge] Initialized');
         
-        // Setup UI Listeners
+        // 1. Run the Auto-Fix sequence (Mic/Volume/Speak)
+        this.autoFixTess();
+        
+        // 2. Setup Controls
         this.setupTessControls();
         this.setupEscapeProtection();
-
-        // Run the Auto-Fix sequence
-        this.autoFixTess();
     }
 
-    // --- DATA LOGIC: READ FROM SCREEN (KEEPS RIGHT NUMBERS) ---
+    // --- DATA LOGIC: READ FROM SCREEN ---
     getAuditData() {
         const lossEl = document.getElementById('lossAmount');
         const urlEl = document.getElementById('urlDisplay');
@@ -68,9 +39,9 @@ class TessBridge {
         };
     }
 
-    // --- WIDGET CONTROL: YOUR WORKING LOGIC ---
+    // --- WIDGET CONTROL: GENTLE & EFFECTIVE ---
     autoFixTess() {
-        console.log('[Tess Bridge] Auto-fixing Tess...');
+        console.log('[Tess Bridge] Preparing Tess...');
         
         setTimeout(() => {
             if (!this.widget) {
@@ -81,20 +52,19 @@ class TessBridge {
             
             // Force proper state
             this.widget.setAttribute('controlled-widget-state', 'active');
-            this.widget.style.width = '200px';
-            this.widget.style.height = '300px';
             
             // Prepare mic and volume
             setTimeout(async () => {
                 try {
-                    // Turn on the mic and volume
+                    // 1. Turn on Mic (Starts the room)
                     await this.widget.micOn?.();
+                    
+                    // 2. Unmute (Ensures volume)
                     await this.widget.unmute?.();
                     
-                    this.tessReady = true;
                     console.log('[Tess Bridge] ✅ Tess ready!');
                     
-                    // Speak the data
+                    // 3. Speak Data
                     this.speakAuditData();
                     
                 } catch (error) {
@@ -107,14 +77,11 @@ class TessBridge {
 
     // --- SPEECH LOGIC ---
     speakAuditData() {
-        if (!this.tessReady) return;
-
         const data = this.getAuditData();
         
-        // Log to console so you can verify she's saying the right thing
-        console.log('[Tess Bridge] PREPARING TO SAY:', data);
-
         const message = `Hi! I'm Tess. I just finished the audit for ${data.url}. It looks like you're losing around ${data.loss} per month in PPC waste. That's exactly what I'm built to fix. Would you like to see how we can recover that revenue?`;
+
+        console.log('[Tess Bridge] Speaking:', message);
 
         try {
             if (typeof this.widget.sendMessage === 'function') {
@@ -127,9 +94,11 @@ class TessBridge {
 
     // --- UI CONTROLS ---
     setupTessControls() {
+        // Pause when image is clicked
         const tessImage = document.querySelector('#tess-image-link img');
         if (tessImage) {
             tessImage.addEventListener('click', (e) => {
+                console.log('[Tess Bridge] Image clicked - pausing');
                 this.pauseTess();
             });
         }
@@ -167,6 +136,7 @@ class TessBridge {
             if (e.key === 'Escape') {
                 const anyOverlayVisible = document.querySelector('.modal, .popup, [style*="display: flex"]');
                 if (anyOverlayVisible) {
+                    console.log('[Tess Bridge] Blocking Escape from widget');
                     e.stopPropagation();
                 }
             }
@@ -175,4 +145,8 @@ class TessBridge {
 }
 
 // Initialize
-new TessBridge();
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        window.tessBridge = new TessBridge();
+    }, 2000);
+});
