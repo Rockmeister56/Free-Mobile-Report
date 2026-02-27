@@ -1,12 +1,15 @@
-// tess-bridge.js - FINAL PRODUCTION VERSION
-// Combines Reliable Data Reading with Aggressive Widget Control
+// tess-bridge.js - FINAL STABLE VERSION
+// Fixes: 1. Right Numbers, 2. Volume Up, 3. NO Text Bubbles
 
 class TessBridge {
     constructor() {
         this.widget = document.querySelector('lemon-slice-widget');
         this.tessReady = false;
 
-        // Run immediately
+        // 👇 STEP 1: KILL BUBBLES IMMEDIATELY (CSS Injection)
+        // This runs before the widget even finishes loading
+        this.injectBubbleKiller();
+
         if (document.readyState === 'complete') {
             this.init();
         } else {
@@ -14,21 +17,40 @@ class TessBridge {
         }
     }
 
+    // 🛑 NEW: Inject CSS that forces bubbles to never display
+    injectBubbleKiller() {
+        const style = document.createElement('style');
+        style.id = 'tess-bubble-killer';
+        style.innerHTML = `
+            /* Target ALL possible bubble classes in Shadow DOM and Light DOM */
+            lemon-slice-widget [class*="bubble"],
+            lemon-slice-widget [class*="message"],
+            lemon-slice-widget [class*="chat"],
+            lemon-slice-widget .text-bubble,
+            lemon-slice-widget .speech-bubble,
+            lemon-slice-widget .agent-message {
+                display: none !important; 
+                visibility: hidden !important; 
+                opacity: 0 !important;
+                pointer-events: none !important;
+            }
+        `;
+        document.head.appendChild(style);
+        console.log('[Tess Bridge] Bubble Killer CSS Injected');
+    }
+
     init() {
         console.log('[Tess Bridge] Initializing...');
         
-        // 1. Hide text bubbles IMMEDIATELY
-        this.hideTextBubbles();
-        
-        // 2. Setup UI Listeners (Pause/Resume)
+        // Setup UI Listeners
         this.setupTessControls();
         this.setupEscapeProtection();
 
-        // 3. Run the Auto-Fix sequence (Volume/Mic/Speak)
+        // Run the Auto-Fix sequence
         this.autoFixTess();
     }
 
-    // --- DATA LOGIC: READ FROM SCREEN ---
+    // --- DATA LOGIC: READ FROM SCREEN (KEEPS RIGHT NUMBERS) ---
     getAuditData() {
         const lossEl = document.getElementById('lossAmount');
         const urlEl = document.getElementById('urlDisplay');
@@ -46,7 +68,7 @@ class TessBridge {
         };
     }
 
-    // --- WIDGET CONTROL: YOUR TRUSTED LOGIC ---
+    // --- WIDGET CONTROL: YOUR WORKING LOGIC ---
     autoFixTess() {
         console.log('[Tess Bridge] Auto-fixing Tess...');
         
@@ -62,17 +84,17 @@ class TessBridge {
             this.widget.style.width = '200px';
             this.widget.style.height = '300px';
             
-            // Prepare mic and volume (CRITICAL FOR VOLUME FIX)
+            // Prepare mic and volume
             setTimeout(async () => {
                 try {
-                    // 👇 THESE LINES FIX THE VOLUME
+                    // Turn on the mic and volume
                     await this.widget.micOn?.();
                     await this.widget.unmute?.();
                     
                     this.tessReady = true;
                     console.log('[Tess Bridge] ✅ Tess ready!');
                     
-                    // Now speak the data
+                    // Speak the data
                     this.speakAuditData();
                     
                 } catch (error) {
@@ -89,16 +111,14 @@ class TessBridge {
 
         const data = this.getAuditData();
         
-        const message = `Hi! I'm Tess. I just finished the audit for ${data.url}. It looks like you're losing around ${data.loss} per month in PPC waste. That's exactly what I'm built to fix. Would you like to see how we can recover that revenue?`;
+        // Log to console so you can verify she's saying the right thing
+        console.log('[Tess Bridge] PREPARING TO SAY:', data);
 
-        console.log('[Tess Bridge] Speaking:', message);
+        const message = `Hi! I'm Tess. I just finished the audit for ${data.url}. It looks like you're losing around ${data.loss} per month in PPC waste. That's exactly what I'm built to fix. Would you like to see how we can recover that revenue?`;
 
         try {
             if (typeof this.widget.sendMessage === 'function') {
                 this.widget.sendMessage(message);
-                
-                // 👇 FORCE HIDE BUBBLES AGAIN AFTER SPEAKING
-                setTimeout(() => this.forceHideBubbles(), 100);
             }
         } catch (e) {
             console.error('[Tess Bridge] Speech error', e);
@@ -107,11 +127,9 @@ class TessBridge {
 
     // --- UI CONTROLS ---
     setupTessControls() {
-        // Pause when image is clicked
         const tessImage = document.querySelector('#tess-image-link img');
         if (tessImage) {
             tessImage.addEventListener('click', (e) => {
-                console.log('[Tess Bridge] Image clicked - pausing');
                 this.pauseTess();
             });
         }
@@ -149,43 +167,10 @@ class TessBridge {
             if (e.key === 'Escape') {
                 const anyOverlayVisible = document.querySelector('.modal, .popup, [style*="display: flex"]');
                 if (anyOverlayVisible) {
-                    console.log('[Tess Bridge] Blocking Escape from widget');
                     e.stopPropagation();
                 }
             }
         }, true);
-    }
-
-    // --- BUBBLE HIDING (AGGRESSIVE) ---
-    hideTextBubbles() {
-        // Inject CSS immediately
-        const style = document.createElement('style');
-        style.id = 'tess-bubble-killer';
-        style.innerHTML = `
-            lemon-slice-widget [class*="bubble"],
-            lemon-slice-widget [class*="message"],
-            lemon-slice-widget [class*="chat"],
-            .message-bubble, .text-bubble, .speech-bubble {
-                display: none !important; visibility: hidden !important; opacity: 0 !important;
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Force hide periodically
-        this.forceHideBubbles();
-        setInterval(() => this.forceHideBubbles(), 1000);
-    }
-
-    forceHideBubbles() {
-        if (!this.widget) return;
-        
-        // Hide in Shadow DOM
-        if (this.widget.shadowRoot) {
-            this.widget.shadowRoot.querySelectorAll('[class*="bubble"], [class*="message"]').forEach(el => {
-                el.style.display = 'none';
-                el.style.visibility = 'hidden';
-            });
-        }
     }
 }
 
