@@ -24,6 +24,85 @@ class TessBridge {
         this.autoFixTess();
     }
 
+    // --- NEW FUNCTION: FLOATING CONTROLS ---
+    setupExternalControls() {
+        // Show the control panel with a fade-in
+        setTimeout(() => {
+            const panel = document.getElementById('tess-control-panel');
+            if (panel) panel.style.opacity = '1';
+        }, 3000);
+
+        // MUTE BUTTON LOGIC
+        const muteBtn = document.getElementById('tess-mute-btn');
+        if (muteBtn) {
+            muteBtn.addEventListener('click', async () => {
+                if (this.isMuted) {
+                    // Unmute
+                    await this.widget.unmute?.();
+                    this.isMuted = false;
+                    muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    muteBtn.style.borderColor = '#0066cc'; // Blue
+                } else {
+                    // Mute
+                    await this.widget.mute?.();
+                    this.isMuted = true;
+                    muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                    muteBtn.style.borderColor = '#ff9900'; // Orange when muted
+                }
+            });
+        }
+
+        // STOP BUTTON LOGIC
+        const stopBtn = document.getElementById('tess-stop-btn');
+        if (stopBtn) {
+            stopBtn.addEventListener('click', () => {
+                console.log('[Tess Bridge] Stop clicked');
+                
+                // Minimize the widget
+                this.widget.setAttribute('controlled-widget-state', 'minimized');
+                
+                // Hide the control panel too
+                const panel = document.getElementById('tess-control-panel');
+                if (panel) panel.style.display = 'none';
+                
+                // Show a small "Restart" floating button in case they want her back
+                this.showRestartButton();
+            });
+        }
+    }
+
+    // Helper to show a tiny restart button if they stop her
+    showRestartButton() {
+        // Check if restart button already exists
+        if (document.getElementById('tess-restart-btn')) return;
+
+        const restartBtn = document.createElement('button');
+        restartBtn.id = 'tess-restart-btn';
+        restartBtn.innerHTML = '<i class="fas fa-play"></i>';
+        restartBtn.title = "Resume Tess";
+        restartBtn.style.cssText = `
+            position: fixed; bottom: 20px; right: 20px;
+            width: 50px; height: 50px; border-radius: 50%;
+            border: 2px solid #00cc66; background: rgba(0,0,0,0.8);
+            color: white; cursor: pointer; z-index: 9998;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        `;
+
+        restartBtn.addEventListener('click', () => {
+            // Restore widget
+            this.widget.setAttribute('controlled-widget-state', 'active');
+            
+            // Show controls again
+            const panel = document.getElementById('tess-control-panel');
+            if (panel) panel.style.display = 'flex';
+            
+            // Remove this restart button
+            restartBtn.remove();
+        });
+
+        document.body.appendChild(restartBtn);
+    }
+
     // --- DATA LOGIC: READ FROM SCREEN ---
     getAuditData() {
         // 1. Try to read what the USER sees on the screen
