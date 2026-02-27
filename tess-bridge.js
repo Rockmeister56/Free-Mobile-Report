@@ -71,9 +71,6 @@ class TessBridge {
                     
                     this.tessReady = true;
                     console.log('[Tess Bridge] ✅ Tess ready!');
-                
-                // 👇 STEP 1: Hide preloader
-                this.hidePreloader();
                     
                     // Now speak the data
                     this.speakAuditData();
