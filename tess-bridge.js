@@ -61,6 +61,11 @@ class TessBridge {
             this.widget.setAttribute('controlled-widget-state', 'active');
             this.widget.style.width = '200px';
             this.widget.style.height = '300px';
+
+             // 👇 STEP 4: Force hide bubbles AFTER message
+                setTimeout(() => {
+                    this.forceHideBubbles();
+                }, 100);
             
             // Prepare mic and volume (CRITICAL FOR VOLUME FIX)
             setTimeout(async () => {
