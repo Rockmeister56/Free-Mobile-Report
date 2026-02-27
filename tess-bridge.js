@@ -64,17 +64,20 @@ class TessBridge {
         // STOP BUTTON LOGIC
         const stopBtn = document.getElementById('tess-stop-btn');
         if (stopBtn) {
-            stopBtn.addEventListener('click', () => {
+            stopBtn.addEventListener('click', async () => {
                 console.log('[Tess Bridge] Stop clicked');
                 
-                // Minimize the widget
-                this.widget.setAttribute('controlled-widget-state', 'minimized');
+                // 1. Turn off the mic (Stops her from listening/processing)
+                await this.widget.micOff?.();
                 
-                // Hide the control panel too
+                // 2. Hide the widget completely (Better than minimized for this state)
+                this.widget.setAttribute('controlled-widget-state', 'hidden');
+                
+                // 3. Hide the control panel
                 const panel = document.getElementById('tess-control-panel');
                 if (panel) panel.style.display = 'none';
                 
-                // Show a small "Restart" floating button
+                // 4. Show the restart button
                 this.showRestartButton();
             });
         }
@@ -96,15 +99,18 @@ class TessBridge {
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         `;
 
-        restartBtn.addEventListener('click', () => {
-            // Restore widget
+        restartBtn.addEventListener('click', async () => {
+            // 1. Turn mic back on
+            await this.widget.micOn?.();
+            
+            // 2. Restore widget
             this.widget.setAttribute('controlled-widget-state', 'active');
             
-            // Show controls again
+            // 3. Show controls again
             const panel = document.getElementById('tess-control-panel');
             if (panel) panel.style.display = 'flex';
             
-            // Remove this restart button
+            // 4. Remove this restart button
             restartBtn.remove();
         });
 
