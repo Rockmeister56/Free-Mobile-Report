@@ -61,23 +61,41 @@ class TessBridge {
             });
         }
 
-        // STOP BUTTON LOGIC
+          // STOP BUTTON LOGIC
         const stopBtn = document.getElementById('tess-stop-btn');
         if (stopBtn) {
             stopBtn.addEventListener('click', async () => {
-                console.log('[Tess Bridge] Stop clicked');
+                console.log('[Tess Bridge] Stop clicked - Killing session');
                 
-                // 1. Turn off the mic (Stops her from listening/processing)
-                await this.widget.micOff?.();
-                
-                // 2. Hide the widget completely (Better than minimized for this state)
+                try {
+                    // 1. INTERRUPT: Stop any current speech
+                    // Note: 'interrupt' might not exist on all versions, so we try/catch
+                    if (typeof this.widget.interrupt === 'function') {
+                        await this.widget.interrupt();
+                    }
+
+                    // 2. MIC OFF: Stop listening
+                    await this.widget.micOff?.();
+
+                    // 3. MUTE: Ensure no audio escapes
+                    await this.widget.mute?.();
+                    
+                    // 4. CLEAR CHAT (Optional): Some widgets reset with an empty message
+                    // This is a hack to "clear the buffer"
+                    // await this.widget.sendMessage(''); 
+                    
+                } catch (e) {
+                    console.warn('[Tess Bridge] Cleanup warning:', e);
+                }
+
+                // 5. HIDE the widget completely
                 this.widget.setAttribute('controlled-widget-state', 'hidden');
                 
-                // 3. Hide the control panel
+                // 6. Hide the control panel
                 const panel = document.getElementById('tess-control-panel');
                 if (panel) panel.style.display = 'none';
                 
-                // 4. Show the restart button
+                // 7. Show restart button
                 this.showRestartButton();
             });
         }
@@ -99,18 +117,15 @@ class TessBridge {
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         `;
 
-        restartBtn.addEventListener('click', async () => {
-            // 1. Turn mic back on
-            await this.widget.micOn?.();
-            
-            // 2. Restore widget
+        restartBtn.addEventListener('click', () => {
+            // Restore widget
             this.widget.setAttribute('controlled-widget-state', 'active');
             
-            // 3. Show controls again
+            // Show controls again
             const panel = document.getElementById('tess-control-panel');
             if (panel) panel.style.display = 'flex';
             
-            // 4. Remove this restart button
+            // Remove this restart button
             restartBtn.remove();
         });
 
