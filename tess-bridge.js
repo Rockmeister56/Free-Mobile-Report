@@ -1,11 +1,12 @@
-// tess-bridge.js - ULTIMATE HYBRID VERSION
-// Keeps the UI controls you built, but fixes the "Speaking" logic
+// tess-bridge.js - FINAL PRODUCTION VERSION
+// Combines Reliable Data Reading with Aggressive Widget Control
 
 class TessBridge {
     constructor() {
         this.widget = document.querySelector('lemon-slice-widget');
         this.tessReady = false;
 
+        // Run immediately
         if (document.readyState === 'complete') {
             this.init();
         } else {
@@ -14,24 +15,21 @@ class TessBridge {
     }
 
     init() {
-        console.log('[Tess Bridge] Initialized');
+        console.log('[Tess Bridge] Initializing...');
         
-        // 1. Setup UI interactions (Pause/Resume)
+        // 1. Hide text bubbles IMMEDIATELY
+        this.hideTextBubbles();
+        
+        // 2. Setup UI Listeners (Pause/Resume)
         this.setupTessControls();
         this.setupEscapeProtection();
-        
-        // 2. Hide text bubbles
-        this.hideTextBubbles();
 
-        // 3. Prepare Widget and Speak
-        setTimeout(() => {
-            this.prepareWidget();
-        }, 1000);
+        // 3. Run the Auto-Fix sequence (Volume/Mic/Speak)
+        this.autoFixTess();
     }
 
-    // --- CORE FIX: READ FROM DOM ---
+    // --- DATA LOGIC: READ FROM SCREEN ---
     getAuditData() {
-        // Read directly from the page elements the user sees
         const lossEl = document.getElementById('lossAmount');
         const urlEl = document.getElementById('urlDisplay');
 
@@ -39,58 +37,75 @@ class TessBridge {
         const lossText = lossEl ? lossEl.textContent : (localStorage.getItem('monthlyLoss') || '$5,000');
         const urlText = urlEl ? urlEl.textContent : (localStorage.getItem('lastScannedUrl') || 'your website');
 
-        // Clean up URL text (remove prefixes)
+        // Clean up URL text
         const cleanUrl = urlText.replace('Website: ', '').replace('Scanning: ', '');
 
         return {
-            loss: lossText, // Let the TTS engine read the $ sign naturally
+            loss: lossText,
             url: cleanUrl
         };
     }
 
-    // --- CORE FIX: WAIT AND SPEAK ---
-    async prepareWidget() {
-        if (!this.widget) return;
-
-        // Ensure widget is active
-        this.widget.setAttribute('controlled-widget-state', 'active');
-
-        // Wait for the API to be ready
-        let attempts = 0;
-        while (typeof this.widget.sendMessage !== 'function' && attempts < 10) {
-            await new Promise(r => setTimeout(r, 500));
-            attempts++;
-        }
-
-        if (typeof this.widget.sendMessage === 'function') {
-            this.tessReady = true;
-            this.speakAuditData();
-        } else {
-            console.warn('[Tess Bridge] Widget API not available');
-        }
+    // --- WIDGET CONTROL: YOUR TRUSTED LOGIC ---
+    autoFixTess() {
+        console.log('[Tess Bridge] Auto-fixing Tess...');
+        
+        setTimeout(() => {
+            if (!this.widget) {
+                console.warn('[Tess Bridge] Widget not ready, retrying...');
+                setTimeout(() => this.autoFixTess(), 2000);
+                return;
+            }
+            
+            // Force proper state
+            this.widget.setAttribute('controlled-widget-state', 'active');
+            this.widget.style.width = '200px';
+            this.widget.style.height = '300px';
+            
+            // Prepare mic and volume (CRITICAL FOR VOLUME FIX)
+            setTimeout(async () => {
+                try {
+                    // 👇 THESE LINES FIX THE VOLUME
+                    await this.widget.micOn?.();
+                    await this.widget.unmute?.();
+                    
+                    this.tessReady = true;
+                    console.log('[Tess Bridge] ✅ Tess ready!');
+                    
+                    // Now speak the data
+                    this.speakAuditData();
+                    
+                } catch (error) {
+                    console.warn('[Tess Bridge] Partial success:', error);
+                }
+            }, 1500);
+            
+        }, 1000);
     }
 
+    // --- SPEECH LOGIC ---
     speakAuditData() {
         if (!this.tessReady) return;
 
         const data = this.getAuditData();
         
-        // Simple, natural message
         const message = `Hi! I'm Tess. I just finished the audit for ${data.url}. It looks like you're losing around ${data.loss} per month in PPC waste. That's exactly what I'm built to fix. Would you like to see how we can recover that revenue?`;
 
         console.log('[Tess Bridge] Speaking:', message);
 
         try {
-            this.widget.sendMessage(message);
-            // Hide bubbles again after speaking
-            setTimeout(() => this.forceHideBubbles(), 100);
+            if (typeof this.widget.sendMessage === 'function') {
+                this.widget.sendMessage(message);
+                
+                // 👇 FORCE HIDE BUBBLES AGAIN AFTER SPEAKING
+                setTimeout(() => this.forceHideBubbles(), 100);
+            }
         } catch (e) {
             console.error('[Tess Bridge] Speech error', e);
         }
     }
 
-    // --- UI CONTROLS (RESTORED) ---
-    
+    // --- UI CONTROLS ---
     setupTessControls() {
         // Pause when image is clicked
         const tessImage = document.querySelector('#tess-image-link img');
@@ -108,14 +123,6 @@ class TessBridge {
             this.widget.setAttribute('muted', 'true');
             this.widget.style.opacity = '0.7';
             this.showPauseIndicator();
-        }
-    }
-
-    resumeTess() {
-        if (this.widget) {
-            if (typeof this.widget.unmute === 'function') this.widget.unmute();
-            this.widget.setAttribute('muted', 'false');
-            this.widget.style.opacity = '1';
         }
     }
 
@@ -149,22 +156,34 @@ class TessBridge {
         }, true);
     }
 
-    // --- BUBBLE HIDING (RESTORED) ---
-
+    // --- BUBBLE HIDING (AGGRESSIVE) ---
     hideTextBubbles() {
+        // Inject CSS immediately
+        const style = document.createElement('style');
+        style.id = 'tess-bubble-killer';
+        style.innerHTML = `
+            lemon-slice-widget [class*="bubble"],
+            lemon-slice-widget [class*="message"],
+            lemon-slice-widget [class*="chat"],
+            .message-bubble, .text-bubble, .speech-bubble {
+                display: none !important; visibility: hidden !important; opacity: 0 !important;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Force hide periodically
         this.forceHideBubbles();
-        const observer = new MutationObserver(() => this.forceHideBubbles());
-        observer.observe(document.body, { childList: true, subtree: true });
+        setInterval(() => this.forceHideBubbles(), 1000);
     }
 
     forceHideBubbles() {
-        const selectors = '[class*="bubble"], [class*="message"], [class*="chat"], .message-bubble, .text-bubble';
-        document.querySelectorAll(selectors).forEach(el => {
-            el.style.cssText = 'display: none !important; visibility: hidden !important;';
-        });
-        if (this.widget?.shadowRoot) {
-            this.widget.shadowRoot.querySelectorAll(selectors).forEach(el => {
-                el.style.cssText = 'display: none !important; visibility: hidden !important;';
+        if (!this.widget) return;
+        
+        // Hide in Shadow DOM
+        if (this.widget.shadowRoot) {
+            this.widget.shadowRoot.querySelectorAll('[class*="bubble"], [class*="message"]').forEach(el => {
+                el.style.display = 'none';
+                el.style.visibility = 'hidden';
             });
         }
     }
