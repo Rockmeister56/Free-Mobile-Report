@@ -1721,5 +1721,69 @@ document.addEventListener('keydown', function(e) {
     </button>
 </div>
 <!-- END TESS CONTROL PANEL -->
+
+<script>
+// ===== REAL TIME LOSS TICKER =====
+function startLossTicker() {
+    // 1. Get the total monthly loss from the page or localStorage
+    const lossElement = document.getElementById('lossAmount');
+    let totalLossText = '$0';
+    
+    if (lossElement) {
+        totalLossText = lossElement.textContent;
+    } else {
+        // Fallback if element isn't ready yet
+        totalLossText = localStorage.getItem('monthlyLoss') || '$4688';
+    }
+
+    // 2. Clean the text to get a raw number (remove $ and ,)
+    const totalLoss = parseFloat(totalLossText.replace(/[$,]/g, ''));
+
+    if (isNaN(totalLoss)) {
+        console.warn('Ticker: Could not read loss amount');
+        return;
+    }
+
+    // 3. Calculate Rate
+    // Assume 30 days in a month
+    const minutesInMonth = 30 * 24 * 60; // 43,200 minutes
+    const lossPerMinute = totalLoss / minutesInMonth;
+
+    console.log(`[Ticker] Loss/Min: $${lossPerMinute.toFixed(2)}`);
+
+    // 4. Start the Counter
+    let currentCents = 0; // Start at 0
+    
+    // Calculate how many cents to add every second
+    // If loss is $4688/mo -> $0.10/min -> $0.0017/sec
+    // To make it visible, let's increment by the minute rate every second (speed up visual)
+    // OR we can just calculate the exact seconds passed.
+    
+    // LET'S DO 'TIME ELAPSED' STYLE
+    const startTime = Date.now();
+    
+    const tickerElement = document.getElementById('ticker-amount');
+    if (!tickerElement) return;
+
+    setInterval(() => {
+        const secondsPassed = (Date.now() - startTime) / 1000;
+        
+        // Calculate dollars lost since page load
+        // We use a 'speed up' factor of 60x so they see the dollars tick up faster
+        // (Otherwise it takes 60 seconds to go up $1)
+        const dollarsLost = lossPerMinute * secondsPassed * 60; 
+        
+        tickerElement.textContent = '$' + dollarsLost.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        
+    }, 1000); // Update every second
+}
+
+// Run it when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Slight delay to ensure 'lossAmount' is populated by the other scripts
+    setTimeout(startLossTicker, 500);
+});
+</script>
+
 </body>
 </html>
