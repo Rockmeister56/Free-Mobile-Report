@@ -681,41 +681,43 @@ lemon-slice-widget .agent-video {
                      class="logo-image">
             </div>
 
-            <!-- REAL TIME LOSS TICKER - STOCK TICKER STYLE (RED/GREEN) -->
+            <!-- REAL TIME LOSS TICKER - STOCK TICKER STYLE (UPDATED TOP) -->
 <div id="loss-ticker" style="
     position: fixed;
     top: 25px;
-    right: 250px;           /* Moved 100px right (was 350px, now 250px) */
+    right: 250px;
     z-index: 9999;
     background: #000000;
-    color: #ff4444;
+    color: #ff0000;
     padding: 0;
     border-radius: 0;
     text-align: left;
     font-family: 'Courier New', monospace;
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);  /* Pure red glow */
-    border: 2px solid #ff0000;  /* Pure red border */
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+    border: 2px solid #ff0000;
     border-left: none;
     border-right: none;
     overflow: hidden;
     min-width: 320px;
 ">
-    <!-- Top label strip - pure red -->
+    <!-- TOP STRIP - NOW BLACK WITH RED BORDERS (matches bottom) -->
     <div style="
-        background: #ff0000;  /* Pure red */
-        color: black;
+        background: #000000;
+        color: #ff0000;
         font-size: 0.7rem;
         font-weight: 700;
         letter-spacing: 2px;
         text-transform: uppercase;
         padding: 3px 15px;
         border-bottom: 1px solid #ff0000;
+        border-top: 1px solid #ff0000;
         font-family: 'Segoe UI', sans-serif;
+        text-align: center;
     ">
         ⚡ REAL-TIME PPC BURN RATE ⚡
     </div>
     
-    <!-- Ticker main area -->
+    <!-- Ticker main area (unchanged) -->
     <div style="
         background: #0a0a0a;
         padding: 12px 15px;
@@ -733,21 +735,21 @@ lemon-slice-widget .agent-video {
             background: #1a1a1a;
             padding: 4px 10px;
             border-radius: 4px;
-            border-left: 3px solid #ff0000;  /* Pure red */
+            border-left: 3px solid #ff0000;
             font-family: 'Courier New', monospace;
         ">
             PPC-WASTE
         </div>
         
-        <!-- The rolling number - NOW GREEN -->
+        <!-- The rolling number - GREEN -->
         <div id="ticker-amount" style="
             font-size: 2.2rem;
             font-weight: 800;
             line-height: 1;
-            color: #00ff00;  /* BRIGHT GREEN */
+            color: #00ff00;
             font-family: 'Courier New', monospace;
             letter-spacing: 2px;
-            text-shadow: 0 0 10px #00ff00;  /* Green glow */
+            text-shadow: 0 0 10px #00ff00;
             margin: 0 10px;
         ">
             -$0.00
@@ -760,20 +762,21 @@ lemon-slice-widget .agent-video {
             background: #1a1a1a;
             padding: 4px 8px;
             border-radius: 4px;
-            border-right: 3px solid #ff0000;  /* Pure red */
+            border-right: 3px solid #ff0000;
             font-family: 'Courier New', monospace;
         ">
             ▼ 24HR
         </div>
     </div>
     
-    <!-- Bottom scrolling tape -->
+    <!-- Bottom scrolling tape (unchanged) -->
     <div style="
-        background: #0a0a0a;
-        border-top: 1px solid #ff000033;
+        background: #000000;
+        border-top: 1px solid #ff0000;
+        border-bottom: 1px solid #ff0000;
         padding: 4px 15px;
         font-size: 0.65rem;
-        color: #ff8888;
+        color: #ff0000;
         font-family: 'Courier New', monospace;
         text-transform: uppercase;
         letter-spacing: 1px;
