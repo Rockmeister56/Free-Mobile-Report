@@ -681,31 +681,118 @@ lemon-slice-widget .agent-video {
                      class="logo-image">
             </div>
 
-            <!-- REAL TIME LOSS TICKER (Fixed Top Right) -->
+            <!-- REAL TIME LOSS TICKER - STOCK TICKER STYLE -->
 <div id="loss-ticker" style="
-    position: fixed;       /* Locks it to the window */
-    top: 25px;             /* Pushes it below the blue top bar */
-    right: 350px;           /* Aligns to the right */
-    z-index: 9999;         /* Keeps it on top of everything */
-    background: linear-gradient(135deg, #ff4444ac, #cc0000);
-    color: white;
-    padding: 10px 25px;
-    border-radius: 50px;
-    text-align: center;
-    font-family: 'Segoe UI', sans-serif;
-    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    position: fixed;
+    top: 25px;
+    right: 350px;
+    z-index: 9999;
+    background: #000000;
+    color: #ff4444;
+    padding: 0;
+    border-radius: 0;
+    text-align: left;
+    font-family: 'Courier New', monospace;
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
+    border: 2px solid #ff4444;
+    border-left: none;
+    border-right: none;
+    overflow: hidden;
+    min-width: 320px;
 ">
-    <div style="font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.9;">
-        💸 CURRANT PPC LEAKAGE 
+    <!-- Top label strip -->
+    <div style="
+        background: #ff4444;
+        color: black;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 3px 15px;
+        border-bottom: 1px solid #ff4444;
+        font-family: 'Segoe UI', sans-serif;
+    ">
+        ⚡ REAL-TIME PPC BURN RATE ⚡
     </div>
-    <div id="ticker-amount" style="font-size: 2rem; font-weight: 800; line-height: 1;">
-        $0.00
+    
+    <!-- Ticker main area -->
+    <div style="
+        background: #0a0a0a;
+        padding: 12px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid #ff444433;
+    ">
+        <!-- Stock/ticker symbol -->
+        <div style="
+            color: #ff8888;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            background: #1a1a1a;
+            padding: 4px 10px;
+            border-radius: 4px;
+            border-left: 3px solid #ff4444;
+            font-family: 'Courier New', monospace;
+        ">
+            PPC-WASTE
+        </div>
+        
+        <!-- The rolling number -->
+        <div id="ticker-amount" style="
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1;
+            color: #ff4444;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #ff4444;
+            margin: 0 10px;
+        ">
+            -$0.00
+        </div>
+        
+        <!-- Market change indicator (static for now) -->
+        <div style="
+            color: #ff8888;
+            font-size: 0.9rem;
+            background: #1a1a1a;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border-right: 3px solid #ff4444;
+            font-family: 'Courier New', monospace;
+        ">
+            ▼ 24HR
+        </div>
     </div>
-    <div style="font-size: 0.7rem; opacity: 0.8;">
-        THIS MINUTE
+    
+    <!-- Bottom scrolling tape (extra stock-market flair) -->
+    <div style="
+        background: #0a0a0a;
+        border-top: 1px solid #ff444433;
+        padding: 4px 15px;
+        font-size: 0.65rem;
+        color: #ff8888;
+        font-family: 'Courier New', monospace;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+    ">
+        <span style="display: inline-block; animation: scrollTape 10s linear infinite;">
+            🔴 LOSS ACCELERATOR • $87.42/MIN • $5,245/HR • $125,880/DAY • 🔴
+        </span>
     </div>
 </div>
+
+<style>
+/* Ticker tape animation for bottom scroll */
+@keyframes scrollTape {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+</style>
             
     </header>
 
