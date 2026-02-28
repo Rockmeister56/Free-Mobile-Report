@@ -681,11 +681,11 @@ lemon-slice-widget .agent-video {
                      class="logo-image">
             </div>
 
-            <!-- REAL TIME LOSS TICKER - STOCK TICKER STYLE (UPDATED TOP) -->
+           <!-- REAL TIME LOSS TICKER - SLIM STOCK TICKER STYLE -->
 <div id="loss-ticker" style="
     position: fixed;
-    top: 10px;
-    right: 500px;
+    top: 25px;
+    right: 250px;
     z-index: 9999;
     background: #000000;
     color: #ff0000;
@@ -698,9 +698,9 @@ lemon-slice-widget .agent-video {
     border-left: none;
     border-right: none;
     overflow: hidden;
-    min-width: 280px;
+    min-width: 280px;  /* Slightly narrower */
 ">
-    <!-- TOP STRIP - NOW BLACK WITH RED BORDERS (matches bottom) -->
+    <!-- TOP STRIP - Black with red borders -->
     <div style="
         background: #000000;
         color: #ff0000;
@@ -708,7 +708,7 @@ lemon-slice-widget .agent-video {
         font-weight: 700;
         letter-spacing: 2px;
         text-transform: uppercase;
-        padding: 3px 15px;
+        padding: 4px 15px;
         border-bottom: 1px solid #ff0000;
         border-top: 1px solid #ff0000;
         font-family: 'Segoe UI', sans-serif;
@@ -717,76 +717,50 @@ lemon-slice-widget .agent-video {
         ⚡ REAL-TIME PPC BURN RATE ⚡
     </div>
     
-    <!-- Ticker main area (unchanged) -->
+    <!-- Ticker main area - SLIMMER -->
     <div style="
         background: #0a0a0a;
-        padding: 12px 15px;
+        padding: 8px 15px;  /* Reduced padding */
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-top: 1px solid #ff000033;
     ">
-        <!-- Stock/ticker symbol -->
-        <div style="
-            color: #ff8888;
-            font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            background: #1a1a1a;
-            padding: 4px 10px;
-            border-radius: 4px;
-            border-left: 3px solid #ff0000;
-            font-family: 'Courier New', monospace;
-        ">
-            PPC-WASTE
-        </div>
-        
-        <!-- The rolling number - GREEN -->
+        <!-- The rolling number - GREEN (larger focus) -->
         <div id="ticker-amount" style="
-            font-size: 2.2rem;
+            font-size: 2rem;  /* Slightly smaller */
             font-weight: 800;
             line-height: 1;
             color: #00ff00;
             font-family: 'Courier New', monospace;
             letter-spacing: 2px;
             text-shadow: 0 0 10px #00ff00;
-            margin: 0 10px;
+            flex: 1;  /* Takes available space */
+            text-align: center;
         ">
             -$0.00
         </div>
         
-        <!-- Market change indicator -->
+        <!-- 24HR indicator (kept) -->
         <div style="
             color: #ff8888;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             background: #1a1a1a;
             padding: 4px 8px;
             border-radius: 4px;
             border-right: 3px solid #ff0000;
             font-family: 'Courier New', monospace;
+            margin-left: 10px;
         ">
             ▼ 24HR
         </div>
     </div>
     
-    <!-- Bottom scrolling tape (unchanged) -->
+    <!-- BOTTOM: Just a simple red line (no text) -->
     <div style="
-        background: #000000;
-        border-top: 1px solid #ff0000;
-        border-bottom: 1px solid #ff0000;
-        padding: 4px 15px;
-        font-size: 0.65rem;
-        color: #ff0000;
-        font-family: 'Courier New', monospace;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        white-space: nowrap;
-        overflow: hidden;
-    ">
-        <span style="display: inline-block; animation: scrollTape 10s linear infinite;">
-            🔴 LOSS ACCELERATOR • $87.42/MIN • $5,245/HR • $125,880/DAY • 🔴
-        </span>
-    </div>
+        height: 2px;
+        background: #ff0000;
+        width: 100%;
+    "></div>
 </div>
 
 <style>
