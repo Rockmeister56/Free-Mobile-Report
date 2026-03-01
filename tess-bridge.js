@@ -183,14 +183,14 @@ class TessBridge {
         }, 1000);
     }
 
-        speakAuditData() {
+            speakAuditData() {
         const data = this.getAuditData();
         
-        // FORMAT THE NUMBER (The "Secret Sauce")
+        // FORMAT THE NUMBER
         const spokenLoss = this.formatNumberForSpeech(data.loss);
         
-        // Construct message: States the numbers correctly + Asks for Name
-        const message = `Hi! I'm Tess. I just finished the audit for ${data.url}. It looks like you're losing around ${spokenLoss} dollars per month in PPC waste. Before I show you how to fix it, what is your name?`;
+        // Construct message: Enforce Identity + Ask for Name
+        const message = `My name is Tess, and I'm your smart AI guide. I just finished the audit for ${data.url}. It shows you're losing around ${spokenLoss} dollars per month. To get started, please introduce yourself. What is your first name?`;
 
         console.log('[Tess Bridge] Speaking:', message);
 
