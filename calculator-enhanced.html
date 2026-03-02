@@ -1324,13 +1324,11 @@ window.addEventListener('load', function() {
     });
 </script>
 
-<!-- ========================================== -->
-<!-- NEW OVERLAY (Black Blur, List of Problems) -->
-<!-- ========================================== -->
-<div id="how-factor-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(8px); background: rgba(0,0,0,0.6); z-index: 9999;">
+<!-- HOW FACTOR OVERLAY - Updated Z-Index -->
+<div id="how-factor-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(8px); background: rgba(0,0,0,0.5); z-index: 9990;">
     
-    <!-- The Centered White Card -->
-    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; background: #fff; border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: center; font-family: sans-serif;">
+    <!-- The Centered White Card (z-index 9999 puts it above the blur but below Tess usually) -->
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; background: #fff; border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: center; font-family: sans-serif; z-index: 9999;">
         
         <h2 style="color: #0056b3; margin-top: 0;">The "How Factor" Breakdown</h2>
         <p style="color: #666; font-size: 14px;">Here is exactly where you are losing money:</p>
@@ -1506,18 +1504,6 @@ function startLossTicker() {
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(startLossTicker, 500);
 });
-</script>
-
-<script>
-    // RUN THIS ON LOAD: Force Tess to the front
-    document.addEventListener('DOMContentLoaded', function() {
-        const widget = document.querySelector('lemon-slice-widget');
-        if (widget) {
-            // Set a super high z-index so she sits ON TOP of the blur
-            widget.style.position = 'relative';
-            widget.style.zIndex = '99999';
-        }
-    });
 </script>
 
 </body>
