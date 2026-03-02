@@ -203,35 +203,59 @@ class TessBridge {
         }
     }
 
-        // --- UPDATED: HOW FACTOR TRIGGER ---
+        // --- UPDATED: HOW FACTOR TRIGGER (WITH NUCLEAR UNMUTE) ---
     async triggerHowFactorMode() {
         console.log('[Tess Bridge] How Factor Triggered');
 
         if (this.widget) {
             // 1. FORCE INTERNAL STATE UNMUTE
-            // This ensures other bridge functions know we are unmuted
             this.isMuted = false;
 
-            // 2. FORCE WIDGET ACTIVE & MIC ON
-            // micOn() is the strongest 'unmute' command available in the API
+            // 2. FORCE WIDGET ACTIVE
             this.widget.setAttribute('controlled-widget-state', 'active');
             
+            // 3. NUCLEAR UNMUTE (Direct Video Manipulation)
+            // We dig into the Shadow DOM to find the video and force it to play
             try {
-                // This forces the browser to engage audio context
-                await this.widget.micOn?.(); 
-                console.log('[Tess Bridge] Mic Activated (Forcing Audio Unmute)');
+                const shadowRoot = this.widget.shadowRoot;
+                if (shadowRoot) {
+                    // Find the video or audio element inside the widget
+                    const video = shadowRoot.querySelector('video');
+                    const audio = shadowRoot.querySelector('audio');
+                    
+                    if (video) {
+                        video.muted = false; // Force unmute
+                        video.volume = 1.0;  // Force full volume
+                        await video.play();  // Force play to unlock audio context
+                        console.log('[Tess Bridge] 🎥 Video Unmuted & Playing');
+                    }
+                    if (audio) {
+                        audio.muted = false;
+                        audio.volume = 1.0;
+                        await audio.play();
+                        console.log('[Tess Bridge] 🔊 Audio Unmuted & Playing');
+                    }
+                }
             } catch (e) {
-                console.warn('[Tess Bridge] MicOn failed', e);
+                console.warn('[Tess Bridge] Nuclear Unmute failed (might be normal):', e);
             }
 
-            // 3. UPDATE VISUAL MUTE BUTTON (if it exists)
+            // 4. STANDARD API WAKE UP
+            try {
+                await this.widget.micOn?.();
+                console.log('[Tess Bridge] Mic Activated');
+            } catch (e) {
+                // Ignore
+            }
+
+            // 5. UPDATE VISUAL BUTTON
             const muteBtn = document.getElementById('tess-mute-btn');
             if (muteBtn) {
                 muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
                 muteBtn.style.borderColor = '#0066cc';
             }
 
-            // 4. SEND MESSAGE
+            // 6. SEND MESSAGE
             try {
                 await this.widget.sendMessage('SYSTEM_TRIGGER_SHOW_HOW_FACTOR');
             } catch (e) {
@@ -239,7 +263,7 @@ class TessBridge {
             }
         }
 
-        // 5. SHOW OVERLAY
+        // 7. SHOW OVERLAY
         const overlay = document.getElementById('how-factor-overlay');
         if (overlay) {
             overlay.style.display = 'block';
