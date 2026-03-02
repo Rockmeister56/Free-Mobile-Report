@@ -686,7 +686,7 @@ lemon-slice-widget .agent-video {
 <div style="position: absolute; left: 50%; transform: translateX(-50%); top: 20px; z-index: 100;">
     <button id="header-how-factor-btn"
             onclick="window.tessBridge.triggerHowFactorMode()"
-            style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 12px 24px; border-radius: 8px; border: none; font-weight: 700; font-family: 'Poppins', sans-serif; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); transition: transform 0.2s, box-shadow 0.2s; display: inline-flex; align-items: center; gap: 8px; font-size: 16px;"
+            style="background: linear-gradient(135deg, #003cff, #04021c); color: white; padding: 12px 24px; border-radius: 8px; border: none; font-weight: 700; font-family: 'Poppins', sans-serif; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); transition: transform 0.2s, box-shadow 0.2s; display: inline-flex; align-items: center; gap: 8px; font-size: 16px;"
             onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 20px rgba(16, 185, 129, 0.6)';"
             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(16, 185, 129, 0.4)';">
         <i class="fas fa-play-circle"></i> How Factor
@@ -839,7 +839,8 @@ lemon-slice-widget .agent-video {
 
         <!-- RIGHT COLUMN - SIDEBAR -->
 <div class="right-column">
-    <!-- TESS VIDEO - Plays once then fades out -->
+    
+    <!-- 1. TESS VIDEO (Plays First) -->
     <video id="tess-preloader-video" autoplay muted playsinline style="
         width: 100%;
         height: auto;
@@ -850,12 +851,15 @@ lemon-slice-widget .agent-video {
         cursor: pointer;
         transition: opacity 0.8s ease, transform 0.2s;
     " onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-        <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Animate%20this%20uploaded%20photo%20o_483250727007375369.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fQW5pbWF0ZSB0aGlzIHVwbG9hZGVkIHBob3RvIG9fNDgzMjUwNzI3MDA3Mzc1MzY5Lm1wNCIsImlhdCI6MTc3MjA3MjMxOCwiZXhwIjoxODAzNjA4MzE4fQ.ku46C2hu5rpZ3U3xKMmA0tzv4NrTI4N-zWuZwUZFIiw" type="video/mp4">
+        <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Animate%20this%20uploaded%20photo%20o_483250727007375369.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fQW5pbWF0ZSB0aGlzIHVwbG9hZGVkIHBob3RvIG9fNDgzMjUwNzI3MDA3Mzc1MzY5Lm1wNCIsImlhdCI6MTc3MjA3MjMxOCwiZXhwIjoxODAzNjA4MzE4fQ.ku46C2hu5rpZ3U3xKMmA0tzv4NrTI4N-zWuZwUZFIhw" type="video/mp4">
     </video>
 
-    <!-- TESS IMAGE - "Book Demo" Button -->
-    <!-- UPDATED: Added your Calendly Link -->
-    <a href="https://calendly.com/mobilewise-ai/30min" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: block;" id="tess-image-link">
+    <!-- 2. TESS IMAGE (Hidden at start, fades in after video) -->
+    <!-- NOTE: style="display: none;" is set so it doesn't show up immediately -->
+    <a href="https://calendly.com/mobilewise-ai/30min" target="_blank" rel="noopener noreferrer" 
+       style="text-decoration: none; display: none; opacity: 0; transition: opacity 1s ease;" 
+       id="tess-image-link">
+        
         <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/just-ask-tess.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvanVzdC1hc2stdGVzcy5wbmciLCJpYXQiOjE3NzE4NDMyMDcsImV4cCI6MTgwMzM3OTIwN30._3mtAkUNc3PhaXosNS8e9pEiIHjLE7AQP2MPqOBHYFs" 
              alt="Book a Demo" 
              style="width: 100%; height: auto; display: block; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s;"
