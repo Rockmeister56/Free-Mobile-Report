@@ -848,7 +848,7 @@ lemon-slice-widget .agent-video {
          style="width: 100%; height: auto; display: block; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s; opacity: 0; animation: fadeInImage 0.8s ease forwards;"
          onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
          onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';"
-         onclick="triggerHowFactor(event)">
+         onclick="var v=document.querySelector('lemon-slice-widget').shadowRoot.querySelector('video'); if(v) v.play(); triggerHowFactor(event);">
 </a>
 
     <!-- TESTIMONIALS SECTION -->
