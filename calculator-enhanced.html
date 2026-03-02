@@ -848,7 +848,7 @@ lemon-slice-widget .agent-video {
          style="width: 100%; height: auto; display: block; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s; opacity: 0; animation: fadeInImage 0.8s ease forwards;"
          onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
          onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';"
-         onclick="var v=document.querySelector('lemon-slice-widget').shadowRoot.querySelector('video'); if(v) v.play(); triggerHowFactor(event);">
+         onclick="var w=document.querySelector('lemon-slice-widget'); var v=w.shadowRoot.querySelector('video'); if(v){v.muted=false; v.play();} triggerHowFactor(event);">
 </a>
 
     <!-- TESTIMONIALS SECTION -->
@@ -1324,41 +1324,41 @@ window.addEventListener('load', function() {
     });
 </script>
 
-<!-- HOW FACTOR OVERLAY - Updated Z-Index -->
-<div id="how-factor-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(8px); background: rgba(0,0,0,0.5); z-index: 9990;">
+<!-- HOW FACTOR OVERLAY - Clean White Card (No Blur, No Black) -->
+<div id="how-factor-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9998;">
     
-    <!-- The Centered White Card (z-index 9999 puts it above the blur but below Tess usually) -->
-    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; background: #fff; border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: center; font-family: sans-serif; z-index: 9999;">
+    <!-- The White Card - Positioned on the Left to avoid Tess -->
+    <div style="position: absolute; top: 50%; left: 50px; transform: translateY(-50%); width: 400px; background: #ffffff; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; font-family: sans-serif; border: 1px solid #eee;">
         
-        <h2 style="color: #0056b3; margin-top: 0;">The "How Factor" Breakdown</h2>
-        <p style="color: #666; font-size: 14px;">Here is exactly where you are losing money:</p>
+        <h2 style="color: #0056b3; margin-top: 0; font-size: 22px;">The "How Factor" Breakdown</h2>
+        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Here is where you are losing money:</p>
 
         <!-- Problem List -->
-        <div style="text-align: left; margin-top: 20px;">
-            <div style="margin-bottom: 15px;">
+        <div style="text-align: left; font-size: 14px;">
+            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0;">
                 <strong>Problem #1: Forms Kill Leads</strong><br>
-                <span style="color: #d9534f; font-size: 14px;">Cost: $1,684/mo wasted</span>
+                <span style="color: #d9534f;">Cost: $1,684/mo</span>
             </div>
-            <div style="margin-bottom: 15px;">
+            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0;">
                 <strong>Problem #2: No AI Assistant</strong><br>
-                <span style="color: #d9534f; font-size: 14px;">Cost: $956/mo lost</span>
+                <span style="color: #d9534f;">Cost: $956/mo</span>
             </div>
-            <div style="margin-bottom: 15px;">
+            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0;">
                 <strong>Problem #3: Slow Load Time</strong><br>
-                <span style="color: #d9534f; font-size: 14px;">Cost: $688/mo lost</span>
+                <span style="color: #d9534f;">Cost: $688/mo</span>
             </div>
-            <div style="margin-bottom: 15px;">
+            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0;">
                 <strong>Problem #4: Ad-to-Page Mismatch</strong><br>
-                <span style="color: #d9534f; font-size: 14px;">Cost: $554/mo lost</span>
+                <span style="color: #d9534f;">Cost: $554/mo</span>
             </div>
             <div style="margin-bottom: 15px;">
                 <strong>Problem #5: No Click-to-Call</strong><br>
-                <span style="color: #d9534f; font-size: 14px;">Cost: $351/mo lost</span>
+                <span style="color: #d9534f;">Cost: $351/mo</span>
             </div>
         </div>
 
         <!-- Exit Button -->
-        <button onclick="closeHowFactor()" style="margin-top: 25px; padding: 10px 30px; background: #0056b3; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px;">
+        <button onclick="closeHowFactor()" style="margin-top: 10px; padding: 10px 25px; background: #0056b3; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; width: 100%;">
             Exit
         </button>
     </div>
@@ -1368,34 +1368,25 @@ window.addEventListener('load', function() {
 <!-- THE SCRIPT (The Brains)                    -->
 <!-- ========================================== -->
 <script>
-    // 1. Open Overlay + Trigger Tess + UNMUTE
+    // 1. Open Overlay + Trigger Tess
     async function triggerHowFactor(event) {
         event.preventDefault();
 
-        // A. Trigger Tess AI
+        // Trigger Tess AI
         const widget = document.querySelector('lemon-slice-widget');
-        
         if (widget) {
-            // Step 1: Force Open the Widget
+            // 1. Force Open
             widget.setAttribute('controlled-widget-state', 'active');
-
-            // Step 2: FORCE UNMUTE / MIC ON
-            // This tricks the browser into enabling audio context immediately.
-            // We use .micOn() because it forces the browser to request permission 
-            // and wakes up the audio stream.
-            try {
-                await widget.micOn(); 
-                // Optional: You can turn it off right after if you just want audio out,
-                // but leaving it on allows them to reply instantly.
-            } catch (e) {
-                console.log("Mic activation required user interaction.");
-            }
-
-            // Step 3: Send the message (The audio should play now)
+            
+            // 2. Ensure Volume is UP (just in case)
+            // Note: LemonSlice doesn't have a simple 'volume' attribute, 
+            // but ensuring 'active' state usually keeps audio alive.
+            
+            // 3. Send the message
             await widget.sendMessage('SYSTEM_TRIGGER_SHOW_HOW_FACTOR');
         }
 
-        // B. Show Overlay
+        // Show Overlay
         const overlay = document.getElementById('how-factor-overlay');
         if (overlay) {
             overlay.style.display = 'block';
