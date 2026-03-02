@@ -203,33 +203,35 @@ class TessBridge {
         }
     }
 
-        // --- NEW: HOW FACTOR TRIGGER ---
-    // Call this from your HTML button: onclick="window.tessBridge.triggerHowFactorMode()"
+        // --- UPDATED: HOW FACTOR TRIGGER ---
     async triggerHowFactorMode() {
         console.log('[Tess Bridge] How Factor Triggered');
 
-        // 1. FORCE UNMUTE & ACTIVE STATE
         if (this.widget) {
-            // Wake up the widget
+            // 1. FORCE INTERNAL STATE UNMUTE
+            // This ensures other bridge functions know we are unmuted
+            this.isMuted = false;
+
+            // 2. FORCE WIDGET ACTIVE & MIC ON
+            // micOn() is the strongest 'unmute' command available in the API
             this.widget.setAttribute('controlled-widget-state', 'active');
             
-            // Force Unmute (The fix for your issue)
             try {
-                await this.widget.unmute?.();
-                this.isMuted = false; // Update bridge state
-                
-                // Update the visual mute button if it exists
-                const muteBtn = document.getElementById('tess-mute-btn');
-                if (muteBtn) {
-                    muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-                    muteBtn.style.borderColor = '#0066cc';
-                }
-                console.log('[Tess Bridge] Widget Unmuted');
+                // This forces the browser to engage audio context
+                await this.widget.micOn?.(); 
+                console.log('[Tess Bridge] Mic Activated (Forcing Audio Unmute)');
             } catch (e) {
-                console.warn('[Tess Bridge] Unmute failed', e);
+                console.warn('[Tess Bridge] MicOn failed', e);
             }
 
-            // 2. SEND MESSAGE TO AI
+            // 3. UPDATE VISUAL MUTE BUTTON (if it exists)
+            const muteBtn = document.getElementById('tess-mute-btn');
+            if (muteBtn) {
+                muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                muteBtn.style.borderColor = '#0066cc';
+            }
+
+            // 4. SEND MESSAGE
             try {
                 await this.widget.sendMessage('SYSTEM_TRIGGER_SHOW_HOW_FACTOR');
             } catch (e) {
@@ -237,7 +239,7 @@ class TessBridge {
             }
         }
 
-        // 3. SHOW THE OVERLAY (The HTML Div)
+        // 5. SHOW OVERLAY
         const overlay = document.getElementById('how-factor-overlay');
         if (overlay) {
             overlay.style.display = 'block';
