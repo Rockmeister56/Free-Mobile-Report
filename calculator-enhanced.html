@@ -1368,25 +1368,34 @@ window.addEventListener('load', function() {
 <!-- THE SCRIPT (The Brains)                    -->
 <!-- ========================================== -->
 <script>
-    // 1. Open Overlay + Trigger Tess
+    // 1. Open Overlay + Trigger Tess + UNMUTE
     async function triggerHowFactor(event) {
         event.preventDefault();
 
-        // Trigger Tess AI
+        // A. Trigger Tess AI
         const widget = document.querySelector('lemon-slice-widget');
+        
         if (widget) {
-            // 1. Force Open
+            // Step 1: Force Open the Widget
             widget.setAttribute('controlled-widget-state', 'active');
-            
-            // 2. Ensure Volume is UP (just in case)
-            // Note: LemonSlice doesn't have a simple 'volume' attribute, 
-            // but ensuring 'active' state usually keeps audio alive.
-            
-            // 3. Send the message
+
+            // Step 2: FORCE UNMUTE / MIC ON
+            // This tricks the browser into enabling audio context immediately.
+            // We use .micOn() because it forces the browser to request permission 
+            // and wakes up the audio stream.
+            try {
+                await widget.micOn(); 
+                // Optional: You can turn it off right after if you just want audio out,
+                // but leaving it on allows them to reply instantly.
+            } catch (e) {
+                console.log("Mic activation required user interaction.");
+            }
+
+            // Step 3: Send the message (The audio should play now)
             await widget.sendMessage('SYSTEM_TRIGGER_SHOW_HOW_FACTOR');
         }
 
-        // Show Overlay
+        // B. Show Overlay
         const overlay = document.getElementById('how-factor-overlay');
         if (overlay) {
             overlay.style.display = 'block';
