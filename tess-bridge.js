@@ -203,6 +203,47 @@ class TessBridge {
         }
     }
 
+        // --- NEW: HOW FACTOR TRIGGER ---
+    // Call this from your HTML button: onclick="window.tessBridge.triggerHowFactorMode()"
+    async triggerHowFactorMode() {
+        console.log('[Tess Bridge] How Factor Triggered');
+
+        // 1. FORCE UNMUTE & ACTIVE STATE
+        if (this.widget) {
+            // Wake up the widget
+            this.widget.setAttribute('controlled-widget-state', 'active');
+            
+            // Force Unmute (The fix for your issue)
+            try {
+                await this.widget.unmute?.();
+                this.isMuted = false; // Update bridge state
+                
+                // Update the visual mute button if it exists
+                const muteBtn = document.getElementById('tess-mute-btn');
+                if (muteBtn) {
+                    muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    muteBtn.style.borderColor = '#0066cc';
+                }
+                console.log('[Tess Bridge] Widget Unmuted');
+            } catch (e) {
+                console.warn('[Tess Bridge] Unmute failed', e);
+            }
+
+            // 2. SEND MESSAGE TO AI
+            try {
+                await this.widget.sendMessage('SYSTEM_TRIGGER_SHOW_HOW_FACTOR');
+            } catch (e) {
+                console.error('[Tess Bridge] Send message failed', e);
+            }
+        }
+
+        // 3. SHOW THE OVERLAY (The HTML Div)
+        const overlay = document.getElementById('how-factor-overlay');
+        if (overlay) {
+            overlay.style.display = 'block';
+        }
+    }
+
     setupTessControls() {
         const tessImage = document.querySelector('#tess-image-link img');
         if (tessImage) {

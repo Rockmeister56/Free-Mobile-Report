@@ -848,7 +848,7 @@ lemon-slice-widget .agent-video {
          style="width: 100%; height: auto; display: block; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s; opacity: 0; animation: fadeInImage 0.8s ease forwards;"
          onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
          onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';"
-         onclick="triggerHowFactor(event)">
+         onclick="window.tessBridge.triggerHowFactorMode()">
 </a>
 
     <!-- TESTIMONIALS SECTION -->
@@ -1368,38 +1368,25 @@ window.addEventListener('load', function() {
 <!-- THE SCRIPT (The Brains)                    -->
 <!-- ========================================== -->
 <script>
-    // 1. Open Overlay + Force Unmute + Trigger Tess
+    // 1. Open Overlay + Trigger Tess
     async function triggerHowFactor(event) {
         event.preventDefault();
 
-        // --- WIDGET MANIPULATION ---
+        // Trigger Tess AI
         const widget = document.querySelector('lemon-slice-widget');
-        
         if (widget) {
-            // A. Force Open State
+            // 1. Force Open
             widget.setAttribute('controlled-widget-state', 'active');
-
-            // B. Force Unmute (Attribute Manipulation)
-            // We try to remove the 'muted' attribute or set it to false
-            if (widget.hasAttribute('muted')) {
-                widget.removeAttribute('muted');
-            }
-            // Some versions use a 'mute' state attribute
-            widget.setAttribute('muted', 'false');
-
-            // C. Wake Up The Mic (Audio Context)
-            // This is the strongest "user interaction" signal
-            try {
-                await widget.micOn();
-            } catch(e) {
-                // Ignore errors if mic isn't ready
-            }
-
-            // D. Send the Trigger Message
+            
+            // 2. Ensure Volume is UP (just in case)
+            // Note: LemonSlice doesn't have a simple 'volume' attribute, 
+            // but ensuring 'active' state usually keeps audio alive.
+            
+            // 3. Send the message
             await widget.sendMessage('SYSTEM_TRIGGER_SHOW_HOW_FACTOR');
         }
 
-        // --- SHOW OVERLAY ---
+        // Show Overlay
         const overlay = document.getElementById('how-factor-overlay');
         if (overlay) {
             overlay.style.display = 'block';
