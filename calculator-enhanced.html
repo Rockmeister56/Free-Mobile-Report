@@ -681,6 +681,18 @@ lemon-slice-widget .agent-video {
                      class="logo-image">
             </div>
 
+            <!-- HOW FACTOR BUTTON (Center of Header) -->
+<!-- If your header is flex, put this in the middle. If not, use the style below: -->
+<div style="position: absolute; left: 50%; transform: translateX(-50%); top: 20px; z-index: 100;">
+    <button id="header-how-factor-btn"
+            onclick="window.tessBridge.triggerHowFactorMode()"
+            style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 12px 24px; border-radius: 8px; border: none; font-weight: 700; font-family: 'Poppins', sans-serif; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); transition: transform 0.2s, box-shadow 0.2s; display: inline-flex; align-items: center; gap: 8px; font-size: 16px;"
+            onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 20px rgba(16, 185, 129, 0.6)';"
+            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(16, 185, 129, 0.4)';">
+        <i class="fas fa-play-circle"></i> How Factor
+    </button>
+</div>
+
            <!-- REAL TIME LOSS TICKER - SLIM STOCK TICKER STYLE -->
 <div id="loss-ticker" style="
     position: fixed;
@@ -825,37 +837,31 @@ lemon-slice-widget .agent-video {
             </div>
         </div>
 
-<!-- RIGHT COLUMN - SIDEBAR -->
+        <!-- RIGHT COLUMN - SIDEBAR -->
 <div class="right-column">
-    
-    <!-- TESS VIDEO -->
-    <!-- Added 'poster' so there is ALWAYS an image visible, even if video takes a second -->
-    <video id="tess-preloader-video" 
-           autoplay 
-           muted 
-           playsinline 
-           poster="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/just-ask-tess.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvanVzdC1hc2stdGVzcy5wbmciLCJpYXQiOjE3NzE4NDMyMDcsImV4cCI6MTgwMzM3OTIwN30._3mtAkUNc3PhaXosNS8e9pEiIHjLE7AQP2MPqOBHYFs"
-           style="
-               width: 100%;
-               height: auto;
-               display: block;
-               margin-bottom: 25px;
-               border-radius: 15px;
-               box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-               cursor: pointer;
-               transition: opacity 0.8s ease, transform 0.2s;
-           " 
-           onmouseover="this.style.transform='scale(1.02)'" 
-           onmouseout="this.style.transform='scale(1)'">
-        <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Animate%20this%20uploaded%20photo%20o_483250727007375369.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fQW5pbWF0ZSB0aGlzIHVwbG9hZGVkIHBob3RvIG9fNDgzMjUwNzI3MDA3Mzc1MzY5Lm1wNCIsImlhdCI6MTc3MjA3MjMxOCwiZXhwIjoxODAzNjA4MzE4fQ.ku46C2hu5rpZ3U3xKMmA0tzv4NrTI4N-zWuZwUZFIhw" type="video/mp4">
+    <!-- TESS VIDEO - Plays once then fades out -->
+    <video id="tess-preloader-video" autoplay muted playsinline style="
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        cursor: pointer;
+        transition: opacity 0.8s ease, transform 0.2s;
+    " onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+        <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Animate%20this%20uploaded%20photo%20o_483250727007375369.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fQW5pbWF0ZSB0aGlzIHVwbG9hZGVkIHBob3RvIG9fNDgzMjUwNzI3MDA3Mzc1MzY5Lm1wNCIsImlhdCI6MTc3MjA3MjMxOCwiZXhwIjoxODAzNjA4MzE4fQ.ku46C2hu5rpZ3U3xKMmA0tzv4NrTI4N-zWuZwUZFIiw" type="video/mp4">
     </video>
 
-    <!-- TESS FROZEN IMAGE (Hidden at start) -->
-    <img id="tess-frozen-frame" 
-         src="" 
-         style="width: 100%; height: auto; display: none; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s;"
-         onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
-         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
+    <!-- TESS IMAGE - "Book Demo" Button -->
+    <!-- UPDATED: Added your Calendly Link -->
+    <a href="https://calendly.com/mobilewise-ai/30min" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: block;" id="tess-image-link">
+        <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/just-ask-tess.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvanVzdC1hc2stdGVzcy5wbmciLCJpYXQiOjE3NzE4NDMyMDcsImV4cCI6MTgwMzM3OTIwN30._3mtAkUNc3PhaXosNS8e9pEiIHjLE7AQP2MPqOBHYFs" 
+             alt="Book a Demo" 
+             style="width: 100%; height: auto; display: block; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s;"
+             onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
+             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
+    </a>
 
     <!-- TESTIMONIALS SECTION -->
     <div style="margin-bottom: 25px;">
@@ -922,43 +928,6 @@ lemon-slice-widget .agent-video {
         </div>
     </div>
 </div>
-
-<!-- SCRIPT PLACED OUTSIDE THE CONTAINER -->
-<script>
-    // Wait for HTML to load so we don't get "null" errors
-    document.addEventListener('DOMContentLoaded', function() {
-        const preloaderVideo = document.getElementById('tess-preloader-video');
-        const frozenFrame = document.getElementById('tess-frozen-frame');
-
-        if (preloaderVideo && frozenFrame) {
-            // 1. Handle the "Freeze" (End of Video)
-            preloaderVideo.addEventListener('ended', function() {
-                // Capture the frame
-                const canvas = document.createElement('canvas');
-                canvas.width = preloaderVideo.videoWidth;
-                canvas.height = preloaderVideo.videoHeight;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(preloaderVideo, 0, 0, canvas.width, canvas.height);
-                
-                // Set image source
-                frozenFrame.src = canvas.toDataURL('image/png');
-                
-                // Swap: Hide Video, Show Image
-                preloaderVideo.style.display = 'none';
-                frozenFrame.style.display = 'block';
-            });
-
-            // 2. Handle the "Click" (Works on both Video and Image)
-            preloaderVideo.addEventListener('click', function() {
-                if (window.tessBridge) window.tessBridge.triggerHowFactorMode();
-            });
-
-            frozenFrame.addEventListener('click', function() {
-                if (window.tessBridge) window.tessBridge.triggerHowFactorMode();
-            });
-        }
-    });
-</script>
 
 <!-- Widget (FINAL FIX) -->
 <lemon-slice-widget
