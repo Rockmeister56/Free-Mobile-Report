@@ -838,86 +838,17 @@ lemon-slice-widget .agent-video {
         cursor: pointer;
         transition: opacity 0.8s ease, transform 0.2s;
     " onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-        <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Animate%20this%20uploaded%20photo%20o_483250727007375369.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fQW5pbWF0ZSB0aGlzIHVwbG9hZGVkIHBob3RvIG9fNDgzMjUwNzI3MDA3Mzc1MzY5Lm1wNCIsImlhdCI6MTc3MjA3MjMxOCwiZXhwIjoxODAzNjA4MzE4fQ.ku46C2hu5rpZ3Ux3KMmA0tzv4NrTI4N-zWuZwUZFIiw" type="video/mp4">
+        <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Animate%20this%20uploaded%20photo%20o_483250727007375369.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fQW5pbWF0ZSB0aGlzIHVwbG9hZGVkIHBob3RvIG9fNDgzMjUwNzI3MDA3Mzc1MzY5Lm1wNCIsImlhdCI6MTc3MjA3MjMxOCwiZXhwIjoxODAzNjA4MzE4fQ.ku46C2hu5rpZ3U3xKMmA0tzv4NrTI4N-zWuZwUZFIiw" type="video/mp4">
     </video>
 
-    <!-- HOW FACTOR IMAGE BUTTON -->
-    <a href="javascript:void(0);" style="text-decoration: none; display: block; margin-bottom: 25px;" id="how-factor-image-link">
-        <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/solution.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvc29sdXRpb24ucG5nIiwiaWF0IjoxNzcyNDkwMjczLCJleHAiOjE4MDQwMjYyNzN9.OV_WT0yjOhDvcxNlv6KCrjb3HD-U7n01DwcKAvS_fjM" 
-             alt="See How Factor" 
-             style="width: 90%; height: auto; display: block; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);"
-             onclick="triggerHowFactorWithBridge(); return false;">
-    </a>
-  
-    <!-- TESS STILL IMAGE - Book Demo -->
-    <a href="https://calendly.com/mobilewise-ai/30min" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: block; margin-bottom: 25px;" id="tess-image-link">
-        <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/demo.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvZGVtby5wbmciLCJpYXQiOjE3NzI0OTAzMzcsImV4cCI6MTgwNDAyNjMzN30.qy6WftBqX9GNMFqjZXpPhSUhDsPkKVCLpdXHTiocyLQ" 
-             alt="Book a Demo" 
-             style="width: 90%; height: auto; display: block; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);"
-             onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
-             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
-    </a>
-
-<script>
-function triggerHowFactorWithBridge() {
-    // 1. Call YOUR bridge (audio stays on)
-    if (window.tessBridge?.triggerHowFactorMode) {
-        window.tessBridge.triggerHowFactorMode();
-    }
-    
-    // 2. Open PDF overlay
-    setTimeout(openHowFactorPDF, 300);
-}
-
-function openHowFactorPDF() {
-    // Check if overlay exists
-    let overlay = document.getElementById('howFactorPDFOverlay');
-    
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'howFactorPDFOverlay';
-        overlay.innerHTML = `
-            <div style="
-                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0,0,0,0.95); z-index: 100000;
-                display: flex; align-items: center; justify-content: center;
-                padding: 20px;
-            ">
-                <div style="
-                    background: white; border-radius: 10px;
-                    width: 90%; max-width: 1000px; height: 90vh;
-                    position: relative; overflow: hidden;
-                ">
-                    <!-- Close button -->
-                    <button onclick="closeHowFactorPDF()" style="
-                        position: absolute; top: 10px; right: 10px;
-                        z-index: 100001; background: red; color: white;
-                        border: none; width: 40px; height: 40px;
-                        border-radius: 50%; font-size: 24px; cursor: pointer;
-                    ">×</button>
-                    
-                    <!-- YOUR PDF FROM SERVER -->
-                    <iframe src="YOUR_PDF_URL_HERE" 
-                            style="width: 100%; height: 100%; border: none;">
-                    </iframe>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(overlay);
-    } else {
-        overlay.style.display = 'flex';
-    }
-}
-
-function closeHowFactorPDF() {
-    document.getElementById('howFactorPDFOverlay').style.display = 'none';
-}
-
-// Close with Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeHowFactorPDF();
-});
-</script>
+  <!-- TESS STILL IMAGE - Fades in, opens Calendly -->
+<a href="https://calendly.com/mobilewise-ai/30min" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: none;" id="tess-image-link">
+    <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/just-ask-tess.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvanVzdC1hc2stdGVzcy5wbmciLCJpYXQiOjE3NzE4NDMyMDcsImV4cCI6MTgwMzM3OTIwN30._3mtAkUNc3PhaXosNS8e9pEiIHjLE7AQP2MPqOBHYFs" 
+         alt="Book a Demo" 
+         style="width: 100%; height: auto; display: block; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s; opacity: 0; animation: fadeInImage 0.8s ease forwards;"
+         onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
+         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
+</a>
 
     <!-- TESTIMONIALS SECTION -->
     <div style="margin-bottom: 25px;">
