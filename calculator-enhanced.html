@@ -825,46 +825,39 @@ lemon-slice-widget .agent-video {
             </div>
         </div>
 
-       <!-- RIGHT COLUMN - SIDEBAR -->
-<div class="right-column">
-    <!-- TESS VIDEO - Plays once then fades out -->
-    <video id="tess-preloader-video" autoplay muted playsinline style="
-        width: 100%;
-        height: auto;
-        display: block;
-        margin-bottom: 25px;
-        border-radius: 15px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        cursor: pointer;
-        transition: opacity 0.8s ease, transform 0.2s;
-    " onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-        <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Animate%20this%20uploaded%20photo%20o_483250727007375369.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fQW5pbWF0ZSB0aGlzIHVwbG9hZGVkIHBob3RvIG9fNDgzMjUwNzI3MDA3Mzc1MzY5Lm1wNCIsImlhdCI6MTc3MjA3MjMxOCwiZXhwIjoxODAzNjA4MzE4fQ.ku46C2hu5rpZ3U3xKMmA0tzv4NrTI4N-zWuZwUZFIhw" type="video/mp4">
-    </video>
+       <script>
+    // Use window. to make these variables GLOBAL so the video event can find them
+    window.preloaderVideo = document.getElementById('tess-preloader-video');
+    window.buttonsContainer = document.getElementById('tess-buttons-container');
 
-    <!-- BUTTONS CONTAINER - Hidden at start -->
-    <div id="tess-buttons-container" style="display: none; opacity: 0; transition: opacity 0.8s ease;">
-        
-        <!-- BUTTON 1: Mobile-Wise AI (Triggers PDF Overlay) -->
-        <a href="javascript:void(0);" onclick="window.tessBridge.triggerHowFactorMode()" style="text-decoration: none; display: block; margin-bottom: 15px;">
-            <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/just-ask-tess.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvanVzdC1hc2stdGVzcy5wbmciLCJpYXQiOjE3NzE4NDMyMDcsImV4cCI6MTgwMzM3OTIwN30._3mtAkUNc3PhaXosNS8e9pEiIHjLE7AQP2MPqOBHYFs" 
-                 alt="See Mobile-Wise AI" 
-                 style="width: 100%; height: auto; display: block; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s;"
-                 onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
-                 onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
-        </a>
+    console.log("Script running. Video element:", window.preloaderVideo);
+    console.log("Script running. Button Container:", window.buttonsContainer);
 
-        <!-- BUTTON 2: Book Demo (Calendly) -->
-        <a href="https://calendly.com/mobilewise-ai/30min" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: block;">
-            <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/just-ask-tess.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvanVzdC1hc2stdGVzcy5wbmciLCJpYXQiOjE3NzE4NDMyMDcsImV4cCI6MTgwMzM3OTIwN30._3mtAkUNc3PhaXosNS8e9pEiIHjLE7AQP2MPqOBHYFs" 
-                 alt="Book a Demo" 
-                 style="width: 100%; height: auto; display: block; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s;"
-                 onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
-                 onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
-        </a>
+    if (window.preloaderVideo && window.buttonsContainer) {
+        console.log("✅ Elements found. Attaching listener...");
         
-        <!-- Spacer to push testimonials down -->
-        <div style="margin-bottom: 25px;"></div>
-    </div>
+        window.preloaderVideo.addEventListener('ended', function() {
+            console.log("🎬 Video Ended! Swapping to buttons...");
+            
+            // 1. Fade out video
+            window.preloaderVideo.style.opacity = '0';
+            
+            // 2. Wait 800ms (match CSS transition), then swap
+            setTimeout(() => {
+                window.preloaderVideo.style.display = 'none';
+                window.buttonsContainer.style.display = 'block';
+                
+                // Force a tiny delay to trigger opacity transition
+                setTimeout(() => {
+                    window.buttonsContainer.style.opacity = '1';
+                    console.log("✅ Buttons should be visible now.");
+                }, 50);
+            }, 800);
+        });
+    } else {
+        console.error("❌ Error: Could not find video or button container.");
+    }
+</script>
 
     <!-- TESTIMONIALS SECTION -->
     <div style="margin-bottom: 25px;">
@@ -1519,6 +1512,40 @@ function startLossTicker() {
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(startLossTicker, 500);
 });
+</script>
+
+<script>
+    // Use window. to make these variables GLOBAL so the video event can find them
+    window.preloaderVideo = document.getElementById('tess-preloader-video');
+    window.buttonsContainer = document.getElementById('tess-buttons-container');
+
+    console.log("Script running. Video element:", window.preloaderVideo);
+    console.log("Script running. Button Container:", window.buttonsContainer);
+
+    if (window.preloaderVideo && window.buttonsContainer) {
+        console.log("✅ Elements found. Attaching listener...");
+        
+        window.preloaderVideo.addEventListener('ended', function() {
+            console.log("🎬 Video Ended! Swapping to buttons...");
+            
+            // 1. Fade out video
+            window.preloaderVideo.style.opacity = '0';
+            
+            // 2. Wait 800ms (match CSS transition), then swap
+            setTimeout(() => {
+                window.preloaderVideo.style.display = 'none';
+                window.buttonsContainer.style.display = 'block';
+                
+                // Force a tiny delay to trigger opacity transition
+                setTimeout(() => {
+                    window.buttonsContainer.style.opacity = '1';
+                    console.log("✅ Buttons should be visible now.");
+                }, 50);
+            }, 800);
+        });
+    } else {
+        console.error("❌ Error: Could not find video or button container.");
+    }
 </script>
 
 </body>
