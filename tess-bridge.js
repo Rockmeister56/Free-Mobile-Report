@@ -23,14 +23,48 @@ class TessBridge {
         this.autoFixTess();
     }
 
+        // --- NEW: FORCE UNMUTE HELPER ---
+    async forceUnmute() {
+        if (this.widget) {
+            // 1. Update Internal State
+            this.isMuted = false;
+
+            // 2. Update UI Button
+            const muteBtn = document.getElementById('tess-mute-btn');
+            if (muteBtn) {
+                muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                muteBtn.style.borderColor = '#0066cc';
+            }
+
+            // 3. API Calls
+            try {
+                await this.widget.micOn?.();
+                await this.widget.unmute?.();
+            } catch(e) {
+                console.warn("Force unmute API error", e);
+            }
+
+            // 4. Nuclear Shadow DOM Unmute
+            try {
+                const shadow = this.widget.shadowRoot;
+                if (shadow) {
+                    const v = shadow.querySelector('video');
+                    const a = shadow.querySelector('audio');
+                    if (v) { v.muted = false; v.volume = 1.0; v.play(); }
+                    if (a) { a.muted = false; a.volume = 1.0; a.play(); }
+                }
+            } catch(e) {}
+        }
+    }
+
     // --- EXTERNAL CONTROLS ---
-    setupExternalControls() {
+        setupExternalControls() {
         setTimeout(() => {
             const panel = document.getElementById('tess-control-panel');
             if (panel) panel.style.opacity = '1';
         }, 3000);
 
-        // MUTE BUTTON
+        // MUTE BUTTON (Existing)
         const muteBtn = document.getElementById('tess-mute-btn');
         if (muteBtn) {
             muteBtn.addEventListener('click', async () => {
@@ -48,32 +82,40 @@ class TessBridge {
             });
         }
 
-        // STOP BUTTON - FIXED TO MINIMIZE PROPERLY
+        // --- NEW: HOW FACTOR BUTTON LISTENER ---
+        // This wires up the button we created in Step 1
+        const howFactorBtn = document.getElementById('tess-how-factor-btn');
+        if (howFactorBtn) {
+            howFactorBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                console.log("[Tess Bridge] How Factor Button Clicked");
+                
+                // 1. Force Unmute
+                await this.forceUnmute();
+                
+                // 2. Send Message
+                await this.widget.sendMessage('SYSTEM_TRIGGER_SHOW_HOW_FACTOR');
+                
+                // 3. Show Overlay
+                const overlay = document.getElementById('how-factor-overlay');
+                if (overlay) overlay.style.display = 'block';
+            });
+        }
+
+        // STOP BUTTON (Existing)
         const stopBtn = document.getElementById('tess-stop-btn');
         if (stopBtn) {
             stopBtn.addEventListener('click', async () => {
                 console.log('[Tess Bridge] Stop clicked - Minimizing');
-                
                 try {
-                    // Try to stop speech if method exists
                     if (typeof this.widget.interrupt === 'function') {
                         await this.widget.interrupt();
                     }
-                } catch (e) {
-                    // Ignore errors
-                }
-
-                // 1. Turn off Mic (Stop listening)
+                } catch (e) { }
                 await this.widget.micOff?.();
-
-                // 2. SET TO MINIMIZED (She goes to corner, stays visible)
                 this.widget.setAttribute('controlled-widget-state', 'minimized');
-                
-                // 3. Hide control panel
                 const panel = document.getElementById('tess-control-panel');
                 if (panel) panel.style.display = 'none';
-                
-                // 4. Show restart button
                 this.showRestartButton();
             });
         }
@@ -200,73 +242,6 @@ class TessBridge {
             }
         } catch (e) {
             console.error('[Tess Bridge] Speech error', e);
-        }
-    }
-
-        // --- UPDATED: HOW FACTOR TRIGGER (WITH NUCLEAR UNMUTE) ---
-    async triggerHowFactorMode() {
-        console.log('[Tess Bridge] How Factor Triggered');
-
-        if (this.widget) {
-            // 1. FORCE INTERNAL STATE UNMUTE
-            this.isMuted = false;
-
-            // 2. FORCE WIDGET ACTIVE
-            this.widget.setAttribute('controlled-widget-state', 'active');
-            
-            // 3. NUCLEAR UNMUTE (Direct Video Manipulation)
-            // We dig into the Shadow DOM to find the video and force it to play
-            try {
-                const shadowRoot = this.widget.shadowRoot;
-                if (shadowRoot) {
-                    // Find the video or audio element inside the widget
-                    const video = shadowRoot.querySelector('video');
-                    const audio = shadowRoot.querySelector('audio');
-                    
-                    if (video) {
-                        video.muted = false; // Force unmute
-                        video.volume = 1.0;  // Force full volume
-                        await video.play();  // Force play to unlock audio context
-                        console.log('[Tess Bridge] 🎥 Video Unmuted & Playing');
-                    }
-                    if (audio) {
-                        audio.muted = false;
-                        audio.volume = 1.0;
-                        await audio.play();
-                        console.log('[Tess Bridge] 🔊 Audio Unmuted & Playing');
-                    }
-                }
-            } catch (e) {
-                console.warn('[Tess Bridge] Nuclear Unmute failed (might be normal):', e);
-            }
-
-            // 4. STANDARD API WAKE UP
-            try {
-                await this.widget.micOn?.();
-                console.log('[Tess Bridge] Mic Activated');
-            } catch (e) {
-                // Ignore
-            }
-
-            // 5. UPDATE VISUAL BUTTON
-            const muteBtn = document.getElementById('tess-mute-btn');
-            if (muteBtn) {
-                muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-                muteBtn.style.borderColor = '#0066cc';
-            }
-
-            // 6. SEND MESSAGE
-            try {
-                await this.widget.sendMessage('SYSTEM_TRIGGER_SHOW_HOW_FACTOR');
-            } catch (e) {
-                console.error('[Tess Bridge] Send message failed', e);
-            }
-        }
-
-        // 7. SHOW OVERLAY
-        const overlay = document.getElementById('how-factor-overlay');
-        if (overlay) {
-            overlay.style.display = 'block';
         }
     }
 
