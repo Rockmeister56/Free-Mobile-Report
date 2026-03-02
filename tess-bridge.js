@@ -57,6 +57,22 @@ class TessBridge {
         }
     }
 
+        async triggerHowFactorMode() {
+        console.log("[Tess Bridge] Triggering How Factor Mode via Button");
+        
+        // 1. Force Unmute (Fixes the silent video issue)
+        await this.forceUnmute();
+        
+        // 2. Show the Overlay (The video/poster)
+        const overlay = document.getElementById('how-factor-overlay');
+        if (overlay) overlay.style.display = 'block';
+
+        // 3. Tell Tess we started (Change this text if she still loops!)
+        if (this.widget) {
+            await this.widget.sendMessage('START_HOW_FACTOR_DEMO');
+        }
+    }
+
     // --- EXTERNAL CONTROLS ---
         setupExternalControls() {
         setTimeout(() => {
@@ -79,26 +95,6 @@ class TessBridge {
                     muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
                     muteBtn.style.borderColor = '#ff9900';
                 }
-            });
-        }
-
-        // --- NEW: HOW FACTOR BUTTON LISTENER ---
-        // This wires up the button we created in Step 1
-        const howFactorBtn = document.getElementById('tess-how-factor-btn');
-        if (howFactorBtn) {
-            howFactorBtn.addEventListener('click', async (e) => {
-                e.preventDefault();
-                console.log("[Tess Bridge] How Factor Button Clicked");
-                
-                // 1. Force Unmute
-                await this.forceUnmute();
-                
-                // 2. Send Message
-                await this.widget.sendMessage('SYSTEM_TRIGGER_SHOW_HOW_FACTOR');
-                
-                // 3. Show Overlay
-                const overlay = document.getElementById('how-factor-overlay');
-                if (overlay) overlay.style.display = 'block';
             });
         }
 
