@@ -828,66 +828,62 @@ lemon-slice-widget .agent-video {
 <!-- RIGHT COLUMN - SIDEBAR -->
 <div class="right-column">
     
-    <!-- TESS VIDEO CONTAINER - Plays, Freezes, becomes Clickable -->
-    <div id="tess-video-container" style="width: 100%; margin-bottom: 25px; position: relative; cursor: pointer;">
-        
-        <!-- The Video -->
-        <video id="tess-preloader-video" 
-               autoplay 
-               muted 
-               playsinline 
-               style="width: 100%; height: auto; display: block; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s;"
-               onmouseover="this.style.transform='scale(1.02)'" 
-               onmouseout="this.style.transform='scale(1)'">
-            <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Animate%20this%20uploaded%20photo%20o_483250727007375369.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fQW5pbWF0ZSB0aGlzIHVwbG9hZGVkIHBob3RvIG9fNDgzMjUwNzI3MDA3Mzc1MzY5Lm1wNCIsImlhdCI6MTc3MjA3MjMxOCwiZXhwIjoxODAzNjA4MzE4fQ.ku46C2hu5rpZ3U3xKMmA0tzv4NrTI4N-zWuZwUZFIhw" type="video/mp4">
-        </video>
-        
-        <!-- The "Frozen Frame" Image (Hidden at first) -->
-        <img id="tess-frozen-frame" 
-             src="" 
-             style="width: 100%; height: auto; display: none; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s;"
-             onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
-             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
-    </div>
+    <!-- 1. THE VIDEO (Plays first) -->
+    <video id="tess-preloader-video" autoplay muted playsinline style="
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        cursor: pointer;
+        transition: opacity 0.8s ease, transform 0.2s;
+    " onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+        <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Animate%20this%20uploaded%20photo%20o_483250727007375369.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fQW5pbWF0ZSB0aGlzIHVwbG9hZGVkIHBob3RvIG9fNDgzMjUwNzI3MDA3Mzc1MzY5Lm1wNCIsImlhdCI6MTc3MjA3MjMxOCwiZXhwIjoxODAzNjA4MzE4fQ.ku46C2hu5rpZ3U3xKMmA0tzv4NrTI4N-zWuZwUZFIhw" type="video/mp4">
+    </video>
 
-    <!-- Script to Handle the Swap (Renamed variables to fix error) -->
+    <!-- 2. THE FROZEN IMAGE (Hidden at start, replaces video in-place) -->
+    <img id="tess-frozen-frame" 
+         src="" 
+         style="width: 100%; height: auto; display: none; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s;"
+         onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
+         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
+
+    <!-- 3. SCRIPT (No wrapper needed, just swaps the elements) -->
     <script>
+        // Use unique variable names to avoid the error
         const preloaderVideo = document.getElementById('tess-preloader-video');
         const frozenFrame = document.getElementById('tess-frozen-frame');
-        const videoContainer = document.getElementById('tess-video-container');
 
-        // 1. When Video Ends, capture the frame and swap
+        // A. Handle the "Freeze" (End of Video)
         preloaderVideo.addEventListener('ended', function() {
-            // Create a temporary canvas to grab the image
+            // Capture the frame
             const canvas = document.createElement('canvas');
             canvas.width = preloaderVideo.videoWidth;
             canvas.height = preloaderVideo.videoHeight;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(preloaderVideo, 0, 0, canvas.width, canvas.height);
             
-            // Turn canvas into an image source
+            // Set image source
             frozenFrame.src = canvas.toDataURL('image/png');
             
-            // Swap displays
+            // Swap: Hide Video, Show Image
             preloaderVideo.style.display = 'none';
             frozenFrame.style.display = 'block';
         });
 
-        // 2. Handle the Click (For both Video and Frozen Image)
-        videoContainer.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // If video is still playing, pause it
-            if (!preloaderVideo.paused) {
-                preloaderVideo.pause();
-            }
-            
-            // TRIGGER THE FUNCTION
-            if (window.tessBridge) {
-                window.tessBridge.triggerHowFactorMode();
-            }
+        // B. Handle the "Click" (Works on both Video and Image)
+        // Clicking the video
+        preloaderVideo.addEventListener('click', function() {
+            if (window.tessBridge) window.tessBridge.triggerHowFactorMode();
+        });
+
+        // Clicking the frozen image
+        frozenFrame.addEventListener('click', function() {
+            if (window.tessBridge) window.tessBridge.triggerHowFactorMode();
         });
     </script>
+
 </div>
 
     <!-- TESTIMONIALS SECTION -->
