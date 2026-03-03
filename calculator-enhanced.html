@@ -130,6 +130,15 @@
         
         .top-bar { top: 0; }
         .bottom-bar { bottom: 0; }
+
+        .logo-section {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.logo-section:hover {
+    filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.7));
+    transform: scale(1.02);
+}
         
         /* ========================================== */
         /* MAIN CONTAINER - FLEXBOX LAYOUT */
@@ -672,14 +681,35 @@ lemon-slice-widget .agent-video {
     <!-- Blue Top Bar -->
     <div class="top-bar"></div>
 
-    <!-- Header with 50% BIGGER LOGO -->
-    <header class="main-header">
-        <div class="header-content">
-            <div class="logo-section">
-                <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/adspend3.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvYWRzcGVuZDMucG5nIiwiaWF0IjoxNzcyMzM0ODgxLCJleHAiOjE4MDM4NzA4ODF9.aOLzrdT84vM0ASQME8XUyRZMSJm0RusyTHvzxg2QvpE" 
-                     alt="PPC Audit Report" 
-                     class="logo-image">
-            </div>
+   <!-- Header with 50% BIGGER LOGO - NOW CLICKABLE FOR HOW FACTOR -->
+<header class="main-header">
+    <div class="header-content">
+        <!-- Logo Section - Now clickable and triggers How Factor -->
+        <div class="logo-section" 
+             onclick="window.tessBridge.triggerHowFactorMode()" 
+             style="cursor: pointer;"
+             title="Click to see how Mobile-Wise AI delivers 5X qualified leads">
+            <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/adspend3.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvYWRzcGVuZDMucG5nIiwiaWF0IjoxNzcyMzM0ODgxLCJleHAiOjE4MDM4NzA4ODF9.aOLzrdT84vM0ASQME8XUyRZMSJm0RusyTHvzxg2QvpE" 
+                 alt="AdSpend Audit Group" 
+                 class="logo-image">
+        </div>
+        
+        <!-- Optional: Add a subtle visual indicator that it's clickable -->
+        <div style="position: absolute; left: 50%; transform: translateX(-50%); top: 80px; color: #10b981; font-size: 0.8rem; opacity: 0.7; display: none;" id="logo-hint">
+            ⚡ Click logo to see how we 5X leads ⚡
+        </div>
+    </div>
+</header>
+
+<!-- Optional: Show hint on hover -->
+<script>
+document.querySelector('.logo-section').addEventListener('mouseenter', function() {
+    document.getElementById('logo-hint').style.display = 'block';
+});
+document.querySelector('.logo-section').addEventListener('mouseleave', function() {
+    document.getElementById('logo-hint').style.display = 'none';
+});
+</script>
 
            <!-- REAL TIME LOSS TICKER - SLIM STOCK TICKER STYLE -->
 <div id="loss-ticker" style="
@@ -1323,43 +1353,35 @@ window.addEventListener('load', function() {
     });
 </script>
 
-<!-- HOW FACTOR OVERLAY - Updated Z-Index -->
-<div id="how-factor-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(8px); background: rgba(0,0,0,0.5); z-index: 9990;">
+<!-- HOW FACTOR OVERLAY - PDF VERSION -->
+<div id="how-factor-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(8px); background: rgba(0,0,0,0.85); z-index: 9990;">
     
-    <!-- The Centered White Card (z-index 9999 puts it above the blur but below Tess usually) -->
-    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; background: #fff; border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: center; font-family: sans-serif; z-index: 9999;">
+    <!-- PDF Container with Exit & Demo Buttons -->
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 1000px; height: 85vh; background: #1a1a2e; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.7); z-index: 9999; border: 2px solid #10b981; overflow: hidden;">
         
-        <h2 style="color: #0056b3; margin-top: 0;">The "How Factor" Breakdown</h2>
-        <p style="color: #666; font-size: 14px;">Here is exactly where you are losing money:</p>
-
-        <!-- Problem List -->
-        <div style="text-align: left; margin-top: 20px;">
-            <div style="margin-bottom: 15px;">
-                <strong>Problem #1: Forms Kill Leads</strong><br>
-                <span style="color: #d9534f; font-size: 14px;">Cost: $1,684/mo wasted</span>
+        <!-- Button Bar at Top -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0f172a; border-bottom: 1px solid #2d3748;">
+            
+            <div style="color: #10b981; font-weight: bold; font-size: 1.1rem;">
+                📄 HOW FACTOR PRESENTATION
             </div>
-            <div style="margin-bottom: 15px;">
-                <strong>Problem #2: No AI Assistant</strong><br>
-                <span style="color: #d9534f; font-size: 14px;">Cost: $956/mo lost</span>
-            </div>
-            <div style="margin-bottom: 15px;">
-                <strong>Problem #3: Slow Load Time</strong><br>
-                <span style="color: #d9534f; font-size: 14px;">Cost: $688/mo lost</span>
-            </div>
-            <div style="margin-bottom: 15px;">
-                <strong>Problem #4: Ad-to-Page Mismatch</strong><br>
-                <span style="color: #d9534f; font-size: 14px;">Cost: $554/mo lost</span>
-            </div>
-            <div style="margin-bottom: 15px;">
-                <strong>Problem #5: No Click-to-Call</strong><br>
-                <span style="color: #d9534f; font-size: 14px;">Cost: $351/mo lost</span>
+            
+            <div style="display: flex; gap: 12px;">
+                <!-- Book Demo Button -->
+                <button onclick="window.open('https://calendly.com/mobilewise-ai/30min', '_blank')" style="background: #10b981; color: black; border: none; padding: 8px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    📅 BOOK DEMO
+                </button>
+                
+                <!-- Exit Button -->
+                <button onclick="closeHowFactor()" style="background: #ff4444; color: white; border: none; padding: 8px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    ✕ EXIT
+                </button>
             </div>
         </div>
-
-        <!-- Exit Button -->
-        <button onclick="closeHowFactor()" style="margin-top: 25px; padding: 10px 30px; background: #0056b3; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px;">
-            Exit
-        </button>
+        
+        <!-- PDF CONTENT AREA - Replace with your PDF URL -->
+        <iframe src="YOUR_PDF_URL_HERE" style="width: 100%; height: calc(85vh - 70px); border: none;"></iframe>
+        
     </div>
 </div>
 
