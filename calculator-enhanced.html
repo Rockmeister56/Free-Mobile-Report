@@ -857,43 +857,28 @@ document.querySelector('.logo-section').addEventListener('mouseleave', function(
 
 <!-- RIGHT COLUMN - SIDEBAR -->
 <div class="right-column">
-    <!-- VIDEO CONTAINER - Holds both videos -->
-    <div style="width: 100%; margin-bottom: 25px;">
-        
-        <!-- ANALYSIS VIDEO (Plays first) -->
-        <video id="analysis-video" autoplay muted playsinline style="
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            transition: opacity 0.8s ease;
-        ">
-            <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video_Cinematic%20tracking%20shot%20throug_485288849292496899.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19DaW5lbWF0aWMgdHJhY2tpbmcgc2hvdCB0aHJvdWdfNDg1Mjg4ODQ5MjkyNDk2ODk5Lm1wNCIsImlhdCI6MTc3MjU1ODg0OCwiZXhwIjoxODA0MDk0ODQ4fQ.b5OjYJqnAFEH0g-cpLH25HRYS3o08DaTFqKBHE1CGj0" type="video/mp4">
-        </video>
-        
-        <!-- RECOMMENDATION VIDEO (Hidden initially) -->
-        <video id="recommendation-video" muted playsinline style="
-            width: 100%;
-            height: auto;
-            display: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            transition: opacity 0.8s ease;
-        ">
-            <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Final%20freeze%20frame%20of%20a%20massi_485286694338768900.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fRmluYWwgZnJlZXplIGZyYW1lIG9mIGEgbWFzc2lfNDg1Mjg2Njk0MzM4NzY4OTAwLm1wNCIsImlhdCI6MTc3MjU1ODk2MywiZXhwIjoxODA0MDk0OTYzfQ.UqmrKkZF9SClJ_x3E3g3bjM2ol7pq-nzKZp9zeavnDE" type="video/mp4">
-        </video>
-    </div>
+    <!-- TESS VIDEO - Plays once then fades out -->
+    <video id="tess-preloader-video" autoplay muted playsinline style="
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        cursor: pointer;
+        transition: opacity 0.8s ease, transform 0.2s;
+    " onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+        <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/Hailuo_Video__Animate%20this%20uploaded%20photo%20o_483250727007375369.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL0hhaWx1b19WaWRlb19fQW5pbWF0ZSB0aGlzIHVwbG9hZGVkIHBob3RvIG9fNDgzMjUwNzI3MDA3Mzc1MzY5Lm1wNCIsImlhdCI6MTc3MjA3MjMxOCwiZXhwIjoxODAzNjA4MzE4fQ.ku46C2hu5rpZ3U3xKMmA0tzv4NrTI4N-zWuZwUZFIiw" type="video/mp4">
+    </video>
 
-    <!-- TESS STILL IMAGE - Book Demo (Hidden initially) -->
-    <a href="https://calendly.com/mobilewise-ai/30min" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: none;" id="tess-image-link">
-        <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/demo2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvZGVtbzIucG5nIiwiaWF0IjoxNzcyNTU1MDIxLCJleHAiOjE4MDQwOTEwMjF9.yS6bCEBaSiZeM0rtL4yyiRGqjahmgkZYI-jOHyJanHc" 
-             alt="Book a Demo" 
-             style="width: 100%; height: auto; display: block; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s; opacity: 0; animation: fadeInImage 0.8s ease forwards;"
-             onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
-             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
-    </a>
-</div>
+  <!-- TESS STILL IMAGE - Fades in, opens Calendly -->
+<a href="https://calendly.com/mobilewise-ai/30min" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: none;" id="tess-image-link">
+    <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/demo2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvZGVtbzIucG5nIiwiaWF0IjoxNzcyNTU1MDIxLCJleHAiOjE4MDQwOTEwMjF9.yS6bCEBaSiZeM0rtL4yyiRGqjahmgkZYI-jOHyJanHc" 
+         alt="Book a Demo" 
+         style="width: 100%; height: auto; display: block; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s; opacity: 0; animation: fadeInImage 0.8s ease forwards;"
+         onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
+         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
+</a>
 
     <!-- TESTIMONIALS SECTION -->
     <div style="margin-bottom: 25px;">
@@ -1023,94 +1008,6 @@ function pauseTess(event) {
     }
 }
 
-</script>
-
-<!-- VIDEO SEQUENCE SCRIPT -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const analysisVideo = document.getElementById('analysis-video');
-    const recommendationVideo = document.getElementById('recommendation-video');
-    const demoImage = document.getElementById('tess-image-link');
-    
-    if (!analysisVideo || !recommendationVideo || !demoImage) {
-        console.error('❌ Missing video elements');
-        return;
-    }
-    
-    // Slow down analysis video to ~10 seconds
-    analysisVideo.playbackRate = 0.7; // Adjust this to hit ~10 seconds
-    
-    // When analysis video ends
-    analysisVideo.addEventListener('ended', function() {
-        console.log('✅ Analysis video ended - crossfading');
-        
-        // Fade out analysis video
-        analysisVideo.style.transition = 'opacity 0.8s ease';
-        analysisVideo.style.opacity = '0';
-        
-        setTimeout(() => {
-            analysisVideo.style.display = 'none';
-            
-            // Show and play recommendation video
-            recommendationVideo.style.display = 'block';
-            recommendationVideo.style.opacity = '0';
-            recommendationVideo.play();
-            recommendationVideo.playbackRate = 1.0;
-            
-            // Fade in recommendation video
-            setTimeout(() => {
-                recommendationVideo.style.transition = 'opacity 0.8s ease';
-                recommendationVideo.style.opacity = '1';
-            }, 50);
-            
-            // When recommendation video ends, freeze last frame
-            recommendationVideo.addEventListener('ended', function() {
-                console.log('✅ Recommendation video ended - freezing');
-                
-                // Don't hide it - just let it sit on last frame for 10 seconds
-                setTimeout(() => {
-                    console.log('⏰ 10 seconds up - showing demo image');
-                    
-                    // Fade out recommendation video
-                    recommendationVideo.style.transition = 'opacity 0.8s ease';
-                    recommendationVideo.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        recommendationVideo.style.display = 'none';
-                        
-                        // Show demo image
-                        demoImage.style.display = 'block';
-                        // Image already has fade animation from CSS
-                        
-                        console.log('✅ Demo image shown');
-                    }, 800);
-                }, 10000); // 10 second freeze
-            });
-            
-        }, 800); // Match fade time
-    });
-    
-    // Safety timeout in case videos don't trigger
-    setTimeout(function() {
-        if (analysisVideo.style.display !== 'none') {
-            console.log('⚠️ Safety timeout - forcing sequence');
-            analysisVideo.style.opacity = '0';
-            setTimeout(() => {
-                analysisVideo.style.display = 'none';
-                recommendationVideo.style.display = 'block';
-                recommendationVideo.play();
-                
-                setTimeout(() => {
-                    recommendationVideo.style.opacity = '0';
-                    setTimeout(() => {
-                        recommendationVideo.style.display = 'none';
-                        demoImage.style.display = 'block';
-                    }, 800);
-                }, 15000); // 15 second total fallback
-            }, 800);
-        }
-    }, 20000); // 20 second total safety
-});
 </script>
 
 <script>
