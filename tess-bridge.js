@@ -228,7 +228,7 @@ class TessBridge {
         const spokenLoss = this.formatNumberForSpeech(data.loss);
         
         // Construct message: Intro + Name Request + Pivot
-        const message = `Hi! I'm Tess your Smart AI Guide here to help you get the most from your audit for ${data.url}. It looks like you're losing around ${spokenLoss} dollars per month in PPC waste. Before we get into your audit report, can I get your name please?`;
+        const message = `Hi! I'm Tess your Smart AI Guide and I just analyzed your site at ${data.url}, and it looks like your main block is in your prequalification form that is costing you approximently ${spokenLoss} dollars per month in PPC waste. Before we get into your audit report, can I get your name please?`;
 
         console.log('[Tess Bridge] Speaking:', message);
 
