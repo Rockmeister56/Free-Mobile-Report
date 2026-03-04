@@ -1030,31 +1030,34 @@ const imageLink = document.getElementById('tess-image-link');
 // Make sure it doesn't loop
 video.loop = false;
 
-// Slow it down
-video.playbackRate = 0.7;
+// REMOVED: playbackRate = 0.7 (let it play at normal speed)
 
 // When video ends, fade in image link
 video.addEventListener('ended', function() {
+    console.log('✅ Video ended naturally - showing image');
+    
     // Fade out video
     video.style.opacity = '0';
     
     setTimeout(() => {
         video.style.display = 'none';  // Hide video
-        imageLink.style.display = 'block';  // Show image link (already has fade animation)
-        console.log('✅ Video faded out, image link faded in');
+        imageLink.style.display = 'block';  // Show image link
+        console.log('✅ Image displayed');
     }, 800); // Match transition time
 });
 
-// Safety timeout
+// Safety timeout - INCREASED to 30 seconds to let full video play
 setTimeout(function() {
-    if (video.style.display !== 'none') {
+    // Only trigger if video is still visible (not already ended)
+    if (video.style.display !== 'none' && video.style.opacity !== '0') {
+        console.log('⚠️ Safety timeout triggered - forcing transition');
         video.style.opacity = '0';
         setTimeout(() => {
             video.style.display = 'none';
             imageLink.style.display = 'block';
         }, 800);
     }
-}, 10000);
+}, 30000); // Increased from 10,000 to 30,000 ms (30 seconds)
 </script>
    
    <script>
