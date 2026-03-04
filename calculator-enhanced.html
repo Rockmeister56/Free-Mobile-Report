@@ -1046,18 +1046,18 @@ video.addEventListener('ended', function() {
     }, 800); // Match transition time
 });
 
-// Safety timeout - INCREASED to 30 seconds to let full video play
+// Safety timeout - SET TO 52 SECONDS
 setTimeout(function() {
     // Only trigger if video is still visible (not already ended)
     if (video.style.display !== 'none' && video.style.opacity !== '0') {
-        console.log('⚠️ Safety timeout triggered - forcing transition');
+        console.log('⚠️ 52-second safety timeout triggered - forcing transition');
         video.style.opacity = '0';
         setTimeout(() => {
             video.style.display = 'none';
             imageLink.style.display = 'block';
         }, 800);
     }
-}, 30000); // Increased from 10,000 to 30,000 ms (30 seconds)
+}, 52000); // 52,000 milliseconds = 52 seconds
 </script>
    
    <script>
