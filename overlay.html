@@ -1,0 +1,173 @@
+<!-- SMART GUIDE WELCOME OVERLAY -->
+<div id="smart-guide-overlay" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease;
+">
+    <div style="
+        background: linear-gradient(145deg, #1a1a2e, #16213e);
+        border-radius: 30px;
+        padding: 50px;
+        max-width: 600px;
+        width: 90%;
+        text-align: center;
+        border: 3px solid #00ff88;
+        box-shadow: 0 25px 60px rgba(0, 255, 136, 0.3);
+        position: relative;
+    ">
+        <!-- Logo/Icon -->
+        <div style="
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 255, 136, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 3rem;
+        ">
+            🤖
+        </div>
+        
+        <!-- Headline -->
+        <h2 style="
+            color: #00ff88;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        ">
+            THIS SITE CONTAINS A<br>SMART GUIDE AI
+        </h2>
+        
+        <!-- Subheadline -->
+        <p style="
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        ">
+            Meet Tess - Your Personal AI Assistant
+        </p>
+        
+        <!-- Benefits -->
+        <div style="
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: left;
+        ">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <span style="color: #00ff88; font-size: 1.3rem;">✓</span>
+                <span style="color: white;">Ask questions in real-time about rates & loans</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <span style="color: #00ff88; font-size: 1.3rem;">✓</span>
+                <span style="color: white;">Get instant answers with video responses</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="color: #00ff88; font-size: 1.3rem;">✓</span>
+                <span style="color: white;">No forms - just natural conversation</span>
+            </div>
+        </div>
+        
+        <!-- CTA Buttons -->
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <button onclick="activateTess()" style="
+                background: linear-gradient(90deg, #00ff88, #00ccff);
+                color: #000;
+                border: none;
+                padding: 20px 30px;
+                border-radius: 60px;
+                font-weight: 700;
+                font-size: 1.4rem;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 15px;
+                transition: transform 0.3s, box-shadow 0.3s;
+                box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+            " onmouseover="this.style.transform='scale(1.02)'" 
+               onmouseout="this.style.transform='scale(1)'">
+                <span style="font-size: 1.8rem;">🎤</span> CLICK HERE TO TALK TO TESS
+            </button>
+            
+            <button onclick="dismissOverlay()" style="
+                background: transparent;
+                color: rgba(255,255,255,0.6);
+                border: 2px solid rgba(255,255,255,0.2);
+                padding: 15px;
+                border-radius: 60px;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.3s;
+            " onmouseover="this.style.background='rgba(255,255,255,0.05)'" 
+               onmouseout="this.style.background='transparent'">
+                ✕ No thanks, I'll continue to the form
+            </button>
+        </div>
+        
+        <!-- Attention Span Stat (subtle) -->
+        <div style="
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.4);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+        ">
+            ⏱️ Average attention span: 47 seconds. Don't waste yours on forms.
+        </div>
+    </div>
+</div>
+
+<script>
+function activateTess() {
+    // Hide overlay
+    document.getElementById('smart-guide-overlay').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('smart-guide-overlay').style.display = 'none';
+    }, 500);
+    
+    // Trigger Tess (using your bridge)
+    if (window.tessBridge && typeof window.tessBridge.triggerHowFactorMode === 'function') {
+        window.tessBridge.triggerHowFactorMode();
+    } else {
+        // Fallback - try to activate widget directly
+        const widget = document.querySelector('lemon-slice-widget');
+        if (widget) {
+            widget.setAttribute('controlled-widget-state', 'active');
+            widget.setAttribute('muted', 'false');
+            widget.setAttribute('volume-enabled', 'true');
+        }
+    }
+    
+    console.log('🎤 Tess activated from welcome overlay');
+}
+
+function dismissOverlay() {
+    document.getElementById('smart-guide-overlay').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('smart-guide-overlay').style.display = 'none';
+    }, 500);
+    console.log('👋 Overlay dismissed');
+}
+
+// Auto-dismiss if user clicks outside (optional)
+window.addEventListener('click', function(e) {
+    const overlay = document.getElementById('smart-guide-overlay');
+    if (e.target === overlay) {
+        dismissOverlay();
+    }
+});
+</script>
