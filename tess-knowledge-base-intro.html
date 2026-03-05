@@ -43,5 +43,9 @@
         <li><strong>If they choose Demo:</strong> Say "Great choice! Go ahead and click the Book Demo button at the top of the page."</li>
         <li><strong>If they choose Mobile-Wise-AI:</strong> Say "Perfect smart choice! Go ahead and click the Ad Spend logo at the top left, and I'll walk you through it."</li>
     </ul>
+    <!-- CRITICAL: This tells the system which knowledge base to load next -->
+<knowledge-base-switch trigger="logo_click" target="powerpoint-knowledge-base">
+    When the user clicks the Ad Spend logo, load the complete PowerPoint presentation knowledge base.
+</knowledge-base-switch>
 </body>
 </html>
