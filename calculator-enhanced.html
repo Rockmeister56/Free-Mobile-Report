@@ -681,22 +681,17 @@ lemon-slice-widget .agent-video {
     <!-- Blue Top Bar -->
     <div class="top-bar"></div>
 
-   <!-- Header with 50% BIGGER LOGO - NOW CLICKABLE FOR HOW FACTOR -->
+   <!-- Header with 50% BIGGER LOGO - NOW OPENS VIDEO OVERLAY -->
 <header class="main-header">
     <div class="header-content">
-        <!-- Logo Section - Now clickable and triggers How Factor -->
+        <!-- Logo Section - Now opens video presentation -->
         <div class="logo-section" 
-             onclick="window.tessBridge.triggerHowFactorMode()" 
+             onclick="openVideoPresentation()" 
              style="cursor: pointer;"
              title="Click to see how Mobile-Wise AI delivers 5X qualified leads">
             <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/adspend3.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvYWRzcGVuZDMucG5nIiwiaWF0IjoxNzcyMzM0ODgxLCJleHAiOjE4MDM4NzA4ODF9.aOLzrdT84vM0ASQME8XUyRZMSJm0RusyTHvzxg2QvpE" 
                  alt="AdSpend Audit Group" 
                  class="logo-image">
-        </div>
-        
-        <!-- Optional: Add a subtle visual indicator that it's clickable -->
-        <div style="position: absolute; left: 50%; transform: translateX(-50%); top: 80px; color: #10b981; font-size: 0.8rem; opacity: 0.7; display: none;" id="logo-hint">
-            ⚡ Click logo to see how we 5X leads ⚡
         </div>
     </div>
 </header>
@@ -996,6 +991,150 @@ document.addEventListener('DOMContentLoaded', function() {
     100% { opacity: 1; }
 }
 </style>
+
+<!-- VIDEO OVERLAY CONTAINER -->
+<div id="video-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(8px); background: rgba(0,0,0,0.85); z-index: 100000;">
+    
+    <!-- Video Player Container -->
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                width: 90%; max-width: 1000px; background: #1a1a2e; border-radius: 20px; 
+                box-shadow: 0 20px 60px rgba(0,0,0,0.7); z-index: 100001; 
+                border: 2px solid #10b981; overflow: hidden;">
+        
+        <!-- Button Bar at Top -->
+        <div style="display: flex; justify-content: space-between; align-items: center; 
+                    padding: 15px 20px; background: #0f172a; border-bottom: 1px solid #2d3748;">
+            
+            <div style="color: #10b981; font-weight: bold; font-size: 1.1rem;">
+                📹 MOBILE-WISE AI PRESENTATION
+            </div>
+            
+            <div style="display: flex; gap: 12px;">
+                <!-- Ask Tess Button (NEW) -->
+                <button onclick="pauseVideoAndWakeTess()" style="
+                    background: #00ccff; 
+                    color: black; 
+                    border: none; 
+                    padding: 8px 20px; 
+                    border-radius: 8px; 
+                    font-weight: bold; 
+                    cursor: pointer; 
+                    display: flex; 
+                    align-items: center; 
+                    gap: 8px;">
+                    🎤 ASK TESS
+                </button>
+                
+                <!-- Book Demo Button -->
+                <button onclick="window.open('https://calendly.com/tommy-ppc/30min', '_blank')" style="
+                    background: #10b981; 
+                    color: black; 
+                    border: none; 
+                    padding: 8px 20px; 
+                    border-radius: 8px; 
+                    font-weight: bold; 
+                    cursor: pointer; 
+                    display: flex; 
+                    align-items: center; 
+                    gap: 8px;">
+                    📅 BOOK DEMO
+                </button>
+                
+                <!-- Exit Button -->
+                <button onclick="closeVideoOverlay()" style="
+                    background: #ff4444; 
+                    color: white; 
+                    border: none; 
+                    padding: 8px 20px; 
+                    border-radius: 8px; 
+                    font-weight: bold; 
+                    cursor: pointer; 
+                    display: flex; 
+                    align-items: center; 
+                    gap: 8px;">
+                    ✕ EXIT
+                </button>
+            </div>
+        </div>
+        
+        <!-- VIDEO PLAYER (responsive sizing) -->
+        <div style="position: relative; width: 100%; padding-top: 56.25%; /* 16:9 Aspect Ratio */">
+            <video id="presentation-video" controls style="
+                position: absolute; 
+                top: 0; 
+                left: 0; 
+                width: 100%; 
+                height: 100%; 
+                background: black;
+            ">
+                <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/mobile-wise-ai.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL21vYmlsZS13aXNlLWFpLm1wNCIsImlhdCI6MTc3Mjc2ODU5NiwiZXhwIjoxODA0MzA0NTk2fQ.fvHBv0vBzByCnfguHbP-6ZCrnarJCXG87JtR29zccuk" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        
+        <!-- Bottom Info Bar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; 
+                    padding: 12px 20px; background: #0f172a; border-top: 1px solid #2d3748;
+                    color: rgba(255,255,255,0.7); font-size: 0.9rem;">
+            <span>⏱️ 4-minute presentation</span>
+            <span>🤖 Tess is standing by for questions</span>
+        </div>
+    </div>
+</div>
+
+<script>
+// Video player functions
+const videoOverlay = document.getElementById('video-overlay');
+const videoPlayer = document.getElementById('presentation-video');
+
+function openVideoOverlay() {
+    videoOverlay.style.display = 'block';
+    videoPlayer.play(); // Auto-play when opened
+}
+
+function closeVideoOverlay() {
+    videoPlayer.pause();
+    videoOverlay.style.display = 'none';
+}
+
+function pauseVideoAndWakeTess() {
+    // Pause the video
+    videoPlayer.pause();
+    
+    // Wake up Tess (using your bridge)
+    if (window.tessBridge && typeof window.tessBridge.triggerHowFactorMode === 'function') {
+        window.tessBridge.triggerHowFactorMode();
+    } else {
+        // Fallback - try to activate widget directly
+        const widget = document.querySelector('lemon-slice-widget');
+        if (widget) {
+            widget.setAttribute('controlled-widget-state', 'active');
+            widget.setAttribute('muted', 'false');
+            widget.setAttribute('volume-enabled', 'true');
+        }
+    }
+    
+    // Optional: Tess asks a question
+    setTimeout(() => {
+        const widget = document.querySelector('lemon-slice-widget');
+        if (widget && widget.sendMessage) {
+            widget.sendMessage("Hi! I see you're watching our presentation. What questions can I answer for you?");
+        }
+    }, 1000);
+}
+
+// When video ends, prompt for questions
+videoPlayer.addEventListener('ended', function() {
+    pauseVideoAndWakeTess();
+});
+
+// Close with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && videoOverlay.style.display === 'block') {
+        closeVideoOverlay();
+    }
+});
+</script>
 
 <script>
 
@@ -1368,150 +1507,6 @@ window.addEventListener('load', function() {
     });
 </script>
 
-<!-- VIDEO OVERLAY CONTAINER -->
-<div id="video-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(8px); background: rgba(0,0,0,0.85); z-index: 100000;">
-    
-    <!-- Video Player Container -->
-    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-                width: 90%; max-width: 1000px; background: #1a1a2e; border-radius: 20px; 
-                box-shadow: 0 20px 60px rgba(0,0,0,0.7); z-index: 100001; 
-                border: 2px solid #10b981; overflow: hidden;">
-        
-        <!-- Button Bar at Top -->
-        <div style="display: flex; justify-content: space-between; align-items: center; 
-                    padding: 15px 20px; background: #0f172a; border-bottom: 1px solid #2d3748;">
-            
-            <div style="color: #10b981; font-weight: bold; font-size: 1.1rem;">
-                📹 MOBILE-WISE AI PRESENTATION
-            </div>
-            
-            <div style="display: flex; gap: 12px;">
-                <!-- Ask Tess Button (NEW) -->
-                <button onclick="pauseVideoAndWakeTess()" style="
-                    background: #00ccff; 
-                    color: black; 
-                    border: none; 
-                    padding: 8px 20px; 
-                    border-radius: 8px; 
-                    font-weight: bold; 
-                    cursor: pointer; 
-                    display: flex; 
-                    align-items: center; 
-                    gap: 8px;">
-                    🎤 ASK TESS
-                </button>
-                
-                <!-- Book Demo Button -->
-                <button onclick="window.open('https://calendly.com/tommy-ppc/30min', '_blank')" style="
-                    background: #10b981; 
-                    color: black; 
-                    border: none; 
-                    padding: 8px 20px; 
-                    border-radius: 8px; 
-                    font-weight: bold; 
-                    cursor: pointer; 
-                    display: flex; 
-                    align-items: center; 
-                    gap: 8px;">
-                    📅 BOOK DEMO
-                </button>
-                
-                <!-- Exit Button -->
-                <button onclick="closeVideoOverlay()" style="
-                    background: #ff4444; 
-                    color: white; 
-                    border: none; 
-                    padding: 8px 20px; 
-                    border-radius: 8px; 
-                    font-weight: bold; 
-                    cursor: pointer; 
-                    display: flex; 
-                    align-items: center; 
-                    gap: 8px;">
-                    ✕ EXIT
-                </button>
-            </div>
-        </div>
-        
-        <!-- VIDEO PLAYER (responsive sizing) -->
-        <div style="position: relative; width: 100%; padding-top: 56.25%; /* 16:9 Aspect Ratio */">
-            <video id="presentation-video" controls style="
-                position: absolute; 
-                top: 0; 
-                left: 0; 
-                width: 100%; 
-                height: 100%; 
-                background: black;
-            ">
-                <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/mobile-wise-ai.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL21vYmlsZS13aXNlLWFpLm1wNCIsImlhdCI6MTc3Mjc2ODU5NiwiZXhwIjoxODA0MzA0NTk2fQ.fvHBv0vBzByCnfguHbP-6ZCrnarJCXG87JtR29zccuk" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-        
-        <!-- Bottom Info Bar -->
-        <div style="display: flex; justify-content: space-between; align-items: center; 
-                    padding: 12px 20px; background: #0f172a; border-top: 1px solid #2d3748;
-                    color: rgba(255,255,255,0.7); font-size: 0.9rem;">
-            <span>⏱️ 4-minute presentation</span>
-            <span>🤖 Tess is standing by for questions</span>
-        </div>
-    </div>
-</div>
-
-<script>
-// Video player functions
-const videoOverlay = document.getElementById('video-overlay');
-const videoPlayer = document.getElementById('presentation-video');
-
-function openVideoOverlay() {
-    videoOverlay.style.display = 'block';
-    videoPlayer.play(); // Auto-play when opened
-}
-
-function closeVideoOverlay() {
-    videoPlayer.pause();
-    videoOverlay.style.display = 'none';
-}
-
-function pauseVideoAndWakeTess() {
-    // Pause the video
-    videoPlayer.pause();
-    
-    // Wake up Tess (using your bridge)
-    if (window.tessBridge && typeof window.tessBridge.triggerHowFactorMode === 'function') {
-        window.tessBridge.triggerHowFactorMode();
-    } else {
-        // Fallback - try to activate widget directly
-        const widget = document.querySelector('lemon-slice-widget');
-        if (widget) {
-            widget.setAttribute('controlled-widget-state', 'active');
-            widget.setAttribute('muted', 'false');
-            widget.setAttribute('volume-enabled', 'true');
-        }
-    }
-    
-    // Optional: Tess asks a question
-    setTimeout(() => {
-        const widget = document.querySelector('lemon-slice-widget');
-        if (widget && widget.sendMessage) {
-            widget.sendMessage("Hi! I see you're watching our presentation. What questions can I answer for you?");
-        }
-    }, 1000);
-}
-
-// When video ends, prompt for questions
-videoPlayer.addEventListener('ended', function() {
-    pauseVideoAndWakeTess();
-});
-
-// Close with Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && videoOverlay.style.display === 'block') {
-        closeVideoOverlay();
-    }
-});
-</script>
-
 <!-- ========================================== -->
 <!-- THE SCRIPT (The Brains)                    -->
 <!-- ========================================== -->
@@ -1652,6 +1647,25 @@ function startLossTicker() {
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(startLossTicker, 500);
 });
+</script>
+
+<script>
+function openVideoPresentation() {
+    console.log('🎬 Opening video presentation');
+    
+    // Open the video overlay
+    const overlay = document.getElementById('video-overlay');
+    if (overlay) {
+        overlay.style.display = 'block';
+        
+        // Video starts paused
+        const video = document.getElementById('presentation-video');
+        if (video) {
+            video.pause();
+            video.currentTime = 0;
+        }
+    }
+}
 </script>
 
 </body>
