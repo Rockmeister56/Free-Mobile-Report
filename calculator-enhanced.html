@@ -1260,28 +1260,30 @@ setTimeout(function() {
     // Generate dynamic data
     const dynamicData = generateDynamicScores();
     
-    // Problem breakdown with dynamic scores
+  // Problem breakdown with dynamic scores
+// HIGH score = BAD problem = RED
+// LOW score = GOOD = GREEN
 const problems = [
-    { name: 'Form Request Too Long', score: dynamicData.problemScores.formLength, 
+    { name: 'Form Request Too Long', score: 85, // 85% abandon = SEVERE problem
       loss: dynamicData.problemLosses.form, desc: '85% abandon long forms' },
-    { name: 'No Mobile AI Assistant', score: dynamicData.problemScores.aiAssistant, 
+    { name: 'No Mobile AI Assistant', score: 80, // 73% expect = SEVERE problem
       loss: dynamicData.problemLosses.ai, desc: '73% expect instant responses' },
-    { name: 'Bounce Rate', score: 65, // HARDCODED to 65 for orange/red
-      loss: 65, desc: '30% (industry avg 50-61%)' },
-    { name: 'Ad-to-Page Mismatch', score: dynamicData.problemScores.adMatch, 
+    { name: 'Bounce Rate', score: 65, // 65% bounce rate = HIGH problem
+      loss: 65, desc: '65% bounce rate (industry avg 50-61%)' },
+    { name: 'Ad-to-Page Mismatch', score: 49, // 49% mismatch = MEDIUM problem
       loss: dynamicData.problemLosses.ad, desc: 'Ad promise ≠ landing page' },
-    { name: 'No Click-to-Call', score: dynamicData.problemScores.clickToCall, 
+    { name: 'No Click-to-Call', score: 32, // 32% missing = LOW problem
       loss: dynamicData.problemLosses.call, desc: 'Mobile users want to call' }
 ];
 
-// Helper functions for bounce rate scoring
+// Helper functions for bounce rate scoring (keeping for reference)
 function calculateBounceRateScore(bounceRate) {
-    // Lower bounce rate = higher score
-    if (bounceRate <= 30) return 95;        // Excellent
-    if (bounceRate <= 40) return 85;        // Good
-    if (bounceRate <= 50) return 70;        // Average
-    if (bounceRate <= 60) return 50;        // Below average
-    return 30;                               // Poor
+    // Higher bounce rate = higher problem score
+    if (bounceRate >= 70) return 90;        // Severe
+    if (bounceRate >= 60) return 75;        // High (65% falls here)
+    if (bounceRate >= 50) return 60;        // Moderate
+    if (bounceRate >= 40) return 40;        // Low
+    return 20;                               // Excellent
 }
 
 function calculateBounceRateLoss(bounceRate) {
@@ -1308,18 +1310,20 @@ function calculateBounceRateLoss(bounceRate) {
     const displayLoss = dynamicData.totalLoss || monthlyLoss;
 
     // Helper to get color class based on score
+    // HIGH score = BAD = RED
     function getScoreColorClass(score) {
-        if (score < 30) return 'score-red';
-        if (score < 50) return 'score-orange';
-        if (score < 70) return 'score-yellow';
-        return 'score-green';
+        if (score >= 70) return 'score-red';      // 70%+ = Severe problem = Red
+        if (score >= 50) return 'score-orange';   // 50-69% = Moderate problem = Orange
+        if (score >= 30) return 'score-yellow';   // 30-49% = Minor problem = Yellow
+        return 'score-green';                       // <30% = Good = Green
     }
 
+    // Progress bar fill color - HIGH score = BAD = RED
     function getProgressFillClass(score) {
-        if (score < 40) return 'red';      // 0-39 = red
-        if (score < 60) return 'orange';   // 40-59 = orange
-        if (score < 80) return 'yellow';   // 60-79 = yellow
-        return 'green';                     // 80+ = green
+        if (score >= 70) return 'red';      // 70%+ = Severe = Red
+        if (score >= 50) return 'orange';   // 50-69% = Moderate = Orange (65% lives here)
+        if (score >= 30) return 'yellow';   // 30-49% = Minor = Yellow
+        return 'green';                      // <30% = Good = Green
     }
 
     // Update page with real data
