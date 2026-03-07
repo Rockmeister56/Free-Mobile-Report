@@ -1266,8 +1266,8 @@ const problems = [
       loss: dynamicData.problemLosses.form, desc: '85% abandon long forms' },
     { name: 'No Mobile AI Assistant', score: dynamicData.problemScores.aiAssistant, 
       loss: dynamicData.problemLosses.ai, desc: '73% expect instant responses' },
-    { name: 'Bounce Rate', score: calculateBounceRateScore(dynamicData.bounceRate || 30), 
-      loss: calculateBounceRateLoss(dynamicData.bounceRate || 30), desc: '30% (industry avg 50-61%)' },
+    { name: 'Bounce Rate', score: 65, // HARDCODED to 65 for orange/red
+      loss: 65, desc: '30% (industry avg 50-61%)' },
     { name: 'Ad-to-Page Mismatch', score: dynamicData.problemScores.adMatch, 
       loss: dynamicData.problemLosses.ad, desc: 'Ad promise ≠ landing page' },
     { name: 'No Click-to-Call', score: dynamicData.problemScores.clickToCall, 
@@ -1307,13 +1307,13 @@ function calculateBounceRateLoss(bounceRate) {
     // Update the monthly loss display to show the dynamically calculated total
     const displayLoss = dynamicData.totalLoss || monthlyLoss;
 
-    // Helper to get color class based on score
-    function getScoreColorClass(score) {
-        if (score < 30) return 'score-red';
-        if (score < 50) return 'score-orange';
-        if (score < 70) return 'score-yellow';
-        return 'score-green';
-    }
+    // Updated with more aggressive reds
+function getScoreColor(score) {
+    if (score >= 80) return '#22c55e'; // Green (keep for other metrics)
+    if (score >= 70) return '#f97316'; // Orange (70-79)
+    if (score >= 50) return '#ef4444'; // Red (50-69)
+    return '#b91c1c'; // Dark Red (<50)
+}
 
     function getProgressFillClass(score) {
         if (score < 30) return 'red';
