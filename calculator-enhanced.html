@@ -1307,13 +1307,13 @@ function calculateBounceRateLoss(bounceRate) {
     // Update the monthly loss display to show the dynamically calculated total
     const displayLoss = dynamicData.totalLoss || monthlyLoss;
 
-    // Updated with more aggressive reds
-function getScoreColor(score) {
-    if (score >= 80) return '#22c55e'; // Green (keep for other metrics)
-    if (score >= 70) return '#f97316'; // Orange (70-79)
-    if (score >= 50) return '#ef4444'; // Red (50-69)
-    return '#b91c1c'; // Dark Red (<50)
-}
+    // Helper to get color class based on score
+    function getScoreColorClass(score) {
+        if (score < 30) return 'score-red';
+        if (score < 50) return 'score-orange';
+        if (score < 70) return 'score-yellow';
+        return 'score-green';
+    }
 
     function getProgressFillClass(score) {
         if (score < 30) return 'red';
