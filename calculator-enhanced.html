@@ -1261,18 +1261,33 @@ setTimeout(function() {
     const dynamicData = generateDynamicScores();
     
     // Problem breakdown with dynamic scores
-    const problems = [
-        { name: 'Form Request Too Long', score: dynamicData.problemScores.formLength, 
-          loss: dynamicData.problemLosses.form, desc: '85% abandon long forms' },
-        { name: 'No Mobile AI Assistant', score: dynamicData.problemScores.aiAssistant, 
-          loss: dynamicData.problemLosses.ai, desc: '73% expect instant responses' },
-        { name: 'Slow Page Load Time', score: dynamicData.problemScores.loadTime, 
-          loss: dynamicData.problemLosses.load, desc: '4.2 seconds (should be <2s)' },
-        { name: 'Ad-to-Page Mismatch', score: dynamicData.problemScores.adMatch, 
-          loss: dynamicData.problemLosses.ad, desc: 'Ad promise ≠ landing page' },
-        { name: 'No Click-to-Call', score: dynamicData.problemScores.clickToCall, 
-          loss: dynamicData.problemLosses.call, desc: 'Mobile users want to call' }
-    ];
+const problems = [
+    { name: 'Form Request Too Long', score: dynamicData.problemScores.formLength, 
+      loss: dynamicData.problemLosses.form, desc: '85% abandon long forms' },
+    { name: 'No Mobile AI Assistant', score: dynamicData.problemScores.aiAssistant, 
+      loss: dynamicData.problemLosses.ai, desc: '73% expect instant responses' },
+    { name: 'Bounce Rate', score: calculateBounceRateScore(dynamicData.bounceRate || 30), 
+      loss: calculateBounceRateLoss(dynamicData.bounceRate || 30), desc: '30% (industry avg 50-61%)' },
+    { name: 'Ad-to-Page Mismatch', score: dynamicData.problemScores.adMatch, 
+      loss: dynamicData.problemLosses.ad, desc: 'Ad promise ≠ landing page' },
+    { name: 'No Click-to-Call', score: dynamicData.problemScores.clickToCall, 
+      loss: dynamicData.problemLosses.call, desc: 'Mobile users want to call' }
+];
+
+// Helper functions for bounce rate scoring
+function calculateBounceRateScore(bounceRate) {
+    // Lower bounce rate = higher score
+    if (bounceRate <= 30) return 95;        // Excellent
+    if (bounceRate <= 40) return 85;        // Good
+    if (bounceRate <= 50) return 70;        // Average
+    if (bounceRate <= 60) return 50;        // Below average
+    return 30;                               // Poor
+}
+
+function calculateBounceRateLoss(bounceRate) {
+    // Calculate loss percentage based on bounce rate
+    return Math.min(90, Math.max(20, bounceRate));
+}
 
     // Detailed analysis items with dynamic scores
     const analysisItems = [
