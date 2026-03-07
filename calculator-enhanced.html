@@ -1313,23 +1313,13 @@ function calculateBounceRateLoss(bounceRate) {
         if (score < 50) return 'score-orange';
         if (score < 70) return 'score-yellow';
         return 'score-green';
-        
     }
 
-    function calculateBounceRateScore(bounceRate) {
-    // 30% bounce rate = 65 score (problem territory)
-    // Formula: 100 - (bounceRate * 1.167) roughly
-    // 30% = 65, 40% = 53, 50% = 42, 60% = 30
-    
-    let rawScore = 100 - (bounceRate * 1.167);
-    return Math.min(90, Math.max(30, Math.round(rawScore)));
-}
-
     function getProgressFillClass(score) {
-        if (score < 30) return 'red';
-        if (score < 50) return 'orange';
-        if (score < 70) return 'yellow';
-        return 'green';
+        if (score < 40) return 'red';      // 0-39 = red
+        if (score < 60) return 'orange';   // 40-59 = orange
+        if (score < 80) return 'yellow';   // 60-79 = yellow
+        return 'green';                     // 80+ = green
     }
 
     // Update page with real data
