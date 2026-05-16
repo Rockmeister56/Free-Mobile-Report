@@ -683,77 +683,6 @@ lemon-slice-widget .agent-video {
     </div>
 </header>
 
-           <!-- REAL TIME LOSS TICKER - SLIM STOCK TICKER STYLE -->
-<div id="loss-ticker" style="
-    position: fixed;
-    top: 50px;
-    right: 320px;
-    z-index: 9999;
-    background: #000000;
-    color: #ff0000;
-    padding: 0;
-    border-radius: 0;
-    text-align: left;
-    font-family: 'Courier New', monospace;
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
-    border: 2px solid #ff0000;
-    border-left: none;
-    border-right: none;
-    overflow: hidden;
-    min-width: 350px;  /* Slightly narrower */
-">
-    <!-- TOP STRIP - Black with red borders -->
-    <div style="
-        background: #000000;
-        color: #ff0000;
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        padding: 4px 15px;
-        border-bottom: 1px solid #ff0000;
-        border-top: 1px solid #ff0000;
-        font-family: 'Segoe UI', sans-serif;
-        text-align: center;
-    ">
-        ⚡ REAL-TIME PPC BURN RATE ⚡
-    </div>
-    
-    <!-- Ticker main area - SLIMMER -->
-    <div style="
-        background: #0a0a0a;
-        padding: 8px 15px;  /* Reduced padding */
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    ">
-        <!-- The rolling number - GREEN (larger focus) -->
-        <div id="ticker-amount" style="
-            font-size: 2rem;  /* Slightly smaller */
-            font-weight: 800;
-            line-height: 1;
-            color: #00ff00;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px #00ff00;
-            flex: 1;  /* Takes available space */
-            text-align: center;
-        ">
-            -$0.00
-        </div>
-        
-        <!-- 24HR indicator (kept) -->
-        <div style="
-            color: #ff8888;
-            font-size: 0.8rem;
-            background: #1a1a1a;
-            padding: 4px 8px;
-            border-radius: 4px;
-            border-right: 3px solid #ff0000;
-            font-family: 'Courier New', monospace;
-            margin-left: 10px;
-        ">
-            ▼ 24HR
         </div>
     </div>
     
@@ -1583,46 +1512,26 @@ window.addEventListener('load', function() {
 <!-- END TESS CONTROL PANEL -->
 
 <script>
-// ===== REAL TIME LOSS TICKER (SLOWED DOWN) =====
-function startLossTicker() {
-    // 1. Get the total monthly loss
-    const lossElement = document.getElementById('lossAmount');
-    let totalLossText = '$0';
+// Google Ad Revenue Counter — Real-time animation
+(function() {
+    const startRevenue = 298000000000; // $298 billion
+    const revenuePerSecond = 9450; // Google earns ~$9,450/second
+    const startTime = Date.now();
     
-    if (lossElement) {
-        totalLossText = lossElement.textContent;
-    } else {
-        totalLossText = localStorage.getItem('monthlyLoss') || '$4688';
+    function updateCounter() {
+        const elapsedSeconds = (Date.now() - startTime) / 1000;
+        const currentRevenue = startRevenue + (revenuePerSecond * elapsedSeconds);
+        
+        const counter = document.getElementById('google-revenue-counter');
+        if (counter) {
+            counter.textContent = '$' + Math.floor(currentRevenue).toLocaleString('en-US');
+        }
+        
+        requestAnimationFrame(updateCounter);
     }
-
-    // 2. Clean the text to get a raw number
-    const totalLoss = parseFloat(totalLossText.replace(/[$,]/g, ''));
-
-    if (isNaN(totalLoss)) return;
-
-    // 3. Calculate Rate
-    // Total Minutes in a month (30 days * 24 hours * 60 min)
-    const minutesInMonth = 43200; 
-    const lossPerMinute = totalLoss / minutesInMonth;
-
-    // 4. Start the Counter
-    const tickerElement = document.getElementById('ticker-amount');
-    if (!tickerElement) return;
-
-    let currentLoss = 120;
     
-    // We update every 100ms (1/10th of a second) for smooth animation
-    setInterval(() => {
-        
-        // Add the loss for this fraction of a second
-        // (lossPerMinute / 600) converts "Per Minute" to "Per 1/10th Second"
-        currentLoss += (lossPerMinute / 120);
-        
-        // 👇 ADD THE MINUS SIGN HERE
-        tickerElement.textContent = '-$' + currentLoss.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        
-    }, 100); // Run 10 times per second
-}
+    updateCounter();
+})();
 
 // Run when page loads
 document.addEventListener('DOMContentLoaded', function() {
