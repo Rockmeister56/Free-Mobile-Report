@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Sender — AdSpend Audit Group</title>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0a0f1e;
+            color: white;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 650px;
+            width: 100%;
+        }
+        h1 { color: #f8c400; margin-bottom: 5px; text-align: center; }
+        .subtitle { color: rgba(255,255,255,0.5); text-align: center; margin-bottom: 30px; font-size: 0.9rem; }
+        .section {
+            background: rgba(18, 28, 46, 0.8);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .section h2 { color: #f8c400; font-size: 1rem; margin-bottom: 16px; }
+        .field { margin-bottom: 14px; }
+        .field label { display: block; color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-bottom: 4px; }
+        .field input, .field textarea {
+            width: 100%; padding: 10px 14px;
+            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px; color: white; font-size: 0.9rem;
+        }
+        .field textarea { min-height: 80px; resize: vertical; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .btn {
+            padding: 14px 28px; border: none; border-radius: 40px;
+            font-weight: 700; font-size: 1rem; cursor: pointer;
+        }
+        .btn-preview { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-send { background: #f8c400; color: #0a0f1e; }
+        .btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 10px; }
+        .preview-box {
+            background: white; color: #333; border-radius: 12px; padding: 30px;
+            margin-top: 20px; display: none; font-family: Georgia, serif;
+            line-height: 1.7; max-height: 400px; overflow-y: auto;
+        }
+        .preview-box h2 { color: #1a3a5c; font-size: 1.3rem; margin-bottom: 15px; }
+        .preview-box .btn-fake {
+            display: inline-block; background: #f8c400; color: #0a0f1e;
+            padding: 12px 28px; border-radius: 30px; font-weight: 700;
+            text-decoration: none; margin: 15px 0; font-family: 'Segoe UI', sans-serif;
+        }
+        .status { text-align: center; margin-top: 12px; font-weight: 600; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 PPC Audit Email Sender</h1>
+        <p class="subtitle">Fill in the details, preview, and send your prospect their personalized audit report</p>
+        
+        <div class="section">
+            <h2>📋 Prospect Info</h2>
+            <div class="row">
+                <div class="field">
+                    <label>First Name</label>
+                    <input type="text" id="prospectName" placeholder="John">
+                </div>
+                <div class="field">
+                    <label>Email Address</label>
+                    <input type="email" id="prospectEmail" placeholder="john@abcmortgage.com">
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📊 Audit Data</h2>
+            <div class="row">
+                <div class="field">
+                    <label>Website URL</label>
+                    <input type="text" id="websiteUrl" placeholder="fcls.com">
+                </div>
+                <div class="field">
+                    <label>Monthly PPC Budget ($)</label>
+                    <input type="number" id="ppcBudget" value="7500">
+                </div>
+            </div>
+            <div class="row">
+                <div class="field">
+                    <label>Monthly Loss ($)</label>
+                    <input type="number" id="monthlyLoss" value="4688">
+                </div>
+                <div class="field">
+                    <label>Your Email (sender)</label>
+                    <input type="email" id="senderEmail" value="brett@mobilewiseai.com">
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>✍️ Custom Message (optional)</h2>
+            <div class="field">
+                <label>Add a personal note above the report link</label>
+                <textarea id="customMessage" placeholder="I ran your numbers through our audit system and thought you'd want to see this..."></textarea>
+            </div>
+        </div>
+        
+        <div class="btn-row">
+            <button class="btn btn-preview" onclick="previewEmail()">👁️ Preview</button>
+            <button class="btn btn-send" onclick="sendEmail()">📤 Send Audit Report</button>
+        </div>
+        
+        <div id="status" class="status"></div>
+        
+        <div id="previewBox" class="preview-box"></div>
+    </div>
+
+    <script>
+        emailjs.init('7-9oxa3UC3uKxtqGM');
+
+        function getFormData() {
+            return {
+                name: document.getElementById('prospectName').value.trim() || 'there',
+                email: document.getElementById('prospectEmail').value.trim(),
+                url: document.getElementById('websiteUrl').value.trim() || 'your website',
+                budget: document.getElementById('ppcBudget').value || '7500',
+                loss: document.getElementById('monthlyLoss').value || '4688',
+                senderEmail: document.getElementById('senderEmail').value.trim(),
+                customMessage: document.getElementById('customMessage').value.trim()
+            };
+        }
+
+        function getReportLink(data) {
+            const baseUrl = 'https://free-mobile-report.netlify.app/report.html';
+            return `${baseUrl}?name=${encodeURIComponent(data.name)}&url=${encodeURIComponent(data.url)}&budget=${data.budget}&loss=${data.loss}`;
+        }
+
+        function previewEmail() {
+            const data = getFormData();
+            if (!data.email) { alert('Please enter the prospect email'); return; }
+            
+            const link = getReportLink(data);
+            const customBlock = data.customMessage ? `<p>${data.customMessage}</p>` : '';
+            
+            document.getElementById('previewBox').style.display = 'block';
+            document.getElementById('previewBox').innerHTML = `
+                <h2>Subject: Your Free PPC Audit Report is Ready, ${data.name}</h2>
+                <p>Hi ${data.name},</p>
+                ${customBlock}
+                ${!data.customMessage ? '<p>I ran your website through our PPC audit system and the results are eye-opening. This report shows exactly how much of your ad budget is being wasted — and how to fix it.</p>' : ''}
+                <a href="${link}" class="btn-fake">📊 VIEW MY FREE AUDIT REPORT →</a>
+                <p style="margin-top:15px;">No cost. No obligation. Just the data you need to stop the bleed.</p>
+                <p>- Brett<br>AdSpend Audit Group</p>
+            `;
+        }
+
+        async function sendEmail() {
+            const data = getFormData();
+            if (!data.email) { alert('Please enter the prospect email'); return; }
+            
+            const status = document.getElementById('status');
+            status.style.display = 'block';
+            status.style.color = '#f8c400';
+            status.textContent = '⏳ Sending...';
+            
+            const link = getReportLink(data);
+            const customBlock = data.customMessage ? `<p>${data.customMessage}</p>` : '<p>I ran your website through our PPC audit system and the results are eye-opening. This report shows exactly how much of your ad budget is being wasted — and how to fix it.</p>';
+            
+            const emailHTML = `
+                <div style="font-family: Georgia, serif; max-width: 550px; padding: 20px;">
+                    <h2 style="color: #1a3a5c;">Your Free PPC Audit Report is Ready, ${data.name}</h2>
+                    <p>Hi ${data.name},</p>
+                    ${customBlock}
+                    <a href="${link}" style="display: inline-block; background: #f8c400; color: #0a0f1e; padding: 14px 30px; border-radius: 30px; font-weight: 700; text-decoration: none; font-family: 'Segoe UI', sans-serif; margin: 15px 0;">📊 VIEW MY FREE AUDIT REPORT →</a>
+                    <p style="margin-top: 15px; color: #666;">No cost. No obligation. Just the data you need to stop the bleed.</p>
+                    <p style="color: #666;">- Brett<br>AdSpend Audit Group</p>
+                </div>
+            `;
+            
+            try {
+                await emailjs.send('service_b9bppgb', 'template_uix9cyx', {
+                    to_email: data.email,
+                    from_name: 'Brett - AdSpend Audit Group',
+                    reply_to: data.senderEmail || 'brett@mobilewiseai.com',
+                    subject: `Your Free PPC Audit Report is Ready, ${data.name}`,
+                    message: emailHTML,
+                    full_name: data.name,
+                    email: data.email
+                });
+                
+                status.style.color = '#4caf50';
+                status.textContent = '✅ Audit report sent to ' + data.email;
+            } catch (error) {
+                status.style.color = '#f44336';
+                status.textContent = '❌ Send failed: ' + error.text;
+            }
+        }
+    </script>
+</body>
+</html>
