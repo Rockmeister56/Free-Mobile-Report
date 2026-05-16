@@ -130,15 +130,6 @@
         
         .top-bar { top: 0; }
         .bottom-bar { bottom: 0; }
-
-        .logo-section {
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-.logo-section:hover {
-    filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.7));
-    transform: scale(1.02);
-}
         
         /* ========================================== */
         /* MAIN CONTAINER - FLEXBOX LAYOUT */
@@ -691,16 +682,6 @@ lemon-slice-widget .agent-video {
         </div>
     </div>
 </header>
-
-<!-- Optional: Show hint on hover -->
-<script>
-document.querySelector('.logo-section').addEventListener('mouseenter', function() {
-    document.getElementById('logo-hint').style.display = 'block';
-});
-document.querySelector('.logo-section').addEventListener('mouseleave', function() {
-    document.getElementById('logo-hint').style.display = 'none';
-});
-</script>
 
            <!-- REAL TIME LOSS TICKER - SLIM STOCK TICKER STYLE -->
 <div id="loss-ticker" style="
