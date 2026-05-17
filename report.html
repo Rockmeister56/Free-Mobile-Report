@@ -91,6 +91,23 @@
 <div id="status" class="status"></div>
 </div>
 
+<div class="section" style="margin-top: 24px;">
+    <h2>📋 Email Template for Contact Forms</h2>
+    <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 12px;">Copy this message and paste it into their website contact form or your own email client.</p>
+    
+    <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px; font-size: 0.85rem; line-height: 1.7; color: rgba(255,255,255,0.9); max-height: 300px; overflow-y: auto;" id="formTemplate">
+        <p>Hi <span class="template-name">[Name]</span>,</p>
+        <p>I noticed your website is running Google Ads, and I ran a quick analysis. You're losing approximately <strong>$[Amount]/month</strong> to bounce rate and form abandonment — visitors who click your ad but leave before converting.</p>
+        <p>I put together a free PPC audit report that shows exactly where the leaks are and how to fix them with zero risk. No cost, no obligation — just the data.</p>
+        <p><strong>👉 View your free report here:</strong><br>
+        <span style="color: #f8c400;" id="shortLink">https://free-mobile-report.netlify.app/report.html?name=John&url=example.com</span></p>
+        <p>Let me know what you think — happy to walk through it with you.</p>
+    </div>
+    
+    <button class="btn btn-send" onclick="copyTemplate()" style="margin-top: 12px;">📋 Copy Template</button>
+    <span id="copyStatus" style="color: #4caf50; font-size: 0.8rem; margin-left: 10px; display: none;">✅ Copied!</span>
+</div>
+
     <script>
         emailjs.init('7-9oxa3UC3uKxtqGM');
 
@@ -136,6 +153,15 @@ async function uploadImageToSupabase(input) {
     }
 }
 
+function copyTemplate() {
+    const template = document.getElementById('formTemplate').innerText;
+    navigator.clipboard.writeText(template).then(() => {
+        const status = document.getElementById('copyStatus');
+        status.style.display = 'inline';
+        setTimeout(() => { status.style.display = 'none'; }, 2000);
+    });
+}
+
         function getFormData() {
             return {
                 name: document.getElementById('prospectName').value.trim() || 'there',
@@ -171,34 +197,10 @@ async function uploadImageToSupabase(input) {
                         <div style="text-align:center;"><a href="${data.report_link}" style="display:inline-block; background:#f8c400; color:#0a0f1e; padding:16px 36px; border-radius:40px; font-weight:700; text-decoration:none; font-size:1.1rem; margin:20px 0;">📊 VIEW MY FREE AUDIT REPORT →</a></div>
                         <p style="color:#888; font-size:0.85rem;">No cost. No obligation. Just the data you need to make an informed decision.</p>
                     </div>
-                    <div class="section" style="margin-top: 24px;">
-    <h2>📋 Email Template for Contact Forms</h2>
-    <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 12px;">Copy this message and paste it into their website contact form or your own email client.</p>
-    
-    <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px; font-size: 0.85rem; line-height: 1.7; color: rgba(255,255,255,0.9); max-height: 300px; overflow-y: auto;" id="formTemplate">
-        <p>Hi <span class="template-name">[Name]</span>,</p>
-        <p>I noticed your website is running Google Ads, and I ran a quick analysis. You're losing approximately <strong>$[Amount]/month</strong> to bounce rate and form abandonment — visitors who click your ad but leave before converting.</p>
-        <p>I put together a free PPC audit report that shows exactly where the leaks are and how to fix them with zero risk. No cost, no obligation — just the data.</p>
-        <p><strong>👉 View your free report here:</strong><br>
-        <span style="color: #f8c400;" id="shortLink">https://free-mobile-report.netlify.app/report.html?name=John&url=example.com</span></p>
-        <p>Let me know what you think — happy to walk through it with you.</p>
-    </div>
-    
-    <button class="btn btn-send" onclick="copyTemplate()" style="margin-top: 12px;">📋 Copy Template</button>
-    <span id="copyStatus" style="color: #4caf50; font-size: 0.8rem; margin-left: 10px; display: none;">✅ Copied!</span>
-</div>
+                    
                 </body></html>
             `);
         }
-
-        function copyTemplate() {
-    const template = document.getElementById('formTemplate').innerText;
-    navigator.clipboard.writeText(template).then(() => {
-        const status = document.getElementById('copyStatus');
-        status.style.display = 'inline';
-        setTimeout(() => { status.style.display = 'none'; }, 2000);
-    });
-}
 
         async function sendEmail() {
             const data = getFormData();
