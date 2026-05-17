@@ -1088,6 +1088,10 @@ setTimeout(function() {
     const scannedUrl = urlParams.get('url') || localStorage.getItem('lastScannedUrl') || 'yourwebsite.com';
     const ppcBudget = parseInt(urlParams.get('budget') || localStorage.getItem('ppcBudget') || '7500');
     const monthlyLoss = parseInt(urlParams.get('loss') || localStorage.getItem('monthlyLoss') || Math.round(ppcBudget * 0.625));
+    const prospectName = urlParams.get('name') || '';
+    if (prospectName) {
+    localStorage.setItem('prospectName', prospectName);
+    }
 
     // ===== DYNAMIC VARIABLE GENERATOR =====
     // This creates different results every time!

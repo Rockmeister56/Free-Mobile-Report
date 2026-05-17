@@ -249,6 +249,13 @@
                 <section class="audit-form">
                     <div class="form-container">
                         <input 
+                    type="text" 
+                   id="prospectName" 
+                   placeholder="Your first name (optional)" 
+                   class="url-input"
+                   style="margin-bottom: 10px;"
+                        >
+                        <input 
                             type="url" 
                             id="websiteUrl" 
                             placeholder="Enter your website URL (e.g., https://yourmortgage site.com)" 
@@ -478,7 +485,9 @@ async function checkDomainAudited(domain) {
             
             // Redirect to analysis page
             const encodedUrl = encodeURIComponent(url);
-            window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}`;
+            const prospectName = document.getElementById('prospectName')?.value?.trim() || '';
+const nameParam = prospectName ? `&name=${encodeURIComponent(prospectName)}` : '';
+window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}${nameParam}`;
         });
         
         // Allow Enter key
