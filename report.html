@@ -106,12 +106,11 @@ async function uploadImageToSupabase(input) {
     status.textContent = '⏳ Uploading...';
     
     const fileName = `ppc-${Date.now()}-${file.name}`;
-    const filePath = `PPC-ex-4emails/${fileName}`;
     
     try {
         const { data, error } = await supabaseClient
             .storage
-            .from('images')
+            .from('PPC-ex-4emails')
             .upload(filePath, file, {
                 cacheControl: '3600',
                 upsert: false
@@ -121,7 +120,7 @@ async function uploadImageToSupabase(input) {
         
         const { data: urlData } = supabaseClient
             .storage
-            .from('images')
+            .from('PPC-ex-4emails')
             .getPublicUrl(filePath);
         
         document.getElementById('teaserImage').value = urlData.publicUrl;
