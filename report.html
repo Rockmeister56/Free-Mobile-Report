@@ -211,10 +211,10 @@ async function uploadImageToSupabase(input) {
                     user_email: data.email,
                     from_name: 'Brett - AdSpend Audit Group',
                     reply_to: 'brett@mobilewiseai.com',
-                    subject: `Your Free PPC Audit Report is Ready, ${data.name}`,
+                    subject: `Requested PPC Audit Report for {{user_name}}`,
                     message: emailHTML,
-                    name: data.name,
-                    email: data.email,
+                    user_name: data.name,
+                    user_email: data.email,
                     report_link: data.report_link
                 });
                 
