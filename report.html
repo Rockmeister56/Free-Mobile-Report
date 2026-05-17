@@ -208,7 +208,7 @@ async function uploadImageToSupabase(input) {
             
             try {
                 await emailjs.send('service_b9bppgb', 'template_f6j78g6', {
-                    to_email: data.email,
+                    user_email: data.email,
                     from_name: 'Brett - AdSpend Audit Group',
                     reply_to: 'brett@mobilewiseai.com',
                     subject: `Your Free PPC Audit Report is Ready, ${data.name}`,
