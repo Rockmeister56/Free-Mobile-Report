@@ -111,7 +111,7 @@ async function uploadImageToSupabase(input) {
         const { data, error } = await supabaseClient
             .storage
             .from('PPC-ex-4emails')
-            .upload(filePath, file, {
+            .upload(fileName, file, {
                 cacheControl: '3600',
                 upsert: false
             });
@@ -121,7 +121,7 @@ async function uploadImageToSupabase(input) {
         const { data: urlData } = supabaseClient
             .storage
             .from('PPC-ex-4emails')
-            .getPublicUrl(filePath);
+            .getPublicUrl(fileName);
         
         document.getElementById('teaserImage').value = urlData.publicUrl;
         status.style.color = '#4caf50';
