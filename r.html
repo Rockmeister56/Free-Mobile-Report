@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+</head>
+<body>
+    <script>
+        const code = window.location.pathname.split('/r/')[1];
+        const mappings = JSON.parse(localStorage.getItem('short_links') || '{}');
+        const targetUrl = mappings[code];
+        
+        if (targetUrl) {
+            window.location.href = targetUrl;
+        } else {
+            document.body.innerHTML = '<h2 style="text-align:center; margin-top:100px; font-family:sans-serif;">Link not found or expired.</h2>';
+        }
+    </script>
+</body>
+</html>
