@@ -183,21 +183,24 @@ function generateShortLink() {
     if (!code) { alert('Enter a short code (e.g., john-fcls)'); return; }
     if (!reportLink) { alert('Paste the report link first'); return; }
     
-    // Store the mapping
     const mappings = JSON.parse(localStorage.getItem('short_links') || '{}');
     mappings[code] = reportLink;
     localStorage.setItem('short_links', JSON.stringify(mappings));
     
-    // Show the short link
     const shortUrl = `https://free-mobile-report.netlify.app/r/${code}`;
     document.getElementById('generatedShortLink').textContent = shortUrl;
     document.getElementById('shortLinkResult').style.display = 'block';
     
-    // 🔥 UPDATE THE FORM TEMPLATE WITH THE SHORT LINK
+    // Update the form template with short link AND name
     const templateLink = document.getElementById('shortLink');
     if (templateLink) {
         templateLink.textContent = shortUrl;
-        templateLink.style.color = '#f8c400';
+    }
+    
+    const prospectName = document.getElementById('prospectName').value || '[Name]';
+    const templateText = document.getElementById('formTemplate');
+    if (templateText) {
+        templateText.innerHTML = templateText.innerHTML.replace(/\[Name\]/g, prospectName);
     }
 }
 
