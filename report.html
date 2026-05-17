@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Sender — AdSpend Audit Group</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -67,11 +68,18 @@
                 <p class="hint">Paste the full URL from your browser after running the audit</p>
             </div>
             <div class="field">
-                <label>Teaser Image URL (optional)</label>
-                <input type="text" id="teaserImage" placeholder="https://your-supabase-url/image.png">
-                <p class="hint">A screenshot or preview of their actual report results</p>
-            </div>
-        </div>
+    <label>Teaser Image (optional)</label>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <input type="text" id="teaserImage" placeholder="Paste Supabase URL or upload below" style="flex: 1;">
+        <span style="color: rgba(255,255,255,0.4); font-size: 0.8rem;">OR</span>
+        <label for="imageUpload" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 10px 16px; cursor: pointer; font-size: 0.85rem; white-space: nowrap; color: #f8c400;">
+            📁 Upload
+        </label>
+        <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="uploadImageToSupabase(this)">
+    </div>
+    <div id="uploadStatus" style="color: #f8c400; font-size: 0.7rem; margin-top: 6px; display: none;"></div>
+    <p class="hint">Upload a screenshot or paste a URL — shows as a preview in the email</p>
+</div>
         
         <button class="btn btn-send" onclick="sendEmail()">📤 Send Audit Report</button>
         <button class="btn btn-preview" onclick="previewEmail()">👁️ Preview First</button>
@@ -81,6 +89,49 @@
 
     <script>
         emailjs.init('7-9oxa3UC3uKxtqGM');
+
+        // ===== SUPABASE IMAGE UPLOAD =====
+const SUPABASE_URL = 'https://fcgbusobfdwnpoqyuzoe.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk';
+const { createClient } = supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function uploadImageToSupabase(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const status = document.getElementById('uploadStatus');
+    status.style.display = 'block';
+    status.style.color = '#f8c400';
+    status.textContent = '⏳ Uploading...';
+    
+    const fileName = `ppc-${Date.now()}-${file.name}`;
+    const filePath = `PPC-ex-4emails/${fileName}`;
+    
+    try {
+        const { data, error } = await supabaseClient
+            .storage
+            .from('images')
+            .upload(filePath, file, {
+                cacheControl: '3600',
+                upsert: false
+            });
+        
+        if (error) throw error;
+        
+        const { data: urlData } = supabaseClient
+            .storage
+            .from('images')
+            .getPublicUrl(filePath);
+        
+        document.getElementById('teaserImage').value = urlData.publicUrl;
+        status.style.color = '#4caf50';
+        status.textContent = '✅ Uploaded: ' + fileName;
+    } catch (error) {
+        status.style.color = '#f44336';
+        status.textContent = '❌ Upload failed: ' + error.message;
+    }
+}
 
         function getFormData() {
             return {
