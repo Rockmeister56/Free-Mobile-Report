@@ -3,18 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Redirecting to Your Report...</title>
+</head>
+<body>
     <script>
-        const code = window.location.pathname.split('/r/')[1];
+        // Get the full path and extract the code
+        var path = window.location.pathname;
+        var code = path.replace('/r/', '').replace(/\/$/, '');
+        
+        console.log('Path:', path);
+        console.log('Code extracted:', code);
+        
         if (code) {
-            const mappings = JSON.parse(localStorage.getItem('short_links') || '{}');
-            const targetUrl = mappings[code];
+            var mappings = JSON.parse(localStorage.getItem('short_links') || '{}');
+            console.log('Mappings:', mappings);
+            var targetUrl = mappings[code];
+            
             if (targetUrl) {
+                console.log('Redirecting to:', targetUrl);
                 window.location.href = targetUrl;
             } else {
-                document.body.innerHTML = '<h2 style="text-align:center; margin-top:100px; font-family:sans-serif;">Link not found. Please ask the sender to resend.</h2>';
+                document.body.innerHTML = '<h2 style="text-align:center; margin-top:100px; font-family:sans-serif;">Link not found or expired. Please ask the sender to resend.</h2>';
             }
+        } else {
+            document.body.innerHTML = '<h2 style="text-align:center; margin-top:100px; font-family:sans-serif;">Invalid link.</h2>';
         }
     </script>
-</head>
-<body></body>
+</body>
 </html>
