@@ -1082,23 +1082,23 @@ setTimeout(function() {
 }, 59000); // 52,000 milliseconds = 52 seconds
 </script>
    
-   <script>
-    // Get data from URL or localStorage
+  <script>
+    // One-time view check — MUST be first
     const urlParams = new URLSearchParams(window.location.search);
     const scannedUrl = urlParams.get('url') || localStorage.getItem('lastScannedUrl') || 'yourwebsite.com';
     const ppcBudget = parseInt(urlParams.get('budget') || localStorage.getItem('ppcBudget') || '7500');
+    const reportKey = `viewed_${scannedUrl}_${ppcBudget}`;
+    if (localStorage.getItem(reportKey)) {
+        window.location.href = `viewed.html?domain=${encodeURIComponent(scannedUrl)}`;
+    }
+    localStorage.setItem(reportKey, 'true');
+
+    // Get rest of data
     const monthlyLoss = parseInt(urlParams.get('loss') || localStorage.getItem('monthlyLoss') || Math.round(ppcBudget * 0.625));
     const prospectName = urlParams.get('name') || '';
     if (prospectName) {
-    localStorage.setItem('prospectName', prospectName);
+        localStorage.setItem('prospectName', prospectName);
     }
-   
-    // One-time view check
-const reportKey = `viewed_${scannedUrl}_${ppcBudget}`;
-if (localStorage.getItem(reportKey)) {
-    window.location.href = `viewed.html?domain=${encodeURIComponent(scannedUrl)}`;
-}
-localStorage.setItem(reportKey, 'true');
 
     // ===== DYNAMIC VARIABLE GENERATOR =====
     // This creates different results every time!
