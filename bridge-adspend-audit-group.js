@@ -1,5 +1,5 @@
 // Botemia Bridge for adSpend Audit Group
-// Generated: 5/18/2026, 9:56:17 AM
+// Generated: 5/18/2026, 11:17:47 AM
 // Client ID: adspend-audit-group
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -1253,7 +1253,15 @@
 
     function showSplash() {
         const config = window.BotemiaConfig.modules?.splashScreen;
-        if (!config || !config.enabled) return;
+        if (!config || !config.enabled) {
+            // Splash disabled — create minimized widget directly
+            window.mainWidget = createMainWidget();
+            document.body.appendChild(window.mainWidget);
+            window.mainWidget.style.display = "block";
+            window.mainWidget.setAttribute("controlled-widget-state", "active");
+            console.log("✅ Tess loaded in corner (splash disabled)");
+            return;
+        }
 
         const overlay = document.createElement('div');
         overlay.className = 'splash-overlay';
