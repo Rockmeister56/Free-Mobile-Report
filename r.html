@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Redirecting...</title>
-</head>
-<body>
+    <title>Redirecting to Your Report...</title>
     <script>
         const code = window.location.pathname.split('/r/')[1];
-        const mappings = JSON.parse(localStorage.getItem('short_links') || '{}');
-        const targetUrl = mappings[code];
-        
-        if (targetUrl) {
-            window.location.href = targetUrl;
-        } else {
-            document.body.innerHTML = '<h2 style="text-align:center; margin-top:100px; font-family:sans-serif;">Link not found or expired.</h2>';
+        if (code) {
+            const mappings = JSON.parse(localStorage.getItem('short_links') || '{}');
+            const targetUrl = mappings[code];
+            if (targetUrl) {
+                window.location.href = targetUrl;
+            } else {
+                document.body.innerHTML = '<h2 style="text-align:center; margin-top:100px; font-family:sans-serif;">Link not found. Please ask the sender to resend.</h2>';
+            }
         }
     </script>
-</body>
+</head>
+<body></body>
 </html>
