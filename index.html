@@ -233,52 +233,53 @@
 
 <!-- PPC Budget Section -->
 <section class="ppc-section">
-    <label class="ppc-label"><h2> 💰 Next - Select your monthly PPC</h2></label>
-                    
-                    <!-- Name Field -->
-<input 
-    type="text" 
-    id="prospectName" 
-    placeholder="Your first name (optional)" 
-    class="url-input"
-    style="margin-bottom: 10px;"
->
+    <label class="ppc-label"><h2>💰 Next - Select your monthly PPC</h2></label>
 
-<!-- Dropdown for quick selection -->
-<select id="ppcBudget" class="budget-select" style="margin-bottom: 10px;">
-    <option value="">CLICK ARROW TO SELECT MONTHLY BUDGET >>></option>
-    <option value="2000">$2,000 - $5,000/month (Getting started)</option>
-    <option value="5000">$5,000 - $10,000/month (Growing fast)</option>
-    <option value="10000">$10,000 - $20,000/month (Established player)</option>
-    <option value="20000">$20,000 - $50,000/month (Market dominator)</option>
-    <option value="50000">$50,000+/month (Enterprise)</option>
-    <option value="custom">💡 Enter exact amount below</option>
-</select>
+    <!-- Dropdown for quick selection -->
+    <select id="ppcBudget" class="budget-select" style="margin-bottom: 10px;">
+        <option value="">CLICK ARROW TO SELECT MONTHLY BUDGET >>></option>
+        <option value="2000">$2,000 - $5,000/month (Getting started)</option>
+        <option value="5000">$5,000 - $10,000/month (Growing fast)</option>
+        <option value="10000">$10,000 - $20,000/month (Established player)</option>
+        <option value="20000">$20,000 - $50,000/month (Market dominator)</option>
+        <option value="50000">$50,000+/month (Enterprise)</option>
+        <option value="custom">💡 Enter exact amount below</option>
+    </select>
 
-<!-- Exact Budget Field (appears when custom is selected) -->
-<input 
-    type="number" 
-    id="exactBudget" 
-    placeholder="Enter exact monthly ad spend ($)" 
-    class="url-input"
-    style="margin-bottom: 10px; display: none;"
-    min="1"
->
+    <!-- Exact Budget Field -->
+    <input 
+        type="number" 
+        id="exactBudget" 
+        placeholder="Enter exact monthly ad spend ($)" 
+        class="url-input"
+        style="margin-bottom: 10px; display: none; width: 100%;"
+        min="1"
+    >
 
-<!-- Website URL -->
-<input 
-    type="url" 
-    id="websiteUrl" 
-    placeholder="Enter your website URL (e.g., https://yourmortgagesite.com)" 
-    class="url-input"
-    required
-    style="margin-bottom: 10px;"
->
+    <!-- Website URL -->
+    <input 
+        type="url" 
+        id="websiteUrl" 
+        placeholder="Enter your website URL (e.g., https://yourmortgagesite.com)" 
+        class="url-input"
+        required
+        style="margin-bottom: 10px;"
+    >
 
-<!-- Analyze Button -->
-<button id="analyzeBtn" class="analyze-btn" style="width: 100%;">
-    📊 GENERATE MY PPC AUDIT REPORT
-</button>
+    <!-- Optional Name -->
+    <input 
+        type="text" 
+        id="prospectName" 
+        placeholder="Your first name (optional)" 
+        class="url-input"
+        style="margin-bottom: 10px;"
+    >
+
+    <!-- Analyze Button -->
+    <button id="analyzeBtn" class="analyze-btn" style="width: 100%;">
+        📊 GENERATE MY PPC AUDIT REPORT
+    </button>
+</section>
 
                 <!-- Benefits - UPDATED for PPC -->
                 <section class="benefits-section">
