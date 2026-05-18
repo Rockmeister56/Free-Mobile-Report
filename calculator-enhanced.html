@@ -1092,6 +1092,14 @@ setTimeout(function() {
     if (prospectName) {
     localStorage.setItem('prospectName', prospectName);
     }
+   
+    // One-time view check
+const reportKey = `viewed_${scannedUrl}_${ppcBudget}`;
+if (localStorage.getItem(reportKey)) {
+    window.location.href = `viewed.html?domain=${encodeURIComponent(scannedUrl)}`;
+    return;
+}
+localStorage.setItem(reportKey, 'true');
 
     // ===== DYNAMIC VARIABLE GENERATOR =====
     // This creates different results every time!

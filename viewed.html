@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Already Viewed — AdSpend Audit Group</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0a0f1e;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background: rgba(18, 28, 46, 0.9);
+            border: 2px solid #f8c400;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 550px;
+            text-align: center;
+        }
+        .card .icon { font-size: 3rem; margin-bottom: 15px; }
+        .card h1 { color: #f8c400; font-size: 1.5rem; margin-bottom: 10px; }
+        .card .domain { color: #ffaa00; font-size: 1.1rem; font-weight: 600; margin-bottom: 5px; }
+        .card .date { color: rgba(255,255,255,0.5); font-size: 0.9rem; margin-bottom: 20px; }
+        .card p { color: rgba(255,255,255,0.8); margin-bottom: 25px; line-height: 1.6; }
+        .btn {
+            display: inline-block;
+            background: #f8c400;
+            color: #0a0f1e;
+            padding: 16px 36px;
+            border-radius: 40px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+        .btn:hover { opacity: 0.9; }
+        .note { color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon">🔒</div>
+        <h1>This Report Has Already Been Viewed</h1>
+        <div class="domain" id="domainDisplay"></div>
+        <div class="date" id="dateDisplay"></div>
+        <p>Each report can only be accessed once to ensure fair use and data accuracy. But you don't have to stop here — schedule a free Zoom meeting with a conversion expert and see exactly how to fix the leaks in your pipeline.</p>
+        <a href="https://calendly.com/mobilewise-ai/30min" class="btn" target="_blank">
+            📅 Schedule a Free Zoom Meeting →
+        </a>
+        <p class="note">No cost. No obligation. Just solutions.</p>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const domain = params.get('domain') || 'your website';
+        const date = params.get('date') || 'recently';
+        
+        document.getElementById('domainDisplay').textContent = domain;
+        document.getElementById('dateDisplay').textContent = 'This domain was audited on ' + date;
+    </script>
+</body>
+</html>

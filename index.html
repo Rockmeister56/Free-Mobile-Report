@@ -408,6 +408,7 @@ async function checkDomainAudited(domain) {
 
     // ===== FUNCTION TO MARK CODE AS USED =====
     async function markCodeAsUsed(code, domain) {
+   if (code === 'ADSPEND-AUDIT') return { success: true };
         try {
             const { error } = await supabaseClient
                 .from('access_codes')
