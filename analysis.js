@@ -103,6 +103,13 @@ async function storeAuditedDomain(domain, accessCode = null) {
     }
 }
 
+// Get parameters from URL or localStorage
+const urlParams = new URLSearchParams(window.location.search);
+const budgetRange = urlParams.get('budget') || localStorage.getItem('ppcBudget') || '10000';
+const scannedUrl = urlParams.get('url') || localStorage.getItem('scannedUrl') || '';
+
+console.log('Budget range received:', budgetRange);
+
 // Convert to actual budget value
 function getMidpointFromRange(range) {
     const numericValue = parseInt(String(range).replace(/[^0-9]/g, ''));
