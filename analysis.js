@@ -103,75 +103,41 @@ async function storeAuditedDomain(domain, accessCode = null) {
     }
 }
 
-// Get parameters from URL or localStorage
-const urlParams = new URLSearchParams(window.location.search);
-const budgetRange = urlParams.get('budget') || localStorage.getItem('ppcBudget') || '10000';
-const scannedUrl = urlParams.get('url') || localStorage.getItem('scannedUrl') || '';
-
-// Debug - see what's coming in
-console.log('Budget range received:', budgetRange);
-
-// Convert range to midpoint value
+// Convert to actual budget value
 function getMidpointFromRange(range) {
-    // Handle if it comes as a string with dash (like "2000-5000")
-    let rangeValue = range;
-    if (range && range.includes('-')) {
-        rangeValue = range.split('-')[0]; // Take the first number
+    const numericValue = parseInt(String(range).replace(/[^0-9]/g, ''));
+    
+    // If it's a custom exact amount (above 50000), use it directly
+    if (numericValue > 50000) {
+        console.log('✅ Using exact custom budget:', numericValue);
+        return numericValue;
     }
     
-    // Clean the value - remove any non-numeric characters
-    rangeValue = String(rangeValue).replace(/[^0-9]/g, '');
-    
+    // Otherwise use range midpoints for dropdown values
     const ranges = {
-        '2000': 3500,    // $2k-5k = $3,500
-        '5000': 7500,    // $5k-10k = $7,500
-        '10000': 15000,  // $10k-20k = $15,000
-        '20000': 35000,  // $20k-50k = $35,000
-        '50000': 60000   // $50k+ = $60,000
+        '2000': 3500,
+        '5000': 7500,
+        '10000': 15000,
+        '20000': 35000,
+        '50000': 60000
     };
     
-    // Try direct lookup first
-    if (ranges[rangeValue]) {
-        console.log('Found in ranges:', ranges[rangeValue]);
-        return ranges[rangeValue];
+    if (ranges[String(numericValue)]) {
+        console.log('✅ Range lookup:', numericValue, '→', ranges[String(numericValue)]);
+        return ranges[String(numericValue)];
     }
     
-    // Try parsing as number
-    const numValue = parseInt(rangeValue);
-    if (!isNaN(numValue)) {
-        // Find closest range
-        if (numValue <= 3500) {
-            console.log('Closest range: 3500');
-            return 3500;
-        }
-        if (numValue <= 7500) {
-            console.log('Closest range: 7500');
-            return 7500;
-        }
-        if (numValue <= 15000) {
-            console.log('Closest range: 15000');
-            return 15000;
-        }
-        if (numValue <= 35000) {
-            console.log('Closest range: 35000');
-            return 35000;
-        }
-        console.log('Default high range: 60000');
-        return 60000;
-    }
-    
-    // Default fallback
-    console.log('Using default: 7500');
-    return 7500;
+    // Fallback
+    console.log('⚠️ Using fallback:', numericValue);
+    return numericValue;
 }
 
 // Calculate the budget and loss
 const ppcBudget = getMidpointFromRange(budgetRange);
-const monthlyLoss = Math.round(ppcBudget * 0.625); // 62.5% waste rate
+const monthlyLoss = Math.round(ppcBudget * 0.625);
 
-// 👇 STORE FOR TESS (ADD THESE 3 LINES)
 localStorage.setItem('tess_loss', monthlyLoss);
-localStorage.setItem('tess_issues', '13'); // Hardcoded for now
+localStorage.setItem('tess_issues', '13');
 console.log('✅ Tess data stored:', monthlyLoss, '13');
 
 console.log('Final PPC Budget:', ppcBudget);
