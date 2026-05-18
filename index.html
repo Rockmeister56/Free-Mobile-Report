@@ -503,16 +503,17 @@ async function checkDomainAudited(domain) {
             // Mark code as used
             await markCodeAsUsed(code, cleanDomain);
             
-            // Store in localStorage
-            localStorage.setItem('ppcBudget', budget);
-            localStorage.setItem('scannedUrl', url);
-            localStorage.setItem('accessCode', code);
+           // Store in localStorage
+localStorage.setItem('ppcBudget', budget);
+localStorage.setItem('monthlyLoss', lossAmount);
+localStorage.setItem('scannedUrl', url);
+localStorage.setItem('accessCode', code);
             
-            // Redirect to analysis page
+           // Redirect to analysis page
             const encodedUrl = encodeURIComponent(url);
             const prospectName = document.getElementById('prospectName')?.value?.trim() || '';
-const nameParam = prospectName ? `&name=${encodeURIComponent(prospectName)}` : '';
-window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}${nameParam}`;
+            const nameParam = prospectName ? `&name=${encodeURIComponent(prospectName)}` : '';
+            window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}&loss=${lossAmount}${nameParam}`;
         });
         
         // Allow Enter key
