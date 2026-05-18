@@ -115,7 +115,7 @@ function getMidpointFromRange(range) {
     const numericValue = parseInt(String(range).replace(/[^0-9]/g, ''));
     
     // If it's a custom exact amount (above 50000), use it directly
-    if (numericValue > 50000) {
+    if (numericValue > 5000) {
         console.log('✅ Using exact custom budget:', numericValue);
         return numericValue;
     }
