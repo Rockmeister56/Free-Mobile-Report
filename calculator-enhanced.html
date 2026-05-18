@@ -1097,7 +1097,6 @@ setTimeout(function() {
 const reportKey = `viewed_${scannedUrl}_${ppcBudget}`;
 if (localStorage.getItem(reportKey)) {
     window.location.href = `viewed.html?domain=${encodeURIComponent(scannedUrl)}`;
-    return;
 }
 localStorage.setItem(reportKey, 'true');
 
