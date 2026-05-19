@@ -1083,15 +1083,19 @@ setTimeout(function() {
 </script>
    
   <script>
-    // One-time view check — MUST be first
+       // One-time view check — MUST be first
     const urlParams = new URLSearchParams(window.location.search);
     const scannedUrl = urlParams.get('url') || localStorage.getItem('lastScannedUrl') || 'yourwebsite.com';
     const ppcBudget = parseInt(urlParams.get('budget') || localStorage.getItem('ppcBudget') || '7500');
+    const isAdmin = urlParams.get('admin') === 'true';
     const reportKey = `viewed_${scannedUrl}_${ppcBudget}`;
-    if (localStorage.getItem(reportKey)) {
-        window.location.href = `viewed.html?domain=${encodeURIComponent(scannedUrl)}`;
+    
+    if (!isAdmin) {
+        if (localStorage.getItem(reportKey)) {
+            window.location.href = `viewed.html?domain=${encodeURIComponent(scannedUrl)}`;
+        }
+        localStorage.setItem(reportKey, 'true');
     }
-    localStorage.setItem(reportKey, 'true');
 
     // Get rest of data
     const monthlyLoss = parseInt(urlParams.get('loss') || localStorage.getItem('monthlyLoss') || Math.round(ppcBudget * 0.625));
