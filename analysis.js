@@ -357,9 +357,11 @@ class AnalysisProgress {
 
     console.log('💾 Stored Data:', { loss: monthlyLoss, issues: 13 });
 
-    // Redirect to results page
+       // Redirect to results page
     setTimeout(() => {
-        const resultsUrl = `calculator-enhanced.html?url=${encodeURIComponent(scannedUrl)}&budget=${ppcBudget}&loss=${monthlyLoss}`;
+        const adminParam = urlParams.get('admin') === 'true' ? '&admin=true' : '';
+        const nameParam = urlParams.get('name') ? `&name=${encodeURIComponent(urlParams.get('name'))}` : '';
+        const resultsUrl = `calculator-enhanced.html?url=${encodeURIComponent(scannedUrl)}&budget=${ppcBudget}&loss=${monthlyLoss}${nameParam}${adminParam}`;
         window.location.href = resultsUrl;
     }, 2000);
 }

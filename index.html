@@ -513,7 +513,8 @@ const encodedUrl = encodeURIComponent(url);
 const prospectName = document.getElementById('prospectName')?.value?.trim() || '';
 const nameParam = prospectName ? `&name=${encodeURIComponent(prospectName)}` : '';
 const lossAmount = Math.round(budget * 0.625);
-window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}&loss=${lossAmount}${nameParam}`;
+const isAdmin = document.getElementById('adminPreview')?.checked ? '&admin=true' : '';
+window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}&loss=${lossAmount}${nameParam}${isAdmin}`;
         });
         
         // Allow Enter key
