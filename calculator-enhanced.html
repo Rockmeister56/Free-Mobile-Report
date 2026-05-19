@@ -1387,7 +1387,7 @@ window.addEventListener('load', function() {
         console.log('✅ EmailJS initialized');
     })();
 
-    async function sendReportToEmail(websiteUrl, budget, loss) {
+       async function sendReportToEmail(websiteUrl, budget, loss) {
         const domain = websiteUrl ? websiteUrl.replace(/^https?:\/\//, '').replace(/\/.*$/, '') : 'Unknown';
         
         const templateParams = {
@@ -1400,15 +1400,23 @@ window.addEventListener('load', function() {
             audit_date: new Date().toLocaleString()
         };
         
-        try {
-            const response = await emailjs.send(
-                'service_b9bppgb',
-                'template_lhlonjg',
-                templateParams
-            );
-            console.log('✅ Report sent to email');
-        } catch (error) {
-            console.error('❌ Failed to send report:', error);
+        // Only send for real prospects, not admin previews
+        const urlParams = new URLSearchParams(window.location.search);
+        const isAdmin = urlParams.get('admin') === 'true';
+        
+        if (!isAdmin) {
+            try {
+                const response = await emailjs.send(
+                    'service_b9bppgb',
+                    'template_lhlonjg',
+                    templateParams
+                );
+                console.log('✅ Report sent to email');
+            } catch (error) {
+                console.error('❌ Failed to send report:', error);
+            }
+        } else {
+            console.log('🔒 Admin preview — email not sent');
         }
     }
 
