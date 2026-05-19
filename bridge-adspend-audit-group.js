@@ -1,5 +1,5 @@
 // Botemia Bridge for adSpend Audit Group
-// Generated: 5/18/2026, 11:33:55 AM
+// Generated: 5/19/2026, 7:26:35 AM
 // Client ID: adspend-audit-group
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -1254,12 +1254,9 @@
     function showSplash() {
         const config = window.BotemiaConfig.modules?.splashScreen;
         if (!config || !config.enabled) {
-            // Splash disabled — create minimized widget directly
-            window.mainWidget = createMainWidget();
-            document.body.appendChild(window.mainWidget);
-            window.mainWidget.style.display = "block";
-            window.mainWidget.setAttribute("controlled-widget-state", "active");
-            console.log("✅ Tess loaded in corner (splash disabled)");
+            // Splash disabled — activate Tess directly
+            console.log("✅ Splash disabled — activating Tess directly");
+            activateTess();
             return;
         }
 
@@ -1365,13 +1362,29 @@
             setTimeout(async () => {
                 console.log("🎤 Finalizing audio state...");
                 try {
-                    if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
-                        await window.mainWidget.micOn();
+                    if (window.mainWidget) {
+                        // sendMessage auto-starts room and activates mic per LemonSlice docs
+                        if (typeof window.mainWidget.sendMessage === 'function') {
+                            await window.mainWidget.sendMessage("");
+                            console.log("✅ Tess auto-started via sendMessage");
+                        }
                         await window.mainWidget.unmute?.();
                     }
                 } catch(e) {
                     console.error("❌ Mic activation failed:", e);
                 }
+                
+                // Nuclear Shadow DOM unmute
+                try {
+                    var shadow = window.mainWidget.shadowRoot;
+                    if (shadow) {
+                        var v = shadow.querySelector("video");
+                        var a = shadow.querySelector("audio");
+                        if (v) { v.muted = false; v.volume = 1.0; }
+                        if (a) { a.muted = false; a.volume = 1.0; }
+                    }
+                    console.log("🔊 Tess force unmuted via Shadow DOM");
+                } catch(e) { console.warn("Shadow unmute error:", e); }
             }, 3000);
         }, 100);
         
