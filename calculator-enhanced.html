@@ -1387,7 +1387,7 @@ window.addEventListener('load', function() {
         console.log('✅ EmailJS initialized');
     })();
 
-       async function sendReportToEmail(websiteUrl, budget, loss) {
+          async function sendReportToEmail(websiteUrl, budget, loss) {
         const domain = websiteUrl ? websiteUrl.replace(/^https?:\/\//, '').replace(/\/.*$/, '') : 'Unknown';
         
         const templateParams = {
