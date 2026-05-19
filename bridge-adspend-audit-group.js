@@ -1,5 +1,5 @@
 // Botemia Bridge for adSpend Audit Group
-// Generated: 5/19/2026, 9:12:15 AM
+// Generated: 5/19/2026, 9:27:19 AM
 // Client ID: adspend-audit-group
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -1363,10 +1363,14 @@
                 console.log("🎤 Finalizing audio state...");
                 try {
                     if (window.mainWidget) {
-                        // sendMessage auto-starts room and activates mic per LemonSlice docs
+                        // Start the room first, then send greeting
+                        await window.mainWidget.micOn?.();
+                        await new Promise(resolve => setTimeout(resolve, 2000));
                         if (typeof window.mainWidget.sendMessage === 'function') {
-                            await window.mainWidget.sendMessage("");
-                            console.log("✅ Tess auto-started via sendMessage");
+                            var prospectName = localStorage.getItem("prospectName") || "";
+                            var greeting = prospectName ? "Hi " + prospectName + ", I'm Tess from AdSpend Audit Group. Thanks for checking out your free PPC audit report." : "Hi, I'm Tess from AdSpend Audit Group. Thanks for checking out your free PPC audit report.";
+                            await window.mainWidget.sendMessage(greeting);
+                            console.log("✅ Tess primed with greeting");
                         }
                         await window.mainWidget.unmute?.();
                     }
