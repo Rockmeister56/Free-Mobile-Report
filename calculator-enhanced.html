@@ -1568,7 +1568,17 @@ function openVideoPresentation() {
     }
 }
 </script>
- <script src="bridge-adspend-audit-group.js"></script>
+
+   <!-- TESS CONTROL BAR -->
+    <div id="tess-control-bar" style="display:none; position:fixed; bottom:20px; right:20px; z-index:9999; gap:10px;">
+        <button onclick="window.muteTess?.()" style="width:50px; height:50px; border-radius:50%; border:2px solid #0066cc; background:rgba(0,0,0,0.8); color:white; cursor:pointer; font-size:1.2rem;" title="Mute/Unmute">
+            <i class="fas fa-volume-up" id="mute-icon"></i>
+        </button>
+        <button onclick="window.stopTess?.()" style="width:50px; height:50px; border-radius:50%; border:2px solid #ff4444; background:rgba(0,0,0,0.8); color:white; cursor:pointer; font-size:1.2rem;" title="Stop Tess">
+            <i class="fas fa-stop"></i>
+        </button>
+    </div>
+    <script src="bridge-adspend-audit-group.js"></script>
 
 </body>
 </html>
