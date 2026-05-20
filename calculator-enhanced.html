@@ -23,7 +23,7 @@
         
         /* VAULT BACKGROUND */
         .report-page {
-            background-image: url('https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/report-bg2jpg.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvcmVwb3J0LWJnMmpwZy5qcGciLCJpYXQiOjE3NzI3NzkwNzIsImV4cCI6MTgwNDMxNTA3Mn0.FQ8DwN5OAk7rMuQ_CLfdf9sggaRTgN0lCgs3TGrqGh4');
+            background-image: url('https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/report-bg2jpg.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvcmVwb3J0LWJnMmpnZy5qcGciLCJpYXQiOjE3NzI3NzkwNzIsImV4cCI6MTgwNDMxNTA3Mn0.FQ8DwN5OAk7rMuQ_CLfdf9sggaRTgN0lCgs3TGrqGh4');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -550,10 +550,11 @@
             z-index: 1000;
             backdrop-filter: blur(5px);
         }
-                /* Hide Free badge - removed completely */
-.textnow-badge {
-    display: none;
-}
+        
+        /* Hide Free badge - removed completely */
+        .textnow-badge {
+            display: none;
+        }
         
         .popup-content {
             background: #0a0a0a;
@@ -610,131 +611,139 @@
             border: 1px solid #0066cc;
         }
         
+        /* Hide ALL text bubbles permanently */
+        lemon-slice-widget [class*="bubble"],
+        lemon-slice-widget [class*="message"],
+        lemon-slice-widget [class*="chat"],
+        lemon-slice-widget .message-bubble,
+        lemon-slice-widget .chat-bubble,
+        lemon-slice-widget .text-bubble {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* Hide any chat history panels */
+        lemon-slice-widget [class*="history"],
+        lemon-slice-widget [class*="transcript"] {
+            display: none !important;
+        }
+
+        /* Keep only the avatar visible */
+        lemon-slice-widget video,
+        lemon-slice-widget .avatar,
+        lemon-slice-widget .agent-video {
+            display: block !important;
+            visibility: visible !important;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 1100px) {
             .main-container {
                 flex-direction: column;
             }
-            
-            .right-column {
-                max-width: 100%;
-            }
-            
-            .banners-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
+            .right-column { max-width: 100%; }
+            .banners-grid { grid-template-columns: repeat(4, 1fr); }
         }
         
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .banners-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .loss-number {
-                font-size: 3.5rem;
-            }
-            /* Hide ALL text bubbles permanently */
-lemon-slice-widget [class*="bubble"],
-lemon-slice-widget [class*="message"],
-lemon-slice-widget [class*="chat"],
-lemon-slice-widget .message-bubble,
-lemon-slice-widget .chat-bubble,
-lemon-slice-widget .text-bubble {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
-/* Hide any chat history panels */
-lemon-slice-widget [class*="history"],
-lemon-slice-widget [class*="transcript"] {
-    display: none !important;
-}
-
-/* Keep only the avatar visible */
-lemon-slice-widget video,
-lemon-slice-widget .avatar,
-lemon-slice-widget .agent-video {
-    display: block !important;
-    visibility: visible !important;
-}
-
+            .header-content { flex-direction: column; gap: 15px; }
+            .banners-grid { grid-template-columns: repeat(2, 1fr); }
+            .loss-number { font-size: 3.5rem; }
         }
-</style>
+        
+        @keyframes fadeInImage {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* TESS CONTROL BAR STYLES */
+        #tess-control-wrapper {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2147483647; /* Max Integer - Sits on top of everything */
+            display: flex;
+            gap: 12px;
+            pointer-events: none;
+        }
+        .tess-ctrl-btn {
+            pointer-events: auto;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2147483648;
+        }
+        .btn-mute { border-color: #0066cc; }
+        .btn-mute:hover { box-shadow: 0 0 15px rgba(0, 102, 204, 0.7); }
+        .btn-stop { border-color: #ff4444; }
+        .btn-stop:hover { box-shadow: 0 0 15px rgba(255, 68, 68, 0.7); }
+    </style>
 </head>
 <body class="report-page">
     <!-- Blue Top Bar -->
     <div class="top-bar"></div>
 
-   <!-- Header with Logo -->
-<header class="main-header">
-    <div class="header-content">
-        <div class="logo-section">
-            <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/your-report3.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvcy95b3VyLXJlcG9ydDMucG5nIiwiaWF0IjoxNzc4OTgzNDc3LCJleHAiOjE4MTA1MTk0Nzd9.IQ8l0zM73zorDbvhmV3JmwAq8vRcUlYTBR61jZ7MTNY" 
-                 alt="AdSpend Audit Group" 
-                 class="logo-image">
+    <!-- Header with Logo -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/your-report3.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvcy95b3VyLXJlcG9ydDMucG5nIiwiaWF0IjoxNzc4OTgzNDc3LCJleHAiOjE4MTA1MTk0Nzd9.IQ8l0zM73zorDbvhmV3JmwAq8vRcUlYTBR61jZ7MTNY" 
+                     alt="AdSpend Audit Group" class="logo-image">
+            </div>
         </div>
-    </div>
-</header>
+    </header>
 
-<!-- GOOGLE AD REVENUE COUNTER -->
-<div style="position: absolute; top: 35px; right: 285px; z-index: 999; width: 600px; background: rgba(0, 0, 0, 0.85); border-radius: 8px; padding: 20px 24px;">
-    <div style="display: flex; align-items: center; gap: 20px;">
-        <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/google-ads.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvcy9nb29nbGUtYWRzLnBuZyIsImlhdCI6MTc3ODk0NjA3MiwiZXhwIjoxODEwNDgyMDcyfQ.xX19Q2OKeoZMRHYMZjolt8_Z1w44aSUcs-1WQ7SK5g0" 
-             alt="Google Ads" 
-             style="height: 68px; width: auto; flex-shrink: 0;">
-        <div style="flex: 1; text-align: right; min-width: 0;">
-            <div id="google-revenue-counter" style="font-family: 'Courier New', Courier, monospace; font-size: 2.4rem; font-weight: 700; color: #ff3333; line-height: 1; letter-spacing: -1px; white-space: nowrap;">$130,000,000,000</div>
-            <div style="color: rgba(255,255,255,0.5); font-size: 0.75rem; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px;">Estimated Annual Earnings to Date</div>
+    <!-- GOOGLE AD REVENUE COUNTER -->
+    <div style="position: absolute; top: 35px; right: 285px; z-index: 999; width: 600px; background: rgba(0, 0, 0, 0.85); border-radius: 8px; padding: 20px 24px;">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/google-ads.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvcy9nb29nbGUtYWRzLnBuZyIsImlhdCI6MTc3ODk0NjA3MiwiZXhwIjoxODEwNDgyMDcyfQ.xX19Q2OKeoZMRHYMZjolt8_Z1w44aSUcs-1WQ7SK5g0" 
+                 alt="Google Ads" style="height: 68px; width: auto; flex-shrink: 0;">
+            <div style="flex: 1; text-align: right; min-width: 0;">
+                <div id="google-revenue-counter" style="font-family: 'Courier New', Courier, monospace; font-size: 2.4rem; font-weight: 700; color: #ff3333; line-height: 1; letter-spacing: -1px; white-space: nowrap;">$130,000,000,000</div>
+                <div style="color: rgba(255,255,255,0.5); font-size: 0.75rem; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px;">Estimated Annual Earnings to Date</div>
+            </div>
         </div>
     </div>
-</div>
 
     <div class="main-container">
         <!-- LEFT COLUMN - REPORT AREA -->
         <div class="left-column">
-            <!-- Main Report Card -->
             <div class="report-card">
                 <div class="results-header">
                     <h1>🔍 PPC AUDIT RESULTS</h1>
                     <div class="url-display" id="urlDisplay">Loading...</div>
                     <div style="color: #0099ff; margin-top: 10px;" id="budgetDisplay">Monthly Budget: $7,500</div>
                 </div>
-
-                <!-- BIG LOSS AMOUNT -->
                 <div class="loss-amount">
                     <div class="loss-label">ESTIMATED MONTHLY WASTE</div>
                     <div class="loss-number" id="lossAmount">$4,688</div>
                     <div class="loss-period">based on your PPC spend</div>
                 </div>
 
-                <!-- SECTION: Critical Problems with Progress Bars -->
                 <div class="section-header">
                     <i class="fas fa-exclamation-triangle"></i>
                     <h2>CRITICAL PROBLEMS <span>5 ISSUES FOUND</span></h2>
                 </div>
+                <div id="problemsList"></div>
 
-                <div id="problemsList">
-                    <!-- Dynamically filled with progress bars -->
-                </div>
-
-                <!-- SECTION: Detailed Analysis -->
                 <div class="section-header" style="margin-top: 30px;">
                     <i class="fas fa-chart-line"></i>
                     <h2>DETAILED ANALYSIS <span>PERFORMANCE SCORES</span></h2>
                 </div>
+                <div id="detailedAnalysis"></div>
 
-                <div id="detailedAnalysis">
-                    <!-- Dynamically filled with analysis items -->
-                </div>
-
-                <!-- Mobile-Wise AI Banner Recommendation -->
                 <div style="margin-top: 30px; text-align: center;">
                     <div style="background: rgba(0,102,204,0.2); border-radius: 15px; padding: 25px; border: 2px solid #0066cc;">
                         <h3 style="color: white; margin-bottom: 15px;">🏆 OUR #1 RECOMMENDATION</h3>
@@ -748,108 +757,67 @@ lemon-slice-widget .agent-video {
             </div>
         </div>
 
-<!-- RIGHT COLUMN - SIDEBAR -->
-<div class="right-column">
-    <!-- TESS VIDEO - Plays once then fades out -->
-    <video id="tess-preloader-video" autoplay muted playsinline style="
-        width: 100%;
-        height: auto;
-        display: block;
-        margin-bottom: 25px;
-        border-radius: 15px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        cursor: pointer;
-        transition: opacity 0.8s ease, transform 0.2s;
-    " onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-        <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/PPCanalysis8.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL1BQQ2FuYWx5c2lzOC5tcDQiLCJpYXQiOjE3NzI2MTUxMzMsImV4cCI6MTgwNDE1MTEzM30.3kwyETdr9M2LFMpiR0ry37yM63-KqFBdSjTkNZlprgw" type="video/mp4">
-    </video>
+        <!-- RIGHT COLUMN - SIDEBAR -->
+        <div class="right-column">
+            <!-- TESS VIDEO -->
+            <video id="tess-preloader-video" autoplay muted playsinline style="
+                width: 100%; height: auto; display: block; margin-bottom: 25px; 
+                border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); cursor: pointer; 
+                transition: opacity 0.8s ease, transform 0.2s;" 
+                onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/PPCanalysis8.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL1BQQ2FuYWx5c2lzOC5tcDQiLCJpYXQiOjE3NzI2MTUxMzMsImV4cCI6MTgwNDE1MTEzM30.3kwyETdr9M2LFMpiR0ry37yM63-KqFBdSjTkNZlprgw" type="video/mp4">
+            </video>
 
-    <script>
-// Force video to reload the new source
-document.addEventListener('DOMContentLoaded', function() {
-    const video = document.getElementById('tess-preloader-video');
-    if (video) {
-        // Reload the video element to clear any cached version
-        video.load();
-        console.log('🔄 Video reloaded to clear cache');
-    }
-});
-</script>
+            <!-- TESS IMAGE -->
+            <a href="https://calendly.com/mobilewise-ai/30min" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: none;" id="tess-image-link">
+                <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/demo2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvZGVtbzIucG5nIiwiaWF0IjoxNzcyNTU1MDIxLCJleHAiOjE4MDQwOTEwMjF9.yS6bCEBaSiZeM0rtL4yyiRGqjahmgkZYI-jOHyJanHc" 
+                     alt="Book a Demo" 
+                     style="width: 100%; height: auto; display: block; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s; opacity: 0; animation: fadeInImage 0.8s ease forwards;"
+                     onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
+                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
+            </a>
 
-  <!-- TESS STILL IMAGE - Fades in, open Calendly -->
-<a href="https://calendly.com/mobilewise-ai/30min" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: none;" id="tess-image-link">
-    <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/PPC-AUDIT/demo2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJQUEMtQVVESVQvZGVtbzIucG5nIiwiaWF0IjoxNzcyNTU1MDIxLCJleHAiOjE4MDQwOTEwMjF9.yS6bCEBaSiZeM0rtL4yyiRGqjahmgkZYI-jOHyJanHc" 
-         alt="Book a Demo" 
-         style="width: 100%; height: auto; display: block; margin-bottom: 25px; cursor: pointer; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.3s; opacity: 0; animation: fadeInImage 0.8s ease forwards;"
-         onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 15px 50px rgba(59,130,246,0.5)';"
-         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.3)';">
-</a>
-
-    <!-- TESTIMONIALS SECTION -->
-    <div style="margin-bottom: 25px;">
-        <h3 style="color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-            <i class="fas fa-star" style="color: #ffcc00;"></i> WHAT MORTGAGE COMPANIES SAY
-        </h3>
-        
-        <div class="testimonial-card">
-            <div class="testimonial-text">"Found $12k in wasted spend in 2 minutes! The visual progress bars showed exactly where our leaks were."</div>
-            <div class="testimonial-author">- Mike Davidson</div>
-            <div class="testimonial-company">Fairway Mortgage</div>
-        </div>
-        
-        <div class="testimonial-card">
-            <div class="testimonial-text">"Our form was killing 85% of mobile leads. Mobile-Wise AI fixed it and we doubled conversions in 30 days."</div>
-            <div class="testimonial-author">- Sarah Chen</div>
-            <div class="testimonial-company">Rocket Mortgage</div>
-        </div>
-        
-        <div class="testimonial-card">
-            <div class="testimonial-text">"The progress bar scores made it impossible to ignore our problems. Now we're saving $5k monthly."</div>
-            <div class="testimonial-author">- Tom Richards</div>
-            <div class="testimonial-company">Guaranteed Rate</div>
-        </div>
-        
-        <div class="testimonial-card">
-            <div class="testimonial-text">"Best PPC audit tool we've used. The visual layout shows exactly what needs fixing first."</div>
-            <div class="testimonial-author">- Jennifer Walsh</div>
-            <div class="testimonial-company">LoanDepot</div>
-        </div>
-    </div>
-
-    <!-- AFFILIATE BANNERS -->
-    <div>
-        <h3 style="color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-            <i class="fas fa-handshake" style="color: #0066cc;"></i> TRUSTED PARTNERS
-        </h3>
-        
-        <div class="banners-grid">
-            <div class="banner-square">
-                <div class="banner-placeholder">
-                    <i class="fas fa-chart-line fa-2x"></i>
-                    <div>AdWords<br>Expert</div>
+            <!-- TESTIMONIALS -->
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-star" style="color: #ffcc00;"></i> WHAT MORTGAGE COMPANIES SAY
+                </h3>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">"Found $12k in wasted spend in 2 minutes! The visual progress bars showed exactly where our leaks were."</div>
+                    <div class="testimonial-author">- Mike Davidson</div>
+                    <div class="testimonial-company">Fairway Mortgage</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">"Our form was killing 85% of mobile leads. Mobile-Wise AI fixed it and we doubled conversions in 30 days."</div>
+                    <div class="testimonial-author">- Sarah Chen</div>
+                    <div class="testimonial-company">Rocket Mortgage</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">"The progress bar scores made it impossible to ignore our problems. Now we're saving $5k monthly."</div>
+                    <div class="testimonial-author">- Tom Richards</div>
+                    <div class="testimonial-company">Guaranteed Rate</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">"Best PPC audit tool we've used. The visual layout shows exactly what needs fixing first."</div>
+                    <div class="testimonial-author">- Jennifer Walsh</div>
+                    <div class="testimonial-company">LoanDepot</div>
                 </div>
             </div>
-            <div class="banner-square">
-                <div class="banner-placeholder">
-                    <i class="fas fa-search fa-2x"></i>
-                    <div>SEO<br>Pro</div>
-                </div>
-            </div>
-            <div class="banner-square">
-                <div class="banner-placeholder">
-                    <i class="fas fa-mobile-alt fa-2x"></i>
-                    <div>Mobile<br>Optimizer</div>
-                </div>
-            </div>
-            <div class="banner-square">
-                <div class="banner-placeholder">
-                    <i class="fas fa-robot fa-2x"></i>
-                    <div>AI<br>Solutions</div>
+
+            <!-- BANNERS -->
+            <div>
+                <h3 style="color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-handshake" style="color: #0066cc;"></i> TRUSTED PARTNERS
+                </h3>
+                <div class="banners-grid">
+                    <div class="banner-square"><div class="banner-placeholder"><i class="fas fa-chart-line fa-2x"></i><div>AdWords<br>Expert</div></div></div>
+                    <div class="banner-square"><div class="banner-placeholder"><i class="fas fa-search fa-2x"></i><div>SEO<br>Pro</div></div></div>
+                    <div class="banner-square"><div class="banner-placeholder"><i class="fas fa-mobile-alt fa-2x"></i><div>Mobile<br>Optimizer</div></div></div>
+                    <div class="banner-square"><div class="banner-placeholder"><i class="fas fa-robot fa-2x"></i><div>AI<br>Solutions</div></div></div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
     <!-- Blue Bottom Bar -->
     <div class="bottom-bar"></div>
@@ -868,832 +836,277 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 
-   <style>
-@keyframes fadeInImage {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-</style>
-
-<!-- VIDEO OVERLAY CONTAINER -->
-<div id="video-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(8px); background: rgba(0,0,0,0.85); z-index: 100000;">
-    
-    <!-- Video Player Container -->
-    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-                width: 90%; max-width: 1000px; background: #1a1a2e; border-radius: 20px; 
-                box-shadow: 0 20px 60px rgba(0,0,0,0.7); z-index: 100001; 
-                border: 2px solid #10b981; overflow: hidden;">
-        
-        <!-- Button Bar at Top -->
-        <div style="display: flex; justify-content: space-between; align-items: center; 
-                    padding: 15px 20px; background: #0f172a; border-bottom: 1px solid #2d3748;">
-            
-            <div style="color: #10b981; font-weight: bold; font-size: 1.1rem;">
-                📹 MOBILE-WISE AI PRESENTATION
+    <!-- VIDEO OVERLAY CONTAINER -->
+    <div id="video-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(8px); background: rgba(0,0,0,0.85); z-index: 100000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 1000px; background: #1a1a2e; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.7); z-index: 100001; border: 2px solid #10b981; overflow: hidden;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #0f172a; border-bottom: 1px solid #2d3748;">
+                <div style="color: #10b981; font-weight: bold; font-size: 1.1rem;">📹 MOBILE-WISE AI PRESENTATION</div>
+                <div style="display: flex; gap: 12px;">
+                    <button onclick="pauseVideoAndWakeTess()" style="background: #00ccff; color: black; border: none; padding: 8px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">🎤 ASK TESS</button>
+                    <button onclick="window.open('https://calendly.com/tommy-ppc/30min', '_blank')" style="background: #10b981; color: black; border: none; padding: 8px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">📅 BOOK DEMO</button>
+                    <button onclick="closeVideoOverlay()" style="background: #ff4444; color: white; border: none; padding: 8px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">✕ EXIT</button>
+                </div>
             </div>
-            
-            <div style="display: flex; gap: 12px;">
-                <!-- Ask Tess Button (NEW) -->
-                <button onclick="pauseVideoAndWakeTess()" style="
-                    background: #00ccff; 
-                    color: black; 
-                    border: none; 
-                    padding: 8px 20px; 
-                    border-radius: 8px; 
-                    font-weight: bold; 
-                    cursor: pointer; 
-                    display: flex; 
-                    align-items: center; 
-                    gap: 8px;">
-                    🎤 ASK TESS
-                </button>
-                
-                <!-- Book Demo Button -->
-                <button onclick="window.open('https://calendly.com/tommy-ppc/30min', '_blank')" style="
-                    background: #10b981; 
-                    color: black; 
-                    border: none; 
-                    padding: 8px 20px; 
-                    border-radius: 8px; 
-                    font-weight: bold; 
-                    cursor: pointer; 
-                    display: flex; 
-                    align-items: center; 
-                    gap: 8px;">
-                    📅 BOOK DEMO
-                </button>
-                
-                <!-- Exit Button -->
-                <button onclick="closeVideoOverlay()" style="
-                    background: #ff4444; 
-                    color: white; 
-                    border: none; 
-                    padding: 8px 20px; 
-                    border-radius: 8px; 
-                    font-weight: bold; 
-                    cursor: pointer; 
-                    display: flex; 
-                    align-items: center; 
-                    gap: 8px;">
-                    ✕ EXIT
-                </button>
+            <div style="position: relative; width: 100%; padding-top: 56.25%;">
+                <video id="presentation-video" controls style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: black;">
+                    <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/mobile-wise-ai.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL21vYmlsZS13aXNlLWFpLm1wNCIsImlhdCI6MTc3Mjc2ODU5NiwiZXhwIjoxODA0MzA0NTk2fQ.fvHBv0vBzByCnfguHbP-6ZCrnarJCXG87JtR29zccuk" type="video/mp4">
+                </video>
             </div>
-        </div>
-        
-        <!-- VIDEO PLAYER (responsive sizing) -->
-        <div style="position: relative; width: 100%; padding-top: 56.25%; /* 16:9 Aspect Ratio */">
-            <video id="presentation-video" controls style="
-                position: absolute; 
-                top: 0; 
-                left: 0; 
-                width: 100%; 
-                height: 100%; 
-                background: black;
-            ">
-                <source src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/mobile-wise-ai.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL21vYmlsZS13aXNlLWFpLm1wNCIsImlhdCI6MTc3Mjc2ODU5NiwiZXhwIjoxODA0MzA0NTk2fQ.fvHBv0vBzByCnfguHbP-6ZCrnarJCXG87JtR29zccuk" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-        
-        <!-- Bottom Info Bar -->
-        <div style="display: flex; justify-content: space-between; align-items: center; 
-                    padding: 12px 20px; background: #0f172a; border-top: 1px solid #2d3748;
-                    color: rgba(255,255,255,0.7); font-size: 0.9rem;">
-            <span>⏱️ 4-minute presentation</span>
-            <span>🤖 Tess is standing by for questions</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #0f172a; border-top: 1px solid #2d3748; color: rgba(255,255,255,0.7); font-size: 0.9rem;">
+                <span>⏱️ 4-minute presentation</span>
+                <span>🤖 Tess is standing by for questions</span>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-// Video player functions
-const videoOverlay = document.getElementById('video-overlay');
-const videoPlayer = document.getElementById('presentation-video');
+    <!-- TESS CONTROL PANEL (Fixed) -->
+    <div id="tess-control-wrapper">
+        <button id="tess-mute-btn" class="tess-ctrl-btn btn-mute" onclick="window.toggleMute()" title="Mute/Unmute Tess">
+            <i class="fas fa-volume-up" id="mute-icon"></i>
+        </button>
+        <button id="tess-stop-btn" class="tess-ctrl-btn btn-stop" onclick="window.stopTessNow()" title="Stop/Minimize Tess">
+            <i class="fas fa-stop"></i>
+        </button>
+    </div>
 
-function openVideoOverlay() {
-    videoOverlay.style.display = 'block';
-    videoPlayer.play(); // Auto-play when opened
-}
-
-function closeVideoOverlay() {
-    videoPlayer.pause();
-    videoOverlay.style.display = 'none';
-}
-
-function pauseVideoAndWakeTess() {
-    // Pause the video
-    videoPlayer.pause();
-    
-    // Wake up Tess (using your bridge)
-    if (window.tessBridge && typeof window.tessBridge.triggerHowFactorMode === 'function') {
-        window.tessBridge.triggerHowFactorMode();
-    } else {
-        // Fallback - try to activate widget directly
-        const widget = document.querySelector('lemon-slice-widget');
-        if (widget) {
-            widget.setAttribute('controlled-widget-state', 'active');
-            widget.setAttribute('muted', 'false');
-            widget.setAttribute('volume-enabled', 'true');
-        }
-    }
-    
-    // Optional: Tess asks a question
-    setTimeout(() => {
-        const widget = document.querySelector('lemon-slice-widget');
-        if (widget && widget.sendMessage) {
-            widget.sendMessage("Hi! I see you're watching our presentation. What questions can I answer for you?");
-        }
-    }, 1000);
-}
-
-// When video ends, prompt for questions
-videoPlayer.addEventListener('ended', function() {
-    pauseVideoAndWakeTess();
-});
-
-// Close with Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && videoOverlay.style.display === 'block') {
-        closeVideoOverlay();
-    }
-});
-</script>
-
-<script>
-
-// Open How Factor modal
-function openHowFactor() {
-    document.getElementById('howFactorModal').style.display = 'flex';
-}
-
-// Make sure pauseTess still works
-function pauseTess(event) {
-    // Your existing pauseTess code
-    console.log('🎯 Tess image clicked - pausing avatar');
-    
-    const widget = document.querySelector('lemon-slice-widget');
-    if (widget) {
-        if (typeof widget.mute === 'function') {
-            widget.mute();
-        }
-        widget.setAttribute('muted', 'true');
-        widget.setAttribute('volume-enabled', 'false');
-        widget.style.opacity = '0.7';
-    }
-}
-
-</script>
-
-<script>
-// Get elements
-const video = document.getElementById('tess-preloader-video');
-const imageLink = document.getElementById('tess-image-link');
-
-// Make sure it doesn't loop
-video.loop = false;
-
-// REMOVED: playbackRate = 0.7 (let it play at normal speed)
-
-// When video ends, fade in image link
-video.addEventListener('ended', function() {
-    console.log('✅ Video ended naturally - showing image');
-    
-    // Fade out video
-    video.style.opacity = '0';
-    
-    setTimeout(() => {
-        video.style.display = 'none';  // Hide video
-        imageLink.style.display = 'block';  // Show image link
-        console.log('✅ Image displayed');
-    }, 800); // Match transition time
-});
-
-// Safety timeout - SET TO 52 SECONDS
-setTimeout(function() {
-    // Only trigger if video is still visible (not already ended)
-    if (video.style.display !== 'none' && video.style.opacity !== '0') {
-        console.log('⚠️ 52-second safety timeout triggered - forcing transition');
-        video.style.opacity = '0';
-        setTimeout(() => {
-            video.style.display = 'none';
-            imageLink.style.display = 'block';
-        }, 800);
-    }
-}, 59000); // 52,000 milliseconds = 52 seconds
-</script>
-   
-  <script>
-       // One-time view check — MUST be first
-    const urlParams = new URLSearchParams(window.location.search);
-    const scannedUrl = urlParams.get('url') || localStorage.getItem('lastScannedUrl') || 'yourwebsite.com';
-    const ppcBudget = parseInt(urlParams.get('budget') || localStorage.getItem('ppcBudget') || '7500');
-    const isAdmin = urlParams.get('admin') === 'true';
-    const reportKey = `viewed_${scannedUrl}_${ppcBudget}`;
-    
-    if (!isAdmin) {
-        if (localStorage.getItem(reportKey)) {
-            window.location.href = `viewed.html?domain=${encodeURIComponent(scannedUrl)}`;
-        }
-        localStorage.setItem(reportKey, 'true');
-    }
-
-    // Get rest of data
-    const monthlyLoss = parseInt(urlParams.get('loss') || localStorage.getItem('monthlyLoss') || Math.round(ppcBudget * 0.625));
-    const prospectName = urlParams.get('name') || '';
-    if (prospectName) {
-        localStorage.setItem('prospectName', prospectName);
-    }
-
-    // ===== DYNAMIC VARIABLE GENERATOR =====
-    // This creates different results every time!
-    function generateDynamicScores() {
-        // Generate random seed based on URL + timestamp
-        const seed = scannedUrl.length + new Date().getTime();
-        const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-        
-        // Problem scores - vary by ±15% but keep the pain realistic
-        const problemScores = {
-            formLength: random(8, 18),        // 8-18% (always terrible)
-            aiAssistant: random(5, 15),        // 5-15% (always terrible)
-            loadTime: random(28, 42),          // 28-42% (varies more)
-            adMatch: random(35, 52),           // 35-52% (yellow/orange range)
-            clickToCall: random(22, 35)         // 22-35% (red/orange range)
-        };
-        
-        // Problem losses - based on monthly loss but with variation
-        const lossVariation = 0.85 + (Math.random() * 0.3); // 0.85 to 1.15
-        const adjustedLoss = Math.round(monthlyLoss * lossVariation);
-        
-        const problemLosses = {
-            form: Math.round(adjustedLoss * 0.40 * (0.9 + Math.random() * 0.2)),
-            ai: Math.round(adjustedLoss * 0.24 * (0.9 + Math.random() * 0.2)),
-            load: Math.round(adjustedLoss * 0.16 * (0.9 + Math.random() * 0.2)),
-            ad: Math.round(adjustedLoss * 0.12 * (0.9 + Math.random() * 0.2)),
-            call: Math.round(adjustedLoss * 0.08 * (0.9 + Math.random() * 0.2))
-        };
-        
-        // Analysis items - vary each one
-        const analysisScores = {
-            loading: random(92, 100),          // Always high
-            mobileSim: random(85, 96),          // Always high
-            conversion: random(55, 72),          // Medium-low
-            aiScan: random(0, 12),               // Always terrible
-            ppcWaste: 100,                        // Always 100% (calculated fact)
-            landingPage: random(38, 52),          // Low-medium
-            formFriction: random(8, 18),          // Always terrible
-            mobileAudit: random(12, 24),          // Always terrible
-            qualityScore: random(48, 65),          // Medium
-            benchmark: random(28, 42)              // Low-medium
-        };
-        
-        return {
-            problemScores,
-            problemLosses,
-            analysisScores,
-            totalLoss: problemLosses.form + problemLosses.ai + problemLosses.load + 
-                      problemLosses.ad + problemLosses.call
-        };
-    }
-
-    // Generate dynamic data
-    const dynamicData = generateDynamicScores();
-    
-  // Problem breakdown with dynamic scores
-// HIGH score = BAD problem = RED
-// LOW score = GOOD = GREEN
-const problems = [
-    { name: 'Form Request Too Long', score: 85, // 85% abandon = SEVERE problem
-      loss: dynamicData.problemLosses.form, desc: '85% abandon long forms' },
-    { name: 'No Mobile AI Assistant', score: 80, // 73% expect = SEVERE problem
-      loss: dynamicData.problemLosses.ai, desc: '73% expect instant responses' },
-    { name: 'Bounce Rate', score: 65, // 65% bounce rate = HIGH problem
-      loss: 65, desc: '65% bounce rate (industry avg 50-61%)' },
-    { name: 'Ad-to-Page Mismatch', score: 49, // 49% mismatch = MEDIUM problem
-      loss: dynamicData.problemLosses.ad, desc: 'Ad promise ≠ landing page' },
-    { name: 'No Click-to-Call', score: 32, // 32% missing = LOW problem
-      loss: dynamicData.problemLosses.call, desc: 'Mobile users want to call' }
-];
-
-// Helper functions for bounce rate scoring (keeping for reference)
-function calculateBounceRateScore(bounceRate) {
-    // Higher bounce rate = higher problem score
-    if (bounceRate >= 70) return 90;        // Severe
-    if (bounceRate >= 60) return 75;        // High (65% falls here)
-    if (bounceRate >= 50) return 60;        // Moderate
-    if (bounceRate >= 40) return 40;        // Low
-    return 20;                               // Excellent
-}
-
-function calculateBounceRateLoss(bounceRate) {
-    // Calculate loss percentage based on bounce rate
-    return Math.min(90, Math.max(20, bounceRate));
-}
-
-    // Detailed analysis items with dynamic scores
-    const analysisItems = [
-        { name: 'Loading website content', score: dynamicData.analysisScores.loading, icon: '🌐' },
-        { name: 'Simulating mobile experience', score: dynamicData.analysisScores.mobileSim, icon: '📱' },
-        { name: 'Checking conversion elements', score: dynamicData.analysisScores.conversion, icon: '🎯' },
-        { name: 'Scanning for AI assistants', score: dynamicData.analysisScores.aiScan, icon: '🤖' },
-        { name: 'Calculating PPC wasted spend', score: dynamicData.analysisScores.ppcWaste, 
-          icon: '💰', special: `$${dynamicData.totalLoss.toLocaleString()}` },
-        { name: 'Analyzing landing page alignment', score: dynamicData.analysisScores.landingPage, icon: '📄' },
-        { name: 'Form field friction analysis', score: dynamicData.analysisScores.formFriction, icon: '📝' },
-        { name: 'Mobile PPC conversion audit', score: dynamicData.analysisScores.mobileAudit, icon: '📊' },
-        { name: 'Quality Score estimation', score: dynamicData.analysisScores.qualityScore, icon: '⭐' },
-        { name: 'Industry benchmark comparison', score: dynamicData.analysisScores.benchmark, icon: '📈' }
-    ];
-
-    // Update the monthly loss display to show the dynamically calculated total
-    const displayLoss = dynamicData.totalLoss || monthlyLoss;
-
-    // Helper to get color class based on score
-    // HIGH score = BAD = RED
-    function getScoreColorClass(score) {
-        if (score >= 70) return 'score-red';      // 70%+ = Severe problem = Red
-        if (score >= 50) return 'score-orange';   // 50-69% = Moderate problem = Orange
-        if (score >= 30) return 'score-yellow';   // 30-49% = Minor problem = Yellow
-        return 'score-green';                       // <30% = Good = Green
-    }
-
-    // Progress bar fill color - HIGH score = BAD = RED
-    function getProgressFillClass(score) {
-        if (score >= 70) return 'red';      // 70%+ = Severe = Red
-        if (score >= 50) return 'orange';   // 50-69% = Moderate = Orange (65% lives here)
-        if (score >= 30) return 'yellow';   // 30-49% = Minor = Yellow
-        return 'green';                      // <30% = Good = Green
-    }
-
-    // Update page with real data
+    <script>
+    // ============================================================
+    // 1. DATA & PAGE LOGIC
+    // ============================================================
     document.addEventListener('DOMContentLoaded', function() {
-        // Update displays
+        // Video Preloader
+        const video = document.getElementById('tess-preloader-video');
+        const imageLink = document.getElementById('tess-image-link');
+        if (video) {
+            video.load();
+            video.loop = false;
+            video.addEventListener('ended', function() {
+                console.log('✅ Video ended naturally');
+                video.style.opacity = '0';
+                setTimeout(() => {
+                    video.style.display = 'none';
+                    if(imageLink) { imageLink.style.display = 'block'; imageLink.style.opacity = '1'; }
+                }, 800);
+            });
+            setTimeout(() => {
+                if (video.style.display !== 'none') {
+                    video.style.opacity = '0';
+                    setTimeout(() => {
+                        video.style.display = 'none';
+                        if(imageLink) { imageLink.style.display = 'block'; imageLink.style.opacity = '1'; }
+                    }, 800);
+                }
+            }, 59000);
+        }
+
+        // Dynamic Report Data
+        const urlParams = new URLSearchParams(window.location.search);
+        const scannedUrl = urlParams.get('url') || localStorage.getItem('lastScannedUrl') || 'yourwebsite.com';
+        const ppcBudget = parseInt(urlParams.get('budget') || localStorage.getItem('ppcBudget') || '7500');
+        const isAdmin = urlParams.get('admin') === 'true';
+        const reportKey = `viewed_${scannedUrl}_${ppcBudget}`;
+        
+        if (!isAdmin) {
+            if (localStorage.getItem(reportKey)) {
+                window.location.href = `viewed.html?domain=${encodeURIComponent(scannedUrl)}`;
+            }
+            localStorage.setItem(reportKey, 'true');
+        }
+
+        const monthlyLoss = parseInt(urlParams.get('loss') || localStorage.getItem('monthlyLoss') || Math.round(ppcBudget * 0.625));
+        
+        // Update UI
         document.getElementById('urlDisplay').textContent = `Website: ${scannedUrl}`;
         document.getElementById('budgetDisplay').textContent = `Monthly Budget: $${ppcBudget.toLocaleString()}`;
-        document.getElementById('lossAmount').textContent = `$${displayLoss.toLocaleString()}`;
-        
-        // Generate problems with progress bars
-       const problemsList = document.getElementById('problemsList');
-problemsList.innerHTML = '';
+        document.getElementById('lossAmount').textContent = `$${monthlyLoss.toLocaleString()}`;
 
-problems.forEach(problem => {
-    const scoreColorClass = getScoreColorClass(problem.score);
-    const progressFillClass = getProgressFillClass(problem.score);
-    const finalWidth = problem.score; // Store the score
-    
-    const problemHtml = `
-        <div class="problem-card">
-            <div class="problem-header">
-                <div class="problem-title">
-                    <i class="fas fa-exclamation-circle"></i>
-                    ${problem.name}
-                </div>
-                <div class="problem-score ${scoreColorClass}">${problem.score}%</div>
-            </div>
-            <div class="progress-container">
-                <div class="progress-bar-bg">
-                    <div class="progress-fill ${progressFillClass}" 
-                         data-final-width="${finalWidth}%" 
-                         style="width: ${problem.score}%;"></div>
-                </div>
-            </div>
-            <div class="problem-footer">
-                <span>${problem.desc}</span>
-                <span class="problem-loss">$${problem.loss.toLocaleString()}</span>
-            </div>
-        </div>
-    `;
-    problemsList.innerHTML += problemHtml;
-});
+        // Generate Random Scores
+        const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+        const problems = [
+            { name: 'Form Request Too Long', score: random(8, 18), loss: Math.round(monthlyLoss * 0.4), desc: '85% abandon long forms' },
+            { name: 'No Mobile AI Assistant', score: random(5, 15), loss: Math.round(monthlyLoss * 0.24), desc: '73% expect instant responses' },
+            { name: 'Bounce Rate', score: 65, loss: 65, desc: '65% bounce rate' },
+            { name: 'Ad-to-Page Mismatch', score: random(35, 52), loss: Math.round(monthlyLoss * 0.12), desc: 'Ad promise ≠ landing page' },
+            { name: 'No Click-to-Call', score: random(22, 35), loss: Math.round(monthlyLoss * 0.08), desc: 'Mobile users want to call' }
+        ];
 
-        // Generate detailed analysis items
-        const detailedAnalysis = document.getElementById('detailedAnalysis');
-        detailedAnalysis.innerHTML = '';
-        
+        const analysisItems = [
+            { name: 'Loading website content', score: random(92, 100), icon: '🌐' },
+            { name: 'Simulating mobile experience', score: random(85, 96), icon: '📱' },
+            { name: 'Checking conversion elements', score: random(55, 72), icon: '🎯' },
+            { name: 'Scanning for AI assistants', score: random(0, 12), icon: '🤖' },
+            { name: 'Calculating PPC wasted spend', score: 100, icon: '💰', special: `$${monthlyLoss.toLocaleString()}` },
+            { name: 'Analyzing landing page alignment', score: random(38, 52), icon: '📄' },
+            { name: 'Form field friction analysis', score: random(8, 18), icon: '📝' },
+            { name: 'Mobile PPC conversion audit', score: random(12, 24), icon: '📊' },
+            { name: 'Quality Score estimation', score: random(48, 65), icon: '⭐' },
+            { name: 'Industry benchmark comparison', score: random(28, 42), icon: '📈' }
+        ];
+
+        // Render Problems
+        const pList = document.getElementById('problemsList');
+        pList.innerHTML = '';
+        problems.forEach(p => {
+            const color = p.score >= 70 ? 'red' : p.score >= 50 ? 'orange' : p.score >= 30 ? 'yellow' : 'green';
+            const html = `
+                <div class="problem-card">
+                    <div class="problem-header">
+                        <div class="problem-title"><i class="fas fa-exclamation-circle"></i> ${p.name}</div>
+                        <div class="problem-score score-${color}">${p.score}%</div>
+                    </div>
+                    <div class="progress-container"><div class="progress-bar-bg"><div class="progress-fill ${color}" style="width: 0%"></div></div></div>
+                    <div class="problem-footer"><span>${p.desc}</span><span class="problem-loss">$${p.loss.toLocaleString()}</span></div>
+                </div>`;
+            pList.innerHTML += html;
+        });
+
+        // Render Analysis
+        const aList = document.getElementById('detailedAnalysis');
+        aList.innerHTML = '';
         analysisItems.forEach(item => {
-            const scoreColorClass = getScoreColorClass(item.score);
-            const progressFillClass = getProgressFillClass(item.score);
-            
-            let rightContent = '';
-            if (item.special) {
-                rightContent = `<span style="color: #ff4444; font-weight: 700;">${item.special}</span>`;
-            } else {
-                rightContent = `<span class="${scoreColorClass}">${item.score}%</span>`;
-            }
-            
-            const itemHtml = `
+            const color = item.score >= 70 ? 'red' : item.score >= 50 ? 'orange' : item.score >= 30 ? 'yellow' : 'green';
+            const right = item.special ? `<span style="color:#ff4444;font-weight:bold">${item.special}</span>` : `<span class="score-${color}">${item.score}%</span>`;
+            const html = `
                 <div class="analysis-item">
                     <div class="analysis-icon">${item.icon}</div>
                     <div class="analysis-content">
                         <div class="analysis-title">${item.name}</div>
-                        <div class="analysis-progress-small">
-                            <div class="analysis-progress-fill ${progressFillClass}" style="width: ${item.score}%;"></div>
-                        </div>
+                        <div class="analysis-progress-small"><div class="analysis-progress-fill ${color}" style="width: 0%"></div></div>
                     </div>
-                    <div class="analysis-score">
-                        ${rightContent}
-                    </div>
-                </div>
-            `;
-            detailedAnalysis.innerHTML += itemHtml;
+                    <div class="analysis-score">${right}</div>
+                </div>`;
+            aList.innerHTML += html;
         });
-    });
 
-    // AI Assistant Button
-    document.getElementById('closeAIModal').addEventListener('click', function() {
-        document.getElementById('aiModal').style.display = 'none';
-    });
-
-    // Schedule Call button
-    document.getElementById('scheduleCallBtn').addEventListener('click', function() {
-        window.open('https://free-mobile-report.netlify.app/zoom-scheduler', '_blank');
-        document.getElementById('aiModal').style.display = 'none';
-    });
-
-    // Live Chat button
-    document.getElementById('liveChatBtn').addEventListener('click', function() {
-        alert('Live chat coming soon! Please schedule a call for immediate assistance.');
-    });
-
-    // Example buttons
-    const exampleButtons = document.querySelectorAll('#mobileWiseExampleBtn, #recommendationExampleBtn');
-    exampleButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            window.open('https://mortgages-assist.com', '_blank');
-        });
-    });
-
-    // Close modal when clicking outside
-    window.addEventListener('click', function(event) {
-        if (event.target.classList.contains('demo-popup')) {
-            event.target.style.display = 'none';
+        // Animate Progress Bars
+        setTimeout(() => {
+            document.querySelectorAll('.progress-fill').forEach(bar => {
+                bar.style.width = bar.parentElement.nextElementSibling.nextElementSibling ? 
+                    bar.parentElement.parentElement.parentElement.querySelector('.problem-score').innerText : 
+                    bar.parentElement.parentElement.parentElement.querySelector('.analysis-score').innerText.replace(/\D/g,'') + '%';
+            });
+            document.querySelectorAll('.analysis-progress-fill').forEach(bar => {
+                bar.style.width = bar.parentElement.nextElementSibling.innerText.replace(/\D/g,'') + '%';
+            });
+        }, 500);
+        
+        // Modal Event Listeners
+        document.getElementById('closeAIModal').onclick = () => document.getElementById('aiModal').style.display = 'none';
+        document.getElementById('scheduleCallBtn').onclick = () => { window.open('https://free-mobile-report.netlify.app/zoom-scheduler', '_blank'); document.getElementById('aiModal').style.display = 'none'; };
+        document.getElementById('liveChatBtn').onclick = () => alert('Live chat coming soon!');
+        document.getElementById('mobileWiseExampleBtn').onclick = () => window.open('https://mortgages-assist.com', '_blank');
+        
+        // EmailJS
+        if(window.emailjs) {
+            emailjs.init("7-9oxa3UC3uKxtqGM");
+            if(!isAdmin && scannedUrl && ppcBudget && monthlyLoss) {
+                emailjs.send('service_b9bppgb', 'template_lhlonjg', {
+                    to_email: 'bizboost.expert@gmail.com',
+                    website_url: scannedUrl,
+                    domain: scannedUrl.replace(/.*?:\/\//g, ''),
+                    budget: ppcBudget,
+                    loss: monthlyLoss,
+                    score: '75%',
+                    audit_date: new Date().toLocaleString()
+                }).then(() => console.log('Email sent'), (err) => console.log('Email failed', err));
+            }
         }
     });
 
-    // Close with ESC key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
+    // Google Counter
+    (function() {
+        const start = 183000000000;
+        const rate = 9450;
+        const t0 = Date.now();
+        function update() {
+            const el = document.getElementById('google-revenue-counter');
+            if(el) el.textContent = '$' + Math.floor(start + (Date.now() - t0)/1000 * rate).toLocaleString();
+            requestAnimationFrame(update);
+        }
+        update();
+    })();
+
+    // Video Overlay Logic
+    function closeVideoOverlay() {
+        document.getElementById('presentation-video').pause();
+        document.getElementById('video-overlay').style.display = 'none';
+    }
+    function pauseVideoAndWakeTess() {
+        document.getElementById('presentation-video').pause();
+        const w = document.querySelector('lemon-slice-widget');
+        if(w) { w.setAttribute('controlled-widget-state', 'active'); w.setAttribute('muted', 'false'); w.setAttribute('volume-enabled', 'true'); }
+    }
+
+    // ============================================================
+    // 2. TESS CONTROL LOGIC
+    // ============================================================
+    
+    // "CONTROL X" - BLOCK TESS (Only if ?admin=true)
+    (function() {
+        if(new URLSearchParams(window.location.search).get('admin') === 'true') {
+            console.log("🛑 CONTROL X ACTIVE: Blocking Tess...");
+            const obs = new MutationObserver((_, o) => {
+                const w = document.querySelector('lemon-slice-widget');
+                if(w) {
+                    w.setAttribute('controlled-widget-state', 'minimized');
+                    w.setAttribute('muted', 'true');
+                    w.setAttribute('volume-enabled', 'false');
+                    if(w.mute) w.mute();
+                    o.disconnect();
+                }
+            });
+            obs.observe(document.body, {childList: true, subtree: true});
+            setTimeout(() => {
+                const w = document.querySelector('lemon-slice-widget');
+                if(w) { w.setAttribute('controlled-widget-state', 'minimized'); w.setAttribute('muted', 'true'); }
+            }, 2000);
+        }
+    })();
+
+    // MUTE BUTTON
+    window.toggleMute = function() {
+        const w = document.querySelector('lemon-slice-widget');
+        const icon = document.getElementById('mute-icon');
+        if(!w) return;
+        const isMuted = w.getAttribute('muted') === 'true' || w.getAttribute('volume-enabled') === 'false';
+        if(isMuted) {
+            w.setAttribute('muted', 'false'); w.setAttribute('volume-enabled', 'true');
+            if(w.unmute) w.unmute();
+            if(icon) icon.className = 'fas fa-volume-up';
+        } else {
+            w.setAttribute('muted', 'true'); w.setAttribute('volume-enabled', 'false');
+            if(w.mute) w.mute();
+            if(icon) icon.className = 'fas fa-volume-mute';
+        }
+    };
+
+    // STOP BUTTON
+    window.stopTessNow = function() {
+        const w = document.querySelector('lemon-slice-widget');
+        if(w) {
+            w.setAttribute('controlled-widget-state', 'minimized');
+            w.setAttribute('muted', 'true'); w.setAttribute('volume-enabled', 'false');
+            if(w.mute) w.mute();
+            if(w.micOff) w.micOff();
+        }
+    };
+    
+    // Keyboard Shortcut
+    document.addEventListener('keydown', e => {
+        if(e.ctrlKey && (e.key === 'x' || e.key === 'X')) {
+            e.preventDefault();
+            window.stopTessNow();
+        }
+        if(e.key === 'Escape') {
+            if(document.getElementById('video-overlay').style.display === 'block') closeVideoOverlay();
             document.getElementById('aiModal').style.display = 'none';
         }
     });
-   // ===== PROGRESS BAR ANIMATION - SIMPLIFIED =====
-function animateProgressBars() {
-    console.log('🎬 Starting animation...');
+    </script>
     
-    // Animate big progress bars
-    document.querySelectorAll('.progress-fill').forEach((bar, index) => {
-        const finalWidth = bar.getAttribute('data-final-width') || bar.style.width;
-        console.log(`Bar ${index}: setting to ${finalWidth}`);
-        
-        // Start at 0
-        bar.style.width = '0%';
-        bar.style.transition = 'none';
-        
-        // Force reflow
-        bar.offsetHeight;
-        
-        // Animate after short delay
-        setTimeout(() => {
-            bar.style.transition = 'width 1.5s cubic-bezier(0.4, 0.0, 0.2, 1)';
-            bar.style.width = finalWidth;
-        }, 300 + (index * 100));
-    });
-    
-    // Animate small analysis bars
-    document.querySelectorAll('.analysis-progress-fill').forEach((bar, index) => {
-        const finalWidth = bar.getAttribute('data-final-width') || bar.style.width;
-        
-        bar.style.width = '0%';
-        bar.style.transition = 'none';
-        bar.offsetHeight;
-        
-        setTimeout(() => {
-            bar.style.transition = 'width 1.2s cubic-bezier(0.4, 0.0, 0.2, 1)';
-            bar.style.width = finalWidth;
-        }, 600 + (index * 50));
-    });
-}
-
-// Single animation trigger after everything loads
-window.addEventListener('load', function() {
-    console.log('🏁 Window loaded, starting animation in 500ms');
-    setTimeout(animateProgressBars, 500);
-});
-</script>
-<!-- EmailJS for report delivery -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script>
-    (function() {
-        emailjs.init("7-9oxa3UC3uKxtqGM");
-        console.log('✅ EmailJS initialized');
-    })();
-
-          async function sendReportToEmail(websiteUrl, budget, loss) {
-        const domain = websiteUrl ? websiteUrl.replace(/^https?:\/\//, '').replace(/\/.*$/, '') : 'Unknown';
-        
-        const templateParams = {
-            to_email: 'bizboost.expert@gmail.com',
-            website_url: websiteUrl || 'Not provided',
-            domain: domain,
-            budget: budget || '0',
-            loss: loss || '0',
-            score: '75%',
-            audit_date: new Date().toLocaleString()
-        };
-        
-        // Only send for real prospects, not admin previews
-        const urlParams = new URLSearchParams(window.location.search);
-        const isAdmin = urlParams.get('admin') === 'true';
-        
-        if (!isAdmin) {
-            try {
-                const response = await emailjs.send(
-                    'service_b9bppgb',
-                    'template_lhlonjg',
-                    templateParams
-                );
-                console.log('✅ Report sent to email');
-            } catch (error) {
-                console.error('❌ Failed to send report:', error);
-            }
-        } else {
-            console.log('🔒 Admin preview — email not sent');
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const websiteUrl = urlParams.get('url');
-        const budget = urlParams.get('budget');
-        const loss = urlParams.get('loss');
-        
-        if (websiteUrl && budget && loss) {
-            sendReportToEmail(websiteUrl, budget, loss);
-        }
-    });
-</script>
-
-<!-- ========================================== -->
-<!-- THE SCRIPT (The Brains)                    -->
-<!-- ========================================== -->
-<script>
-    // 1. Open Overlay + Trigger Tess
-    async function triggerHowFactor(event) {
-        event.preventDefault();
-
-        // Trigger Tess AI
-        const widget = document.querySelector('lemon-slice-widget');
-        if (widget) {
-            // 1. Force Open
-            widget.setAttribute('controlled-widget-state', 'active');
-            
-            // 2. Ensure Volume is UP (just in case)
-            // Note: LemonSlice doesn't have a simple 'volume' attribute, 
-            // but ensuring 'active' state usually keeps audio alive.
-            
-            // 3. Send the message
-            await widget.sendMessage('SYSTEM_TRIGGER_SHOW_HOW_FACTOR');
-        }
-
-        // Show Overlay
-        const overlay = document.getElementById('how-factor-overlay');
-        if (overlay) {
-            overlay.style.display = 'block';
-        }
-    }
-
-    // 2. Close Overlay
-    function closeHowFactor() {
-        const overlay = document.getElementById('how-factor-overlay');
-        if (overlay) {
-            overlay.style.display = 'none';
-        }
-    }
-</script>
-
-
-<script>
-// Google Ad Revenue Counter — Real-time animation
-(function() {
-    const startRevenue = 183000000000; // $298 billion
-    const revenuePerSecond = 9450; // Google earns ~$9,450/second
-    const startTime = Date.now();
-    
-    function updateCounter() {
-        const elapsedSeconds = (Date.now() - startTime) / 1000;
-        const currentRevenue = startRevenue + (revenuePerSecond * elapsedSeconds);
-        
-        const counter = document.getElementById('google-revenue-counter');
-        if (counter) {
-            counter.textContent = '$' + Math.floor(currentRevenue).toLocaleString('en-US');
-        }
-        
-        requestAnimationFrame(updateCounter);
-    }
-    
-    updateCounter();
-})();
-
-</script>
-
-<script>
-function openVideoPresentation() {
-    console.log('🎬 Opening video presentation');
-    
-    // Open the video overlay
-    const overlay = document.getElementById('video-overlay');
-    if (overlay) {
-        overlay.style.display = 'block';
-        
-        // Video starts paused
-        const video = document.getElementById('presentation-video');
-        if (video) {
-            video.pause();
-            video.currentTime = 0;
-        }
-    }
-}
-</script>
-<!-- ========================================== -->
-<!-- TESS CONTROL PANEL (BURIED BUTTONS FIX)   -->
-<!-- ========================================== -->
-
-<!-- This container uses extremely high z-index to break out of iframes or overlays -->
-<div id="tess-control-wrapper" style="position: fixed; bottom: 20px; right: 20px; z-index: 2147483647; display: flex; gap: 12px; pointer-events: none;">
-    
-    <!-- MUTE BUTTON -->
-    <button id="tess-mute-btn" onclick="toggleMute()" style="
-        pointer-events: auto;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border: 2px solid #0066cc;
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
-        font-size: 1.2rem;
-        cursor: pointer;
-        box-shadow: 0 0 15px rgba(0, 102, 204, 0.7);
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 2147483648;">
-        <i class="fas fa-volume-up" id="mute-icon"></i>
-    </button>
-
-    <!-- STOP BUTTON -->
-    <button id="tess-stop-btn" onclick="stopTessNow()" style="
-        pointer-events: auto;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border: 2px solid #ff4444;
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
-        font-size: 1.2rem;
-        cursor: pointer;
-        box-shadow: 0 0 15px rgba(255, 68, 68, 0.7);
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 2147483648;">
-        <i class="fas fa-stop"></i>
-    </button>
-</div>
-
-<script>
-// ============================================================
-// 1. "CONTROL X" - BLOCK TESS SPEECH MODE FIX
-// ============================================================
-// To test: Add ?admin=true to your URL (e.g., yoursite.com?admin=true)
-(function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const shouldBlockTess = urlParams.get('admin') === 'true';
-
-    if (shouldBlockTess) {
-        console.log("🛑 CONTROL X ACTIVE: Blocking Tess from speaking...");
-
-        // We use a MutationObserver because the widget loads asynchronously
-        const blockTessObserver = new MutationObserver(function(mutations, observer) {
-            const widget = document.querySelector('lemon-slice-widget');
-            
-            if (widget) {
-                console.log("🛑 Tess Widget Detected. Applying mute/minimize commands.");
-                
-                // 1. Force Minimize (Removes video from view, keeps frame hidden)
-                widget.setAttribute('controlled-widget-state', 'minimized');
-                
-                // 2. Force Mute (Prevents audio)
-                widget.setAttribute('muted', 'true');
-                widget.setAttribute('volume-enabled', 'false');
-                
-                // 3. Call API functions if available
-                if (typeof widget.mute === 'function') widget.mute();
-                if (typeof widget.micOff === 'function') widget.micOff();
-
-                // 4. Optional: Ensure text bubbles are hidden just in case
-                // (Based on your previous CSS request)
-                widget.shadowRoot?.querySelectorAll('[class*="bubble"], [class*="message"]').forEach(el => el.style.display = 'none');
-
-                // Stop observing once we've caught it
-                observer.disconnect();
-            }
-        });
-
-        // Start observing the body for the widget to appear
-        blockTessObserver.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-
-        // Fallback timeout (in case observer misses it or it's already there)
-        setTimeout(() => {
-            const widget = document.querySelector('lemon-slice-widget');
-            if (widget) {
-                widget.setAttribute('controlled-widget-state', 'minimized');
-                widget.setAttribute('muted', 'true');
-                widget.setAttribute('volume-enabled', 'false');
-                if (typeof widget.mute === 'function') widget.mute();
-            }
-        }, 2000);
-    }
-})();
-
-// ============================================================
-// 2. STOP BUTTON FUNCTION (Immediate Kill)
-// ============================================================
-window.stopTessNow = function() {
-    console.log("🛑 STOP BUTTON PRESSED");
-    const widget = document.querySelector('lemon-slice-widget');
-    
-    if (widget) {
-        // Minimize the widget
-        widget.setAttribute('controlled-widget-state', 'minimized');
-        
-        // Mute audio
-        widget.setAttribute('muted', 'true');
-        widget.setAttribute('volume-enabled', 'false');
-        
-        // Execute API methods
-        if (typeof widget.mute === 'function') widget.mute();
-        if (typeof widget.micOff === 'function') widget.micOff();
-        
-        // Visual feedback (flash red on button)
-        const btn = document.getElementById('tess-stop-btn');
-        btn.style.background = '#ff0000';
-        setTimeout(() => btn.style.background = 'rgba(0, 0, 0, 0.9)', 200);
-    } else {
-        console.log("Widget not found yet.");
-    }
-};
-
-// ============================================================
-// 3. MUTE BUTTON FUNCTION (Toggle)
-// ============================================================
-window.toggleMute = function() {
-    console.log("🔇 MUTE TOGGLE PRESSED");
-    const widget = document.querySelector('lemon-slice-widget');
-    const icon = document.getElementById('mute-icon');
-    
-    if (!widget) {
-        console.log("Widget not found yet.");
-        return;
-    }
-
-    // Check current state
-    // If 'muted' attribute is 'true', we assume it is muted.
-    const isMuted = widget.getAttribute('muted') === 'true' || widget.getAttribute('volume-enabled') === 'false';
-
-    if (isMuted) {
-        // UNMUTE
-        console.log("Unmuting...");
-        widget.setAttribute('muted', 'false');
-        widget.setAttribute('volume-enabled', 'true');
-        if (typeof widget.unmute === 'function') widget.unmute();
-        if (icon) icon.className = 'fas fa-volume-up';
-    } else {
-        // MUTE
-        console.log("Muting...");
-        widget.setAttribute('muted', 'true');
-        widget.setAttribute('volume-enabled', 'false');
-        if (typeof widget.mute === 'function') widget.mute();
-        if (icon) icon.className = 'fas fa-volume-mute';
-    }
-};
-
-// ============================================================
-// 4. KEYBOARD SHORTCUT (Ctrl + X to Stop)
-// ============================================================
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && (e.key === 'x' || e.key === 'X')) {
-        e.preventDefault(); // Prevent browser default
-        window.stopTessNow();
-        console.log("⌨️ Ctrl+X detected - Stopping Tess");
-    }
-});
-</script>
-
- <script src="bridge-adspend-audit-group.js"></script>
-
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Your Bridge -->
+    <script src="bridge-adspend-audit-group.js"></script>
 </body>
 </html>
