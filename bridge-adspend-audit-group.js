@@ -1,5 +1,5 @@
 // Botemia Bridge for adSpend Audit Group
-// Generated: 5/19/2026, 9:32:40 PM
+// Generated: 5/19/2026, 9:39:57 PM
 // Client ID: adspend-audit-group
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -1376,15 +1376,13 @@
                             document.addEventListener("keydown", function(e) {
                                 if (e.ctrlKey && !e.shiftKey && (e.key === "x" || e.key === "X")) {
                                     e.preventDefault();
-                                    if (window.dailyCallObject) {
-                                        window.dailyCallObject.sendAppMessage({ event: "force-end" }, "*");
-                                    }
                                     if (window.mainWidget) {
-                                        window.mainWidget.setAttribute("controlled-widget-state", "minimized");
+                                        window.mainWidget.setAttribute("controlled-widget-state", "hidden");
                                         window.mainWidget.micOff?.();
                                         window.mainWidget.mute?.();
+                                        window.mainWidget.style.display = "none";
                                     }
-                                    console.log("⏹️ Tess fully stopped via Ctrl+X");
+                                    console.log("⏹️ Tess hidden via Ctrl+X");
                                 }
                             });
                         await window.mainWidget.unmute?.();
