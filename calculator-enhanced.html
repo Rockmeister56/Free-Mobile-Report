@@ -1090,12 +1090,11 @@ setTimeout(function() {
     const isAdmin = urlParams.get('admin') === 'true';
     const reportKey = `viewed_${scannedUrl}_${ppcBudget}`;
     
-    if (!isAdmin) {
-        if (localStorage.getItem(reportKey)) {
-            window.location.href = `viewed.html?domain=${encodeURIComponent(scannedUrl)}`;
-        }
-        localStorage.setItem(reportKey, 'true');
-    }
+   // TEMPORARILY DISABLED FOR TESTING
+// if (localStorage.getItem(reportKey)) {
+//     window.location.href = `viewed.html?domain=${encodeURIComponent(scannedUrl)}`;
+// }
+// localStorage.setItem(reportKey, 'true');
 
     // Get rest of data
     const monthlyLoss = parseInt(urlParams.get('loss') || localStorage.getItem('monthlyLoss') || Math.round(ppcBudget * 0.625));
@@ -1495,77 +1494,98 @@ window.addEventListener('load', function() {
 </script>
 
 <!-- ========================================== -->
-<!-- TESS CONTROL PANEL (Unified & Fixed)       -->
+<!-- TESS CONTROL PANEL (NUCLEAR FIX)           -->
 <!-- ========================================== -->
 
-<!-- We are using the BOTTOM control bar (tess-control-bar) as the primary controls because they have higher Z-index -->
-<div id="tess-control-bar" style="position:fixed; bottom:20px; right:20px; z-index:999999; display:flex; gap:10px;">
+<!-- BUTTONS: MAXIMUM PRIORITY Z-INDEX -->
+<div id="tess-control-bar" style="position:fixed !important; bottom:20px !important; right:20px !important; z-index:2147483647 !important; display:flex !important; gap:10px !important; pointer-events: none;">
+    
     <!-- MUTE BUTTON -->
-    <button onclick="window.muteTess()" style="width:50px; height:50px; border-radius:50%; border:2px solid #0066cc; background:rgba(0,0,0,0.8); color:white; cursor:pointer; font-size:1.2rem;" title="Mute/Unmute">
+    <button onclick="window.muteTess()" style="
+        pointer-events: auto !important; 
+        width: 60px; 
+        height: 60px; 
+        border-radius: 50%; 
+        border: 3px solid #0066cc; 
+        background: rgba(0, 0, 0, 0.95); 
+        color: white; 
+        font-size: 1.5rem; 
+        cursor: pointer; 
+        box-shadow: 0 0 20px rgba(0, 102, 204, 0.8); 
+        transition: transform 0.2s; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        z-index: 2147483648;">
         <i class="fas fa-volume-up" id="mute-icon"></i>
     </button>
+
     <!-- STOP BUTTON -->
-    <button onclick="window.stopTess()" style="width:50px; height:50px; border-radius:50%; border:2px solid #ff4444; background:rgba(0,0,0,0.8); color:white; cursor:pointer; font-size:1.2rem;" title="Stop Tess">
+    <button onclick="window.stopTess()" style="
+        pointer-events: auto !important; 
+        width: 60px; 
+        height: 60px; 
+        border-radius: 50%; 
+        border: 3px solid #ff4444; 
+        background: rgba(0, 0, 0, 0.95); 
+        color: white; 
+        font-size: 1.5rem; 
+        cursor: pointer; 
+        box-shadow: 0 0 20px rgba(255, 68, 68, 0.8); 
+        transition: transform 0.2s; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        z-index: 2147483648;">
         <i class="fas fa-stop"></i>
     </button>
 </div>
 
 <script>
 // ============================================================
-// 1. "CONTROL X" - BLOCK TESS FROM APPEARING
+// 1. "CONTROL X" - AGGRESSIVE BLOCKER (Interval Method)
 // ============================================================
-// This runs immediately to check if we should block her on the first visit
 (function() {
     const urlParams = new URLSearchParams(window.location.search);
-    // CHECK: Is 'admin=true' in the URL? (Use this to test)
-    const shouldBlockTess = urlParams.get('admin') === 'true';
+    const shouldBlock = urlParams.get('admin') === 'true';
 
-    if (shouldBlockTess) {
-        console.log("🛑 CONTROL X ACTIVE: Keeping Tess minimized...");
-
-        // Watch for the widget to load
-        const observer = new MutationObserver(() => {
+    if (shouldBlock) {
+        console.log("🛑 CONTROL X: Scanning for Tess to block...");
+        
+        // We check every 100ms for 5 seconds
+        const checkInterval = setInterval(() => {
             const widget = document.querySelector('lemon-slice-widget');
             if (widget) {
-                // Minimize her immediately
+                console.log("🛑 CONTROL X: Found Tess! Minimizing immediately.");
                 widget.setAttribute('controlled-widget-state', 'minimized');
-                console.log("✅ Tess has been minimized via Control X");
-                observer.disconnect(); // Stop watching
+                // Stop checking once we have her
+                clearInterval(checkInterval);
             }
-        });
+        }, 100);
 
-        observer.observe(document.body, { childList: true, subtree: true });
-
-        // Fallback: Just in case we missed it
+        // Safety stop after 5 seconds
         setTimeout(() => {
-            const widget = document.querySelector('lemon-slice-widget');
-            if (widget) {
-                widget.setAttribute('controlled-widget-state', 'minimized');
-            }
-        }, 2000);
+            clearInterval(checkInterval);
+            console.log("🛑 CONTROL X: Scan finished.");
+        }, 5000);
     }
 })();
 
 // ============================================================
-// 2. STOP BUTTON (Safe Version)
+// 2. STOP BUTTON
 // ============================================================
 window.stopTess = function() {
     var widget = document.querySelector('lemon-slice-widget');
     if (widget) {
-        // REMOVED: The code that force-ended the room.
-        // We now ONLY minimize the widget. This keeps her alive but hidden.
+        // Just minimize. Do not kill the room or mute audio.
         widget.setAttribute('controlled-widget-state', 'minimized');
-        
-        // Optional: Turn off mic if she was listening
         widget.micOff?.();
         
-        // We do NOT call widget.mute() here, so her volume stays intact for next time
-        
-        // Hide the control bar
+        // Hide buttons
         var bar = document.getElementById('tess-control-bar');
         if (bar) bar.style.display = 'none';
         
-        console.log('⏹️ Tess stopped (minimized only, not killed)');
+        console.log('⏹️ Tess Minimized');
     }
 };
 
@@ -1586,17 +1606,15 @@ window.muteTess = function() {
     }
 };
 
-// Keyboard shortcut: Ctrl+X to stop Tess
+// Keyboard Shortcut
 document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && !e.shiftKey && (e.key === 'x' || e.key === 'X')) {
+    if (e.ctrlKey && (e.key === 'x' || e.key === 'X')) {
         e.preventDefault();
         window.stopTess();
-        console.log('⌨️ Tess stopped via Ctrl+X');
     }
 });
 </script>
 
-<!-- Load the Bridge Script last -->
 <script src="bridge-adspend-audit-group.js"></script>
 
 </body>
