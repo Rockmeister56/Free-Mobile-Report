@@ -1090,11 +1090,10 @@ setTimeout(function() {
     const isAdmin = urlParams.get('admin') === 'true';
     const reportKey = `viewed_${scannedUrl}_${ppcBudget}`;
     
-   // TEMPORARILY DISABLED FOR TESTING
-// if (localStorage.getItem(reportKey)) {
-//     window.location.href = `viewed.html?domain=${encodeURIComponent(scannedUrl)}`;
-// }
-// localStorage.setItem(reportKey, 'true');
+ if (localStorage.getItem(reportKey)) {
+    window.location.href = `viewed.html?domain=${encodeURIComponent(scannedUrl)}`;
+}
+localStorage.setItem(reportKey, 'true');
 
     // Get rest of data
     const monthlyLoss = parseInt(urlParams.get('loss') || localStorage.getItem('monthlyLoss') || Math.round(ppcBudget * 0.625));
