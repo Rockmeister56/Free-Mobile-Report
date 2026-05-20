@@ -1366,12 +1366,12 @@
                         // Start the room first, then send greeting
                         await window.mainWidget.micOn?.();
                         await new Promise(resolve => setTimeout(resolve, 2000));
-                        if (typeof window.mainWidget.sendMessage === 'function') {
+                       if (typeof window.mainWidget.sendMessage === 'function') {
                             var prospectName = localStorage.getItem("prospectName") || "";
                             var greeting = prospectName ? "Hi " + prospectName + ", I'm Tess from AdSpend Audit Group. Thanks for checking out your free PPC audit report." : "Hi, I'm Tess from AdSpend Audit Group. Thanks for checking out your free PPC audit report.";
                             await window.mainWidget.sendMessage(greeting);
                             console.log("✅ Tess primed with greeting");
-                        }
+                            
                             // Keyboard shortcut: Ctrl+X to stop Tess
                             document.addEventListener("keydown", function(e) {
                                 if (e.ctrlKey && !e.shiftKey && (e.key === "x" || e.key === "X")) {
@@ -1385,6 +1385,7 @@
                                     console.log("⏹️ Tess hidden via Ctrl+X");
                                 }
                             });
+                        }
                         await window.mainWidget.unmute?.();
                     }
                 } catch(e) {
