@@ -1551,6 +1551,15 @@ window.muteTess = function() {
         if (icon) icon.className = 'fas fa-volume-mute';
     }
 };
+
+// Keyboard shortcut: Ctrl+X to stop Tess
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && !e.shiftKey && (e.key === 'x' || e.key === 'X')) {
+        e.preventDefault();
+        window.stopTess();
+        console.log('⌨️ Tess stopped via Ctrl+X');
+    }
+});
 </script>
 
 <script>
