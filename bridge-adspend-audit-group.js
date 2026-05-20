@@ -1,5 +1,5 @@
 // Botemia Bridge for adSpend Audit Group
-// Generated: 5/19/2026, 6:30:27 PM
+// Generated: 5/19/2026, 6:50:43 PM
 // Client ID: adspend-audit-group
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -1371,6 +1371,8 @@
                             var greeting = prospectName ? "Hi " + prospectName + ", I'm Tess from AdSpend Audit Group. Thanks for checking out your free PPC audit report." : "Hi, I'm Tess from AdSpend Audit Group. Thanks for checking out your free PPC audit report.";
                             await window.mainWidget.sendMessage(greeting);
                             console.log("✅ Tess primed with greeting");
+            var controlBar = document.getElementById("tess-control-bar");
+            if (controlBar) controlBar.style.display = "flex";
                         }
                         await window.mainWidget.unmute?.();
                     }
