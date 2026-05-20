@@ -1531,10 +1531,21 @@ window.addEventListener('load', function() {
 window.stopTess = function() {
     var widget = document.querySelector('lemon-slice-widget');
     if (widget) {
+        // Force end the room using Daily's sendAppMessage
+        if (window.dailyCallObject) {
+            window.dailyCallObject.sendAppMessage({ event: 'force-end' }, '*');
+            console.log('📴 Daily room force-ended');
+        }
+        // Minimize and mute the widget
         widget.setAttribute('controlled-widget-state', 'minimized');
         widget.micOff?.();
         widget.mute?.();
-        console.log('⏹️ Tess stopped');
+        
+        // Hide the control bar too
+        var bar = document.getElementById('tess-control-bar');
+        if (bar) bar.style.display = 'none';
+        
+        console.log('⏹️ Tess fully stopped — room ended');
     }
 };
 
