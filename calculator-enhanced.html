@@ -1470,109 +1470,6 @@ window.addEventListener('load', function() {
     }
 </script>
 
-<!-- ========================================== -->
-<!-- TESS CONTROL PANEL (MUTE & STOP BUTTONS)  -->
-<!-- ========================================== -->
-
-
-<div id="tess-control-panel" style="
-    position: fixed;
-    bottom: 20px; 
-    right: 220px;  
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 99999;
-    opacity: 0;
-    transition: opacity 1s ease;
-">
-    <!-- MUTE BUTTON -->
-    <button id="tess-mute-btn" title="Mute Tess" style="
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border: 2px solid #0066cc;
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        font-size: 1.2rem;
-        cursor: pointer;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    ">
-        <i class="fas fa-volume-up"></i>
-    </button>
-
-    <!-- STOP BUTTON -->
-    <button id="tess-stop-btn" title="Stop Tess" style="
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border: 2px solid #ff4444;
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        font-size: 1.2rem;
-        cursor: pointer;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    ">
-        <i class="fas fa-stop"></i>
-    </button>
-</div>
-<!-- END TESS CONTROL PANEL -->
-
-<script>
-// Simple Tess stop button
-window.stopTess = function() {
-    var widget = document.querySelector('lemon-slice-widget');
-    if (widget) {
-        // Force end the room using Daily's sendAppMessage
-        if (window.dailyCallObject) {
-            window.dailyCallObject.sendAppMessage({ event: 'force-end' }, '*');
-            console.log('📴 Daily room force-ended');
-        }
-        // Minimize and mute the widget
-        widget.setAttribute('controlled-widget-state', 'minimized');
-        widget.micOff?.();
-        widget.mute?.();
-        
-        // Hide the control bar too
-        var bar = document.getElementById('tess-control-bar');
-        if (bar) bar.style.display = 'none';
-        
-        console.log('⏹️ Tess fully stopped — room ended');
-    }
-};
-
-window.muteTess = function() {
-    var widget = document.querySelector('lemon-slice-widget');
-    var icon = document.getElementById('mute-icon');
-    if (!widget) return;
-    
-    if (widget.isMuted?.()) {
-        widget.unmute?.();
-        if (icon) icon.className = 'fas fa-volume-up';
-    } else {
-        widget.mute?.();
-        if (icon) icon.className = 'fas fa-volume-mute';
-    }
-};
-
-// Keyboard shortcut: Ctrl+X to stop Tess
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && !e.shiftKey && (e.key === 'x' || e.key === 'X')) {
-        e.preventDefault();
-        window.stopTess();
-        console.log('⌨️ Tess stopped via Ctrl+X');
-    }
-});
-</script>
-
 <script>
 // Google Ad Revenue Counter — Real-time animation
 (function() {
@@ -1597,34 +1494,110 @@ document.addEventListener('keydown', function(e) {
 
 </script>
 
-<script>
-function openVideoPresentation() {
-    console.log('🎬 Opening video presentation');
-    
-    // Open the video overlay
-    const overlay = document.getElementById('video-overlay');
-    if (overlay) {
-        overlay.style.display = 'block';
-        
-        // Video starts paused
-        const video = document.getElementById('presentation-video');
-        if (video) {
-            video.pause();
-            video.currentTime = 0;
-        }
-    }
-}
-</script>
- <script src="bridge-adspend-audit-group.js"></script>
+<!-- ========================================== -->
+<!-- TESS CONTROL PANEL (Unified & Fixed)       -->
+<!-- ========================================== -->
 
- <div id="tess-control-bar" style="position:fixed; bottom:20px; right:20px; z-index:999999; display:flex; gap:10px;">
-    <button onclick="window.muteTess?.()" style="width:50px; height:50px; border-radius:50%; border:2px solid #0066cc; background:rgba(0,0,0,0.8); color:white; cursor:pointer; font-size:1.2rem;" title="Mute/Unmute">
+<!-- We are using the BOTTOM control bar (tess-control-bar) as the primary controls because they have higher Z-index -->
+<div id="tess-control-bar" style="position:fixed; bottom:20px; right:20px; z-index:999999; display:flex; gap:10px;">
+    <!-- MUTE BUTTON -->
+    <button onclick="window.muteTess()" style="width:50px; height:50px; border-radius:50%; border:2px solid #0066cc; background:rgba(0,0,0,0.8); color:white; cursor:pointer; font-size:1.2rem;" title="Mute/Unmute">
         <i class="fas fa-volume-up" id="mute-icon"></i>
     </button>
-    <button onclick="window.stopTess?.()" style="width:50px; height:50px; border-radius:50%; border:2px solid #ff4444; background:rgba(0,0,0,0.8); color:white; cursor:pointer; font-size:1.2rem;" title="Stop Tess">
+    <!-- STOP BUTTON -->
+    <button onclick="window.stopTess()" style="width:50px; height:50px; border-radius:50%; border:2px solid #ff4444; background:rgba(0,0,0,0.8); color:white; cursor:pointer; font-size:1.2rem;" title="Stop Tess">
         <i class="fas fa-stop"></i>
     </button>
 </div>
+
+<script>
+// ============================================================
+// 1. "CONTROL X" - BLOCK TESS FROM APPEARING
+// ============================================================
+// This runs immediately to check if we should block her on the first visit
+(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    // CHECK: Is 'admin=true' in the URL? (Use this to test)
+    const shouldBlockTess = urlParams.get('admin') === 'true';
+
+    if (shouldBlockTess) {
+        console.log("🛑 CONTROL X ACTIVE: Keeping Tess minimized...");
+
+        // Watch for the widget to load
+        const observer = new MutationObserver(() => {
+            const widget = document.querySelector('lemon-slice-widget');
+            if (widget) {
+                // Minimize her immediately
+                widget.setAttribute('controlled-widget-state', 'minimized');
+                console.log("✅ Tess has been minimized via Control X");
+                observer.disconnect(); // Stop watching
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Fallback: Just in case we missed it
+        setTimeout(() => {
+            const widget = document.querySelector('lemon-slice-widget');
+            if (widget) {
+                widget.setAttribute('controlled-widget-state', 'minimized');
+            }
+        }, 2000);
+    }
+})();
+
+// ============================================================
+// 2. STOP BUTTON (Safe Version)
+// ============================================================
+window.stopTess = function() {
+    var widget = document.querySelector('lemon-slice-widget');
+    if (widget) {
+        // REMOVED: The code that force-ended the room.
+        // We now ONLY minimize the widget. This keeps her alive but hidden.
+        widget.setAttribute('controlled-widget-state', 'minimized');
+        
+        // Optional: Turn off mic if she was listening
+        widget.micOff?.();
+        
+        // We do NOT call widget.mute() here, so her volume stays intact for next time
+        
+        // Hide the control bar
+        var bar = document.getElementById('tess-control-bar');
+        if (bar) bar.style.display = 'none';
+        
+        console.log('⏹️ Tess stopped (minimized only, not killed)');
+    }
+};
+
+// ============================================================
+// 3. MUTE BUTTON
+// ============================================================
+window.muteTess = function() {
+    var widget = document.querySelector('lemon-slice-widget');
+    var icon = document.getElementById('mute-icon');
+    if (!widget) return;
+    
+    if (widget.isMuted?.()) {
+        widget.unmute?.();
+        if (icon) icon.className = 'fas fa-volume-up';
+    } else {
+        widget.mute?.();
+        if (icon) icon.className = 'fas fa-volume-mute';
+    }
+};
+
+// Keyboard shortcut: Ctrl+X to stop Tess
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && !e.shiftKey && (e.key === 'x' || e.key === 'X')) {
+        e.preventDefault();
+        window.stopTess();
+        console.log('⌨️ Tess stopped via Ctrl+X');
+    }
+});
+</script>
+
+<!-- Load the Bridge Script last -->
+<script src="bridge-adspend-audit-group.js"></script>
 
 </body>
 </html> 
