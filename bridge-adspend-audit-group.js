@@ -1,5 +1,5 @@
 // Botemia Bridge for adSpend Audit Group
-// Generated: 5/19/2026, 6:50:43 PM
+// Generated: 5/19/2026, 9:32:40 PM
 // Client ID: adspend-audit-group
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -1371,9 +1371,22 @@
                             var greeting = prospectName ? "Hi " + prospectName + ", I'm Tess from AdSpend Audit Group. Thanks for checking out your free PPC audit report." : "Hi, I'm Tess from AdSpend Audit Group. Thanks for checking out your free PPC audit report.";
                             await window.mainWidget.sendMessage(greeting);
                             console.log("✅ Tess primed with greeting");
-            var controlBar = document.getElementById("tess-control-bar");
-            if (controlBar) controlBar.style.display = "flex";
                         }
+                            // Keyboard shortcut: Ctrl+X to stop Tess
+                            document.addEventListener("keydown", function(e) {
+                                if (e.ctrlKey && !e.shiftKey && (e.key === "x" || e.key === "X")) {
+                                    e.preventDefault();
+                                    if (window.dailyCallObject) {
+                                        window.dailyCallObject.sendAppMessage({ event: "force-end" }, "*");
+                                    }
+                                    if (window.mainWidget) {
+                                        window.mainWidget.setAttribute("controlled-widget-state", "minimized");
+                                        window.mainWidget.micOff?.();
+                                        window.mainWidget.mute?.();
+                                    }
+                                    console.log("⏹️ Tess fully stopped via Ctrl+X");
+                                }
+                            });
                         await window.mainWidget.unmute?.();
                     }
                 } catch(e) {
