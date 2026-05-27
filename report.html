@@ -17,7 +17,7 @@
             padding: 40px 20px;
             min-height: 100vh;
         }
-        .container { max-width: 550px; width: 100%; }
+        .container { max-width: 600px; width: 100%; }
         h1 { color: #f8c400; margin-bottom: 5px; text-align: center; font-size: 1.5rem; }
         .subtitle { color: rgba(255,255,255,0.5); text-align: center; margin-bottom: 30px; font-size: 0.85rem; }
         .section {
@@ -28,11 +28,12 @@
         .section h2 { color: #f8c400; font-size: 1rem; margin-bottom: 16px; }
         .field { margin-bottom: 14px; }
         .field label { display: block; color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-bottom: 4px; }
-        .field input {
+        .field input, .field textarea {
             width: 100%; padding: 10px 14px;
             background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px; color: white; font-size: 0.9rem;
+            border-radius: 8px; color: white; font-size: 0.9rem; resize: vertical;
         }
+        .field textarea { min-height: 80px; font-family: monospace; font-size: 0.8rem; }
         .btn {
             padding: 14px 28px; border: none; border-radius: 40px;
             font-weight: 700; font-size: 1rem; cursor: pointer; width: 100%;
@@ -41,315 +42,225 @@
         .btn-preview { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); margin-top: 8px; }
         .status { text-align: center; margin-top: 12px; font-weight: 600; display: none; }
         .hint { color: rgba(255,255,255,0.4); font-size: 0.7rem; margin-top: 4px; }
+        .auto-filled { border-color: #4caf50 !important; background: rgba(76,175,80,0.08) !important; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>📧 Send PPC Audit Report</h1>
-        <p class="subtitle">Fill in the fields below and send your prospect their personalized audit</p>
+        <p class="subtitle">Paste one CSV row — everything auto-fills</p>
         
+        <!-- CSV PASTE ZONE -->
         <div class="section">
-            <h2>👤 Prospect Details</h2>
+            <h2>📋 Paste Scraper CSV Row</h2>
             <div class="field">
-                <label>First Name</label>
-                <input type="text" id="prospectName" placeholder="John">
-            </div>
-            <div class="field">
-                <label>Email Address</label>
-                <input type="email" id="prospectEmail" placeholder="john@abcmortgage.com">
+                <label>Paste one row from your scraper CSV</label>
+                <textarea id="csvInput" placeholder="Henry,Wilkes,Wilkes Mortgage Group,VA • FHA • Commercial Financing Specialist,Los Angeles CA,206,wilkesmortgage.com,henry@wilkesmortgage.com" oninput="parseCSV()"></textarea>
+                <p class="hint">Format: FirstName,LastName,Company,Specialties,CityState,ReviewCount,WebsiteURL,Email</p>
             </div>
         </div>
         
+        <!-- AUTO-FILLED FIELDS -->
+        <div class="section">
+            <h2>👤 Prospect Details (auto-filled)</h2>
+            <div class="field">
+                <label>First Name</label>
+                <input type="text" id="prospectName" placeholder="Henry" class="auto-filled" readonly>
+            </div>
+            <div class="field">
+                <label>Website URL</label>
+                <input type="text" id="websiteURL" placeholder="wilkesmortgage.com" class="auto-filled" readonly>
+            </div>
+            <div class="field">
+                <label>Email Address</label>
+                <input type="email" id="prospectEmail" placeholder="henry@wilkesmortgage.com" class="auto-filled" readonly>
+            </div>
+        </div>
+        
+        <!-- DYNAMIC LETTER PREVIEW -->
+        <div class="section">
+            <h2>📝 Dynamic Opening Letter</h2>
+            <div class="field">
+                <label>Generated Message</label>
+                <textarea id="dynamicLetter" rows="4" placeholder="Auto-generated from CSV data..."></textarea>
+            </div>
+        </div>
+        
+        <!-- REPORT LINK -->
         <div class="section">
             <h2>🔗 PPC Report Link</h2>
             <div class="field">
                 <label>Full Report Link</label>
                 <input type="text" id="reportLink" placeholder="https://free-mobile-report.netlify.app/calculator-enhanced.html?url=...&name=...">
-                <p class="hint">Paste the full URL from your browser after running the audit</p>
             </div>
             <div class="field">
-    <label>PPC IMAGE FILE</label>
-    <div style="display: flex; gap: 10px; align-items: center;">
-        <input type="text" id="teaserImage" placeholder="Paste Supabase URL or upload below" style="flex: 1;">
-        <span style="color: rgba(255,255,255,0.4); font-size: 0.8rem;">OR</span>
-        <label for="imageUpload" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 10px 16px; cursor: pointer; font-size: 0.85rem; white-space: nowrap; color: #f8c400;">
-            📁 Upload
-        </label>
-        <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="uploadImageToSupabase(this)">
-    </div>
-    <div id="uploadStatus" style="color: #f8c400; font-size: 0.7rem; margin-top: 6px; display: none;"></div>
-    <p class="hint">Upload a screenshot or paste a URL — shows as a preview in the email</p>
-</div>
+                <label>PPC IMAGE FILE</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="teaserImage" placeholder="Paste Supabase URL or upload below" style="flex: 1;">
+                    <span style="color: rgba(255,255,255,0.4); font-size: 0.8rem;">OR</span>
+                    <label for="imageUpload" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 10px 16px; cursor: pointer; font-size: 0.85rem; white-space: nowrap; color: #f8c400;">
+                        📁 Upload
+                    </label>
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="uploadImageToSupabase(this)">
+                </div>
+                <div id="uploadStatus" style="color: #f8c400; font-size: 0.7rem; margin-top: 6px; display: none;"></div>
+            </div>
+        </div>
         
-     <button class="btn btn-preview" onclick="previewEmail()">👁️ Preview First</button>
-
-<div style="height: 12px;"></div>
-
-<button class="btn btn-send" onclick="sendEmail()">📤 Send Audit Report</button>
-
-
-<div id="status" class="status"></div>
-</div>
-
-<div class="section" style="margin-top: 24px;">
-    <h2>📋 Email Template for Contact Forms</h2>
-    <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 12px;">Copy this message and paste it into their website contact form or your own email client.</p>
-    
-    <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px; font-size: 0.85rem; line-height: 1.7; color: rgba(255,255,255,0.9); max-height: 200px; overflow-y: auto;" id="formTemplate">
-        <p>Hi <span class="template-name">[Name]</span>,</p>
-        <p>I noticed your website is running Google Ads, and I ran a quick analysis. You're losing approximately <strong>$[Amount]/month</strong> to bounce rate and form abandonment — visitors who click your ad but leave before converting.</p>
-        <p>I put together a free PPC audit report that shows exactly where the leaks are and how to fix them with zero risk. No cost, no obligation — just the data.</p>
-        <p><strong>👉 View your free report here:</strong><br>
-        <span style="color: #f8c400;" id="shortLink">https://free-mobile-report.netlify.app/report.html?name=John&url=example.com</span></p>
-        <p>Let me know what you think — happy to walk through it with you.</p>
-    </div>
-    
-    <div style="display: flex; gap: 10px; margin-top: 12px;">
-        <button class="btn btn-preview" onclick="previewFormMessage()">👁️ Preview</button>
-        <button class="btn btn-send" onclick="copyTemplate()">📋 Copy Template</button>
-    </div>
-    <span id="copyStatus" style="color: #4caf50; font-size: 0.8rem; margin-top: 8px; display: none;">✅ Copied!</span>
-</div>
-</div>
-
-<!-- SHORT LINK GENERATOR -->
-<div class="section" style="margin-top: 24px;">
-    <h2>🔗 Short Link Generator</h2>
-    <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 12px;">Generate a clean short link for your prospect.</p>
-    
-    <div style="display: flex; gap: 10px; align-items: center;">
-        <input type="text" id="shortCode" placeholder="e.g., john-fcls" style="flex: 1; padding: 10px 14px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-size: 0.9rem;">
-        <button class="btn btn-send" onclick="generateShortLink()" style="width: auto; padding: 10px 20px;">Generate</button>
-    </div>
-    
-    <div id="shortLinkResult" style="margin-top: 12px; display: none;">
-        <p style="color: rgba(255,255,255,0.5); font-size: 0.75rem; margin-bottom: 4px;">Short Link (share this):</p>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <code id="generatedShortLink" style="flex: 1; background: rgba(0,0,0,0.4); padding: 10px 14px; border-radius: 8px; color: #f8c400; font-size: 0.85rem; word-break: break-all;"></code>
-            <button class="btn btn-preview" onclick="copyShortLink()" style="width: auto; padding: 10px 16px;">📋</button>
+        <button class="btn btn-preview" onclick="previewEmail()">👁️ Preview Full Email</button>
+        <div style="height: 12px;"></div>
+        <button class="btn btn-send" onclick="sendEmail()">📤 Send Audit Report</button>
+        <div id="status" class="status"></div>
+        
+        <!-- CONTACT FORM TEMPLATE -->
+        <div class="section" style="margin-top: 24px;">
+            <h2>📋 Contact Form Template</h2>
+            <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 12px;">Copy this personalized message for website contact forms.</p>
+            <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px; font-size: 0.85rem; line-height: 1.7; color: rgba(255,255,255,0.9); max-height: 200px; overflow-y: auto;" id="formTemplate">
+                <p><em>Paste a CSV row above to generate...</em></p>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 12px;">
+                <button class="btn btn-preview" onclick="previewFormMessage()">👁️ Preview</button>
+                <button class="btn btn-send" onclick="copyTemplate()">📋 Copy Template</button>
+            </div>
+            <span id="copyStatus" style="color: #4caf50; font-size: 0.8rem; margin-top: 8px; display: none;">✅ Copied!</span>
         </div>
     </div>
-</div>
 
     <script>
         emailjs.init('7-9oxa3UC3uKxtqGM');
 
-        // ===== SUPABASE IMAGE UPLOAD =====
-const SUPABASE_URL = 'https://fcgbusobfdwnpoqyuzoe.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk';
-const { createClient } = supabase;
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const SUPABASE_URL = 'https://fcgbusobfdwnpoqyuzoe.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk';
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-async function uploadImageToSupabase(input) {
-    const file = input.files[0];
-    if (!file) return;
-    
-    const status = document.getElementById('uploadStatus');
-    status.style.display = 'block';
-    status.style.color = '#f8c400';
-    status.textContent = '⏳ Uploading...';
-    
-    const fileName = `ppc-${Date.now()}-${file.name}`;
-    
-    try {
-        const { data, error } = await supabaseClient
-            .storage
-            .from('ppc-images')
-            .upload(fileName, file, {
-                cacheControl: '3600',
-                upsert: false
-            });
-        
-        if (error) throw error;
-        
-        const { data: urlData } = supabaseClient
-            .storage
-            .from('ppc-images')
-            .getPublicUrl(fileName);
-        
-        document.getElementById('teaserImage').value = urlData.publicUrl;
-        status.style.color = '#4caf50';
-        status.textContent = '✅ Uploaded: ' + fileName;
-    } catch (error) {
-        status.style.color = '#f44336';
-        status.textContent = '❌ Upload failed: ' + error.message;
-    }
-}
-
-function generateShortLink() {
-    const code = document.getElementById('shortCode').value.trim();
-    const reportLink = document.getElementById('reportLink').value;
-    
-    if (!code) { alert('Enter a short code (e.g., john-fcls)'); return; }
-    if (!reportLink) { alert('Paste the report link first'); return; }
-    
-    const mappings = JSON.parse(localStorage.getItem('short_links') || '{}');
-    mappings[code] = reportLink;
-    localStorage.setItem('short_links', JSON.stringify(mappings));
-    
-    const shortUrl = `https://free-mobile-report.netlify.app/r/${code}`;
-    document.getElementById('generatedShortLink').textContent = shortUrl;
-    document.getElementById('shortLinkResult').style.display = 'block';
-    
-    // Update the form template with short link AND name
-    const templateLink = document.getElementById('shortLink');
-    if (templateLink) {
-        templateLink.textContent = shortUrl;
-    }
-    
-    const prospectName = document.getElementById('prospectName').value || '[Name]';
-    const templateText = document.getElementById('formTemplate');
-    if (templateText) {
-        templateText.innerHTML = templateText.innerHTML.replace(/\[Name\]/g, prospectName);
-    }
-}
-
-function copyShortLink() {
-    const link = document.getElementById('generatedShortLink').textContent;
-    navigator.clipboard.writeText(link);
-}
-
-function copyTemplate() {
-    const name = document.getElementById('prospectName').value || '[Name]';
-    const link = document.getElementById('shortLink').textContent || document.getElementById('reportLink').value;
-    
-    const message = `Hi ${name},\n\nAs a PPC Audit Specialist with AdSpend Audit Group, I analyze mortgage websites to find where ad budgets are leaking — and your site showed costly, Ad-spend red flag leaks.\n\nTo share what I'm seeing, I've included a link below to your PPC Audit Report to illustrate exactly how your bounce rate (51%) and form abandonment (74%) are costing you thousands in wasted ad spend every month.\n\nNo cost. No obligation. Just the data you need.\n\n👉 View your free report here:\n${link}\n\nIf you have questions, our AI assistant Tess is available 24/7 to walk you through the results.\n\nSincerely,\nTommy Kilpatrick\nPPC Audit Specialist`;
-    
-    navigator.clipboard.writeText(message).then(() => {
-        const status = document.getElementById('copyStatus');
-        status.style.display = 'inline';
-        setTimeout(() => { status.style.display = 'none'; }, 2000);
-    });
-}
-
-function previewFormMessage() {
-    const name = document.getElementById('prospectName').value || '[Name]';
-    const link = document.getElementById('reportLink').value || '#';
-    
-   const message = `Hi ${name}, 
-As a PPC Audit Specialist with AdSpend Audit Group, I analyze mortgage websites to find where ad budgets are leaking — and your site showed significant red flags.
-
-To share what I'm seeing, I've included a link below to your PPC Audit Report illustrating exactly how your bounce rate (51%) and form abandonment (74%) are costing you thousands in wasted ad spend every month.
-
-No cost. No obligation. Just the data you need.
-
-👉 View your free report here:
-${link}
-
-If you have questions, our AI assistant Tess is available 24/7 to walk you through the results on your personal Audit Report Page.
-
-Sincerely,
-Tommy Kilpatrick
-PPC Audit Specialist`;
-    
-    const win = window.open('', 'formPreview', 'width=550,height=500');
-    win.document.write(`
-        <html><head><title>Form Message Preview</title>
-        <style>
-            body { font-family: 'Segoe UI', system-ui, sans-serif; padding: 30px; color: #333; line-height: 1.7; max-width: 500px; margin: 0 auto; }
-            h2 { color: #1a3a5c; margin-bottom: 15px; }
-            .message-box { background: #f5f5f0; padding: 20px; border-radius: 8px; white-space: pre-wrap; border: 1px solid #ddd; }
-            .btn-test { display: inline-block; background: #f8c400; color: #0a0f1e; padding: 10px 24px; border-radius: 30px; text-decoration: none; font-weight: 600; margin-top: 15px; font-family: 'Segoe UI', sans-serif; }
-            .note { color: #888; font-size: 0.8rem; margin-top: 20px; }
-        </style></head>
-        <body>
-            <h2>📋 Form Message Preview</h2>
-            <p style="color: #888; font-size: 0.85rem;">This is what your partner will copy and send:</p>
-            <div class="message-box">${message.replace(/\n/g, '<br>')}</div>
-            <p style="margin-top: 15px;"><strong>Test the link:</strong></p>
-            <a href="${link}" target="_blank" class="btn-test">🔗 Open Report Link</a>
-            <p class="note">Close this window when done.</p>
-        </body></html>
-    `);
-}
+        // CSV: FirstName,LastName,Company,Specialties,CityState,ReviewCount,WebsiteURL,Email
+        function parseCSV() {
+            const raw = document.getElementById('csvInput').value.trim();
+            if (!raw) return;
+            
+            const parts = raw.split(',');
+            if (parts.length < 8) return;
+            
+            const firstName = parts[0].trim();
+            const lastName = parts[1].trim();
+            const company = parts[2].trim();
+            const specialties = parts[3].trim();
+            const cityState = parts[4].trim();
+            const reviewCount = parts[5].trim();
+            const websiteURL = parts[6].trim();
+            const email = parts[7].trim();
+            
+            // Auto-fill fields
+            document.getElementById('prospectName').value = firstName;
+            document.getElementById('websiteURL').value = websiteURL;
+            document.getElementById('prospectEmail').value = email;
+            
+            // Build dynamic letter
+            const fullName = lastName ? `${firstName} ${lastName}` : firstName;
+            const companyLine = company ? ` • ${company}` : '';
+            const specialtyLine = specialties ? ` | ${specialties}` : '';
+            const headerLine = `noticed ${fullName}${companyLine}${specialtyLine}`;
+            const reviewLine = reviewCount && cityState 
+                ? ` is one of the top-rated mortgage companies in ${cityState} with ${reviewCount} reviews.` 
+                : '.';
+            
+            const letter = `Hi there — ${headerLine}${reviewLine} Strong reputations like yours often struggle to convert online traffic fast enough to match the trust you've built locally. We built a conversational AI that plugs into your website and turns more visitors into booked appointments — without touching your ad spend. Worth a 15-minute demo?`;
+            
+            document.getElementById('dynamicLetter').value = letter;
+            
+            // Update form template
+            const link = document.getElementById('reportLink').value || '#';
+            document.getElementById('formTemplate').innerHTML = `
+                <p>${letter}</p>
+                <p>👉 View your free report here:<br>
+                <span style="color: #f8c400;">${link}</span></p>
+                <p>Let me know what you think — happy to walk through it with you.</p>
+            `;
+        }
 
         function getFormData() {
             return {
                 name: document.getElementById('prospectName').value.trim() || 'there',
+                websiteURL: document.getElementById('websiteURL').value.trim() || 'your website',
                 email: document.getElementById('prospectEmail').value.trim(),
+                dynamicLetter: document.getElementById('dynamicLetter').value.trim(),
                 report_link: document.getElementById('reportLink').value.trim(),
                 teaser_image: document.getElementById('teaserImage').value.trim()
             };
+        }
+
+        async function uploadImageToSupabase(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const status = document.getElementById('uploadStatus');
+            status.style.display = 'block';
+            status.style.color = '#f8c400';
+            status.textContent = '⏳ Uploading...';
+            const fileName = `ppc-${Date.now()}-${file.name}`;
+            try {
+                const { data, error } = await supabaseClient.storage.from('ppc-images').upload(fileName, file, { cacheControl: '3600', upsert: false });
+                if (error) throw error;
+                const { data: urlData } = supabaseClient.storage.from('ppc-images').getPublicUrl(fileName);
+                document.getElementById('teaserImage').value = urlData.publicUrl;
+                status.style.color = '#4caf50';
+                status.textContent = '✅ Uploaded: ' + fileName;
+            } catch (error) {
+                status.style.color = '#f44336';
+                status.textContent = '❌ Upload failed: ' + error.message;
+            }
+        }
+
+        function copyTemplate() {
+            const data = getFormData();
+            const link = data.report_link || '#';
+            const fullMessage = `${data.dynamicLetter}\n\n👉 View your free report here:\n${link}\n\nLet me know what you think — happy to walk through it with you.\n\nSincerely,\nTommy Kilpatrick\nPPC Audit Specialist`;
+            navigator.clipboard.writeText(fullMessage).then(() => {
+                const status = document.getElementById('copyStatus');
+                status.style.display = 'inline';
+                setTimeout(() => { status.style.display = 'none'; }, 2000);
+            });
+        }
+
+        function previewFormMessage() {
+            const data = getFormData();
+            const link = data.report_link || '#';
+            const fullMessage = `${data.dynamicLetter}\n\n👉 View your free report here:\n${link}\n\nLet me know what you think — happy to walk through it with you.\n\nSincerely,\nTommy Kilpatrick\nPPC Audit Specialist`;
+            const win = window.open('', 'formPreview', 'width=550,height=500');
+            win.document.write(`<html><head><title>Form Message Preview</title><style>body{font-family:'Segoe UI',sans-serif;padding:30px;color:#333;line-height:1.7;max-width:500px;margin:0 auto;}h2{color:#1a3a5c;margin-bottom:15px;}.message-box{background:#f5f5f0;padding:20px;border-radius:8px;white-space:pre-wrap;border:1px solid #ddd;}</style></head><body><h2>📋 Form Message Preview</h2><div class="message-box">${fullMessage.replace(/\n/g,'<br>')}</div></body></html>`);
         }
 
         function previewEmail() {
             const data = getFormData();
             if (!data.email) { alert('Please enter the prospect email'); return; }
             if (!data.report_link) { alert('Please paste the report link'); return; }
-            
-            const teaserImg = data.teaser_image 
-                ? `<img src="${data.teaser_image}" alt="Your Report Preview" style="width:100%; border-radius:8px; margin:20px 0; border:1px solid #e0e0e0;">`
-                : '';
-            
+            const teaserImg = data.teaser_image ? `<img src="${data.teaser_image}" alt="Your Report Preview" style="width:100%; border-radius:8px; margin:20px 0; border:1px solid #e0e0e0;">` : '';
             const win = window.open('', 'preview', 'width=650,height=700');
-            win.document.write(`
-                <html><head><title>Email Preview</title></head>
-                <body style="font-family:'Segoe UI',sans-serif; max-width:600px; margin:0 auto; padding:20px; color:#333;">
-                    <div style="background:#0a0f1e; padding:20px; border-radius:10px 10px 0 0;">
-                        <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/your-report.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvcy95b3VyLXJlcG9ydC5wbmciLCJpYXQiOjE3Nzg5NTMyODEsImV4cCI6MTgxMDQ4OTI4MX0.dLraOnzrfNIpcTF_YhRFN7pGwetT4WLqdvXXkugzPSc" alt="Your PPC Audit Report" style="height:40px;">
-                    </div>
-                    <div style="padding:30px; background:white; border-radius:0 0 10px 10px;">
-                        <h1 style="color:#1a3a5c; font-size:1.4rem;">Your Free PPC Audit Report is Ready</h1>
-                        <p style="font-weight:normal;">Hi ${data.name},</p>
-                        <p>I ran your website through our PPC audit system and the results are ready for you to view. This report breaks down exactly where your ad budget is leaking — and how conversational AI can plug those leaks with zero risk.</p>
-                        ${teaserImg}
-                        <h2 style="font-size:1.1rem; color:#1a3a5c; margin:20px 0 12px 0;">Your Personalized Audit Includes:</h2>
-                        <p style="line-height:1.8;">✓ Your exact bounce rate and what it's costing you<br>✓ Form abandonment analysis with revenue impact<br>✓ A side-by-side comparison of your current results vs. what AI can deliver</p>
-                        <div style="text-align:center;"><a href="${data.report_link}" style="display:inline-block; background:#f8c400; color:#0a0f1e; padding:16px 36px; border-radius:40px; font-weight:700; text-decoration:none; font-size:1.1rem; margin:20px 0;">📊 VIEW MY FREE AUDIT REPORT →</a></div>
-                        <p style="color:#888; font-size:0.85rem;">No cost. No obligation. Just the data you need to make an informed decision.</p>
-                    </div>
-                    
-                </body></html>
-            `);
+            win.document.write(`<html><head><title>Email Preview</title></head><body style="font-family:'Segoe UI',sans-serif;max-width:600px;margin:0 auto;padding:20px;color:#333;"><div style="background:#0a0f1e;padding:20px;"><img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/your-report.png" style="height:40px;"></div><div style="padding:30px;background:white;border-radius:0 0 10px 10px;"><h1 style="color:#1a3a5c;">Your Free PPC Audit Report for ${data.websiteURL} is Ready</h1><p>${data.dynamicLetter}</p>${teaserImg}<div style="text-align:center;"><a href="${data.report_link}" style="display:inline-block;background:#f8c400;color:#0a0f1e;padding:16px 36px;border-radius:40px;font-weight:700;text-decoration:none;margin:20px 0;">📊 VIEW MY FREE AUDIT REPORT →</a></div></div></body></html>`);
         }
 
         async function sendEmail() {
             const data = getFormData();
             if (!data.email) { alert('Please enter the prospect email'); return; }
             if (!data.report_link) { alert('Please paste the report link'); return; }
-            
             const status = document.getElementById('status');
             status.style.display = 'block';
             status.style.color = '#f8c400';
             status.textContent = '⏳ Sending...';
-            
-            const teaserImg = data.teaser_image 
-                ? `<img src="${data.teaser_image}" alt="Your Report Preview" style="width:100%; border-radius:8px; margin:20px 0; border:1px solid #e0e0e0;">`
-                : '';
-            
-            const emailHTML = `
-                <div style="font-family:'Segoe UI',sans-serif; max-width:600px; margin:0 auto; background:white; border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
-                    <div style="background:#0a0f1e; padding:20px 30px;">
-                        <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/your-report.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvcy95b3VyLXJlcG9ydC5wbmciLCJpYXQiOjE3Nzg5NTMyODEsImV4cCI6MTgxMDQ4OTI4MX0.dLraOnzrfNIpcTF_YhRFN7pGwetT4WLqdvXXkugzPSc" alt="Your PPC Audit Report" style="height:40px;">
-                    </div>
-                    <div style="padding:30px; color:#333; line-height:1.7;">
-                        <h1 style="color:#1a3a5c; font-size:1.4rem; margin-bottom:15px;">Your Free PPC Audit Report is Ready</h1>
-                        <p style="font-weight:normal;">Hi ${data.name},</p>
-                        <p>I ran your website through our PPC audit system and the results are ready for you to view. This report breaks down exactly where your ad budget is leaking — and how conversational AI can plug those leaks with zero risk.</p>
-                        ${teaserImg}
-                        <h2 style="font-size:1.1rem; color:#1a3a5c; margin:20px 0 12px 0;">Your Personalized Audit Includes:</h2>
-                        <p style="line-height:1.8;">✓ Your exact bounce rate and what it's costing you<br>✓ Form abandonment analysis with revenue impact<br>✓ A side-by-side comparison of your current results vs. what AI can deliver</p>
-                        <div style="text-align:center;"><a href="${data.report_link}" style="display:inline-block; background:#f8c400; color:#0a0f1e; padding:16px 36px; border-radius:40px; font-weight:700; text-decoration:none; font-size:1.1rem; margin:20px 0;">📊 VIEW MY FREE AUDIT REPORT →</a></div>
-                        <p style="color:#888; font-size:0.85rem;">No cost. No obligation. Just the data you need to make an informed decision.</p>
-                    </div>
-                    <div style="background:#fafaf5; padding:15px 30px; text-align:center; font-size:0.75rem; color:#888; border-top:1px solid #e8e8e0;">
-                        <p>© 2026 AdSpend Audit Group — MobileWise AI</p>
-                    </div>
-                </div>
-            `;
-            
+            const teaserImg = data.teaser_image ? `<img src="${data.teaser_image}" alt="Your Report Preview" style="width:100%; border-radius:8px; margin:20px 0; border:1px solid #e0e0e0;">` : '';
+            const emailHTML = `<div style="font-family:'Segoe UI',sans-serif;max-width:600px;margin:0 auto;background:white;border-radius:10px;overflow:hidden;"><div style="background:#0a0f1e;padding:20px 30px;"><img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/your-report.png" style="height:40px;"></div><div style="padding:30px;color:#333;line-height:1.7;"><h1 style="color:#1a3a5c;">Your Free PPC Audit Report for ${data.websiteURL} is Ready</h1><p>${data.dynamicLetter}</p>${teaserImg}<div style="text-align:center;"><a href="${data.report_link}" style="display:inline-block;background:#f8c400;color:#0a0f1e;padding:16px 36px;border-radius:40px;font-weight:700;text-decoration:none;font-size:1.1rem;margin:20px 0;">📊 VIEW MY FREE AUDIT REPORT →</a></div></div><div style="background:#fafaf5;padding:15px 30px;text-align:center;font-size:0.75rem;color:#888;">© 2026 AdSpend Audit Group — MobileWise AI</div></div>`;
             try {
                 await emailjs.send('service_b9bppgb', 'template_f6j78g6', {
                     user_email: data.email,
                     from_name: 'Brett - AdSpend Audit Group',
                     reply_to: 'brett@mobilewiseai.com',
-                    subject: `Requested PPC Audit Report for {{user_name}}`,
+                    subject: `Your PPC Audit Report for ${data.websiteURL} is Ready`,
                     message: emailHTML,
                     name: data.name,
-                    user_email: data.email,
+                    website_url: data.websiteURL,
                     report_link: data.report_link
                 });
-                
                 status.style.color = '#4caf50';
                 status.textContent = '✅ Audit report sent to ' + data.email;
             } catch (error) {
