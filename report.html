@@ -41,6 +41,7 @@
         .btn-preview { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); margin-top: 8px; }
         .status { text-align: center; margin-top: 12px; font-weight: 600; display: none; }
         .hint { color: rgba(255,255,255,0.4); font-size: 0.7rem; margin-top: 4px; }
+        
     </style>
 </head>
 <body>
@@ -48,17 +49,31 @@
         <h1>📧 Send PPC Audit Report</h1>
         <p class="subtitle">Fill in the fields below and send your prospect their personalized audit</p>
         
-        <div class="section">
-            <h2>👤 Prospect Details</h2>
-            <div class="field">
-                <label>First Name</label>
-                <input type="text" id="prospectName" placeholder="John">
-            </div>
-            <div class="field">
-                <label>Email Address</label>
-                <input type="email" id="prospectEmail" placeholder="john@abcmortgage.com">
-            </div>
-        </div>
+       <!-- CSV PASTE ZONE -->
+<div class="section">
+    <h2>📋 Paste Scraper CSV Row (or fill manually)</h2>
+    <div class="field">
+        <label>Paste one row from your scraper CSV</label>
+        <textarea id="csvInput" placeholder="Henry,Wilkes,Wilkes Mortgage Group,VA • FHA • Commercial Financing Specialist,Los Angeles CA,206,wilkesmortgage.com,henry@wilkesmortgage.com" oninput="parseCSV()" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;font-size:0.8rem;resize:vertical;min-height:60px;font-family:monospace;"></textarea>
+        <p class="hint">Format: FirstName,LastName,Company,Specialties,CityState,ReviewCount,WebsiteURL,Email</p>
+    </div>
+</div>
+
+<div class="section">
+    <h2>👤 Prospect Details</h2>
+    <div class="field">
+        <label>First Name</label>
+        <input type="text" id="prospectName" placeholder="John">
+    </div>
+    <div class="field">
+        <label>Website URL</label>
+        <input type="text" id="websiteURL" placeholder="abcmortgage.com">
+    </div>
+    <div class="field">
+        <label>Email Address</label>
+        <input type="email" id="prospectEmail" placeholder="john@abcmortgage.com">
+    </div>
+</div>
         
         <div class="section">
             <h2>🔗 PPC Report Link</h2>
@@ -133,6 +148,22 @@
 
     <script>
         emailjs.init('7-9oxa3UC3uKxtqGM');
+        // CSV: FirstName,LastName,Company,Specialties,CityState,ReviewCount,WebsiteURL,Email
+function parseCSV() {
+    const raw = document.getElementById('csvInput').value.trim();
+    if (!raw) return;
+    
+    const parts = raw.split(',');
+    if (parts.length < 8) return;
+    
+    const firstName = parts[0].trim();
+    const websiteURL = parts[6].trim();
+    const email = parts[7].trim();
+    
+    document.getElementById('prospectName').value = firstName;
+    document.getElementById('websiteURL').value = websiteURL;
+    document.getElementById('prospectEmail').value = email;
+}
 
         // ===== SUPABASE IMAGE UPLOAD =====
 const SUPABASE_URL = 'https://fcgbusobfdwnpoqyuzoe.supabase.co';
@@ -264,13 +295,14 @@ PPC Audit Specialist`;
 }
 
         function getFormData() {
-            return {
-                name: document.getElementById('prospectName').value.trim() || 'there',
-                email: document.getElementById('prospectEmail').value.trim(),
-                report_link: document.getElementById('reportLink').value.trim(),
-                teaser_image: document.getElementById('teaserImage').value.trim()
-            };
-        }
+        return {
+        name: document.getElementById('prospectName').value.trim() || 'there',
+        websiteURL: document.getElementById('websiteURL').value.trim() || 'your website',
+        email: document.getElementById('prospectEmail').value.trim(),
+        report_link: document.getElementById('reportLink').value.trim(),
+        teaser_image: document.getElementById('teaserImage').value.trim()
+    };
+}
 
         function previewEmail() {
             const data = getFormData();
@@ -289,7 +321,7 @@ PPC Audit Specialist`;
                         <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/your-report.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvcy95b3VyLXJlcG9ydC5wbmciLCJpYXQiOjE3Nzg5NTMyODEsImV4cCI6MTgxMDQ4OTI4MX0.dLraOnzrfNIpcTF_YhRFN7pGwetT4WLqdvXXkugzPSc" alt="Your PPC Audit Report" style="height:40px;">
                     </div>
                     <div style="padding:30px; background:white; border-radius:0 0 10px 10px;">
-                        <h1 style="color:#1a3a5c; font-size:1.4rem;">Your Free PPC Audit Report is Ready</h1>
+                        <h1 style="color:#1a3a5c; font-size:1.4rem;">Your Free PPC Audit Report for ${data.websiteURL} is Ready</h1>
                         <p style="font-weight:normal;">Hi ${data.name},</p>
                         <p>I ran your website through our PPC audit system and the results are ready for you to view. This report breaks down exactly where your ad budget is leaking — and how conversational AI can plug those leaks with zero risk.</p>
                         ${teaserImg}
@@ -323,7 +355,7 @@ PPC Audit Specialist`;
                         <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/your-report.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvcy95b3VyLXJlcG9ydC5wbmciLCJpYXQiOjE3Nzg5NTMyODEsImV4cCI6MTgxMDQ4OTI4MX0.dLraOnzrfNIpcTF_YhRFN7pGwetT4WLqdvXXkugzPSc" alt="Your PPC Audit Report" style="height:40px;">
                     </div>
                     <div style="padding:30px; color:#333; line-height:1.7;">
-                        <h1 style="color:#1a3a5c; font-size:1.4rem; margin-bottom:15px;">Your Free PPC Audit Report is Ready</h1>
+                        <h1 style="color:#1a3a5c; font-size:1.4rem; margin-bottom:15px;">Your Free PPC Audit Report for ${data.websiteURL} is Ready</h1>
                         <p style="font-weight:normal;">Hi ${data.name},</p>
                         <p>I ran your website through our PPC audit system and the results are ready for you to view. This report breaks down exactly where your ad budget is leaking — and how conversational AI can plug those leaks with zero risk.</p>
                         ${teaserImg}
@@ -343,7 +375,7 @@ PPC Audit Specialist`;
                     user_email: data.email,
                     from_name: 'Brett - AdSpend Audit Group',
                     reply_to: 'brett@mobilewiseai.com',
-                    subject: `Requested PPC Audit Report for {{user_name}}`,
+                    subject: `Your PPC Audit Report for ${data.websiteURL} is Ready`,
                     message: emailHTML,
                     name: data.name,
                     user_email: data.email,
