@@ -74,6 +74,15 @@
         <input type="email" id="prospectEmail" placeholder="john@abcmortgage.com">
     </div>
 </div>
+
+<div class="section">
+    <h2>📝 Dynamic Opening Letter</h2>
+    <div class="field">
+        <label>Personalized Message (auto-generated, editable)</label>
+        <textarea id="dynamicLetter" rows="5" placeholder="Paste a CSV row above to auto-generate..." style="width:100%; padding:10px 14px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; font-size:0.85rem; resize:vertical; line-height:1.6;"></textarea>
+        <p class="hint">This message appears at the top of your email and contact form template. Edit as needed.</p>
+    </div>
+</div>
         
         <div class="section">
             <h2>🔗 PPC Report Link</h2>
@@ -157,12 +166,54 @@ function parseCSV() {
     if (parts.length < 8) return;
     
     const firstName = parts[0].trim();
+    const lastName = parts[1].trim();
+    const company = parts[2].trim();
+    const specialties = parts[3].trim();
+    const cityState = parts[4].trim();
+    const reviewCount = parts[5].trim();
     const websiteURL = parts[6].trim();
     const email = parts[7].trim();
     
+    // Auto-fill prospect fields
     document.getElementById('prospectName').value = firstName;
     document.getElementById('websiteURL').value = websiteURL;
     document.getElementById('prospectEmail').value = email;
+    
+    // Build the full name
+    const fullName = lastName ? `${firstName} ${lastName}` : firstName;
+    
+    // Build company and specialties line
+    const companyLine = company ? ` • ${company}` : '';
+    const specialtyLine = specialties ? ` | ${specialties}` : '';
+    
+    // Build the review line
+    const reviewLine = reviewCount && cityState 
+        ? ` is one of the top-rated mortgage companies in ${cityState} with ${reviewCount} reviews.` 
+        : '.';
+    
+    // Assemble the dynamic letter
+    const letter = `Hi there — noticed ${fullName}${companyLine}${specialtyLine}${reviewLine} Strong reputations like yours often struggle to convert online traffic fast enough to match the trust you've built locally. We built a conversational AI that plugs into your website and turns more visitors into booked appointments — without touching your ad spend. Worth a 15-minute demo?`;
+    
+    // Populate the dynamic letter field
+    document.getElementById('dynamicLetter').value = letter;
+    
+    // Also update the form template with the short link if one exists
+    updateFormTemplate();
+}
+
+function updateFormTemplate() {
+    const letter = document.getElementById('dynamicLetter').value || '';
+    const shortLink = document.getElementById('generatedShortLink').textContent || document.getElementById('reportLink').value || '#';
+    const template = document.getElementById('formTemplate');
+    if (template && letter) {
+        template.innerHTML = `
+            <p>${letter}</p>
+            <p>👉 View your free report here:<br>
+            <span style="color: #f8c400;">${shortLink}</span></p>
+            <p>Let me know what you think — happy to walk through it with you.</p>
+            <p>Sincerely,<br>Tommy Kilpatrick<br>PPC Audit Specialist</p>
+        `;
+    }
 }
 
         // ===== SUPABASE IMAGE UPLOAD =====
@@ -241,12 +292,12 @@ function copyShortLink() {
 }
 
 function copyTemplate() {
-    const name = document.getElementById('prospectName').value || '[Name]';
-    const link = document.getElementById('shortLink').textContent || document.getElementById('reportLink').value;
+    const letter = document.getElementById('dynamicLetter').value || '';
+    const shortLink = document.getElementById('generatedShortLink').textContent || document.getElementById('reportLink').value || '#';
     
-    const message = `Hi ${name},\n\nAs a PPC Audit Specialist with AdSpend Audit Group, I analyze mortgage websites to find where ad budgets are leaking — and your site showed costly, Ad-spend red flag leaks.\n\nTo share what I'm seeing, I've included a link below to your PPC Audit Report to illustrate exactly how your bounce rate (51%) and form abandonment (74%) are costing you thousands in wasted ad spend every month.\n\nNo cost. No obligation. Just the data you need.\n\n👉 View your free report here:\n${link}\n\nIf you have questions, our AI assistant Tess is available 24/7 to walk you through the results.\n\nSincerely,\nTommy Kilpatrick\nPPC Audit Specialist`;
+    const fullMessage = `${letter}\n\n👉 View your free report here:\n${shortLink}\n\nLet me know what you think — happy to walk through it with you.\n\nSincerely,\nTommy Kilpatrick\nPPC Audit Specialist`;
     
-    navigator.clipboard.writeText(message).then(() => {
+    navigator.clipboard.writeText(fullMessage).then(() => {
         const status = document.getElementById('copyStatus');
         status.style.display = 'inline';
         setTimeout(() => { status.style.display = 'none'; }, 2000);
@@ -323,7 +374,7 @@ PPC Audit Specialist`;
                     <div style="padding:30px; background:white; border-radius:0 0 10px 10px;">
                         <h1 style="color:#1a3a5c; font-size:1.4rem;">Your Free PPC Audit Report for ${data.websiteURL} is Ready</h1>
                         <p style="font-weight:normal;">Hi ${data.name},</p>
-                        <p>I ran your website through our PPC audit system and the results are ready for you to view. This report breaks down exactly where your ad budget is leaking — and how conversational AI can plug those leaks with zero risk.</p>
+                        <p>${document.getElementById('dynamicLetter').value || 'I ran your website through our PPC audit system and the results are ready for you to view.'}</p>
                         ${teaserImg}
                         <h2 style="font-size:1.1rem; color:#1a3a5c; margin:20px 0 12px 0;">Your Personalized Audit Includes:</h2>
                         <p style="line-height:1.8;">✓ Your exact bounce rate and what it's costing you<br>✓ Form abandonment analysis with revenue impact<br>✓ A side-by-side comparison of your current results vs. what AI can deliver</p>
@@ -357,7 +408,7 @@ PPC Audit Specialist`;
                     <div style="padding:30px; color:#333; line-height:1.7;">
                         <h1 style="color:#1a3a5c; font-size:1.4rem; margin-bottom:15px;">Your Free PPC Audit Report for ${data.websiteURL} is Ready</h1>
                         <p style="font-weight:normal;">Hi ${data.name},</p>
-                        <p>I ran your website through our PPC audit system and the results are ready for you to view. This report breaks down exactly where your ad budget is leaking — and how conversational AI can plug those leaks with zero risk.</p>
+                        <p>${document.getElementById('dynamicLetter').value || 'I ran your website through our PPC audit system and the results are ready for you to view.'}</p>
                         ${teaserImg}
                         <h2 style="font-size:1.1rem; color:#1a3a5c; margin:20px 0 12px 0;">Your Personalized Audit Includes:</h2>
                         <p style="line-height:1.8;">✓ Your exact bounce rate and what it's costing you<br>✓ Form abandonment analysis with revenue impact<br>✓ A side-by-side comparison of your current results vs. what AI can deliver</p>
@@ -372,15 +423,18 @@ PPC Audit Specialist`;
             
             try {
                 await emailjs.send('service_b9bppgb', 'template_f6j78g6', {
-                    user_email: data.email,
-                    from_name: 'Brett - AdSpend Audit Group',
-                    reply_to: 'brett@mobilewiseai.com',
-                    subject: `Your PPC Audit Report for ${data.websiteURL} is Ready`,
-                    message: emailHTML,
-                    name: data.name,
-                    user_email: data.email,
-                    report_link: data.report_link
-                });
+    user_email: data.email,
+    from_name: 'Brett - AdSpend Audit Group',
+    reply_to: 'brett@mobilewiseai.com',
+    subject: `Your PPC Audit Report for ${data.websiteURL} is Ready`,
+    message: emailHTML,
+    name: data.name,
+    website_url: data.websiteURL,
+    email_header: data.websiteURL && data.websiteURL !== 'your website' 
+        ? `Your Free PPC Audit Report for ${data.websiteURL} is Ready`
+        : 'Your Free PPC Audit Report is Ready',
+    report_link: data.report_link
+});
                 
                 status.style.color = '#4caf50';
                 status.textContent = '✅ Audit report sent to ' + data.email;
