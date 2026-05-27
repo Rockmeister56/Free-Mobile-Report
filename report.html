@@ -375,7 +375,6 @@ PPC Audit Specialist`;
                         <h1 style="color:#1a3a5c; font-size:1.4rem;">Your Free PPC Audit Report for ${data.websiteURL} is Ready</h1>
                         <p style="font-weight:normal;">Hi ${data.name},</p>
                         <p>${document.getElementById('dynamicLetter').value || 'I ran your website through our PPC audit system and the results are ready for you to view.'}</p>
-                        ${teaserImg}
                         <h2 style="font-size:1.1rem; color:#1a3a5c; margin:20px 0 12px 0;">Your Personalized Audit Includes:</h2>
                         <p style="line-height:1.8;">✓ Your exact bounce rate and what it's costing you<br>✓ Form abandonment analysis with revenue impact<br>✓ A side-by-side comparison of your current results vs. what AI can deliver</p>
                         <div style="text-align:center;"><a href="${data.report_link}" style="display:inline-block; background:#f8c400; color:#0a0f1e; padding:16px 36px; border-radius:40px; font-weight:700; text-decoration:none; font-size:1.1rem; margin:20px 0;">📊 VIEW MY FREE AUDIT REPORT →</a></div>
@@ -433,6 +432,8 @@ PPC Audit Specialist`;
     email_header: data.websiteURL && data.websiteURL !== 'your website' 
         ? `Your Free PPC Audit Report for ${data.websiteURL} is Ready`
         : 'Your Free PPC Audit Report is Ready',
+    teaser_image: data.teaser_image,    // ← ADD THIS LINE
+    dynamic_letter: document.getElementById('dynamicLetter').value || 'I ran your website through our PPC audit system and the results are ready for you to view.',
     report_link: data.report_link
 });
                 
