@@ -514,7 +514,14 @@ const prospectName = document.getElementById('prospectName')?.value?.trim() || '
 const nameParam = prospectName ? `&name=${encodeURIComponent(prospectName)}` : '';
 const lossAmount = Math.round(budget * 0.625);
 const isAdmin = document.getElementById('adminPreview')?.checked ? '&admin=true' : '';
-window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}&loss=${lossAmount}${nameParam}${isAdmin}`;
+// Check if admin preview is checked
+if (document.getElementById('adminPreview')?.checked) {
+    // Admin path — goes to preview, no Tess, no view counted
+    window.location.href = `preview.html?url=${encodedUrl}&budget=${budget}&loss=${lossAmount}${nameParam}`;
+} else {
+    // Normal prospect path — full analysis
+    window.location.href = `analysis.html?url=${encodedUrl}&budget=${budget}&loss=${lossAmount}${nameParam}${isAdmin}`;
+}
         });
         
         // Allow Enter key
