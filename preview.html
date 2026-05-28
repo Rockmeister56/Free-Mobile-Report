@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Link Generator — AdSpend Audit Group</title>
+    <meta name="robots" content="noindex, nofollow">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0a0f1e;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background: rgba(18,28,46,0.9);
+            border: 2px solid #f8c400;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            text-align: center;
+        }
+        .card h2 { color: #f8c400; margin: 0 0 10px; font-size: 1.2rem; }
+        .domain { color: #ffaa00; font-size: 1rem; margin-bottom: 15px; }
+        .link-box {
+            background: rgba(0,0,0,0.5);
+            padding: 12px;
+            border-radius: 8px;
+            color: #4fc3f7;
+            font-size: 0.8rem;
+            word-break: break-all;
+            margin: 15px 0;
+            text-align: left;
+        }
+        .btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+        .btn-copy {
+            background: #f8c400;
+            color: #0a0f1e;
+        }
+        .note {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.7rem;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🔗 PROSPECT LINK READY</h2>
+        <div class="domain" id="domainDisplay"></div>
+        
+        <div class="link-box" id="prospectLink" onclick="copyLink()" style="cursor: pointer;" title="Click to copy"></div>
+        
+        <button class="btn btn-copy" onclick="copyLink()">📋 Copy Link</button>
+        
+        <div class="note">🔒 No Tess activated. No view counted. Link leads to full audit.</div>
+    </div>
+
+    <script>
+        var params = new URLSearchParams(window.location.search);
+        var url = params.get('url') || '';
+        var budget = params.get('budget') || '0';
+        var loss = params.get('loss') || '0';
+        var name = params.get('name') || '';
+        var domain = url.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+        
+        document.getElementById('domainDisplay').textContent = domain;
+        
+        var cleanLink = window.location.origin + '/calculator-enhanced.html?url=' + encodeURIComponent(url) + '&budget=' + budget + '&loss=' + loss + (name ? '&name=' + encodeURIComponent(name) : '');
+        document.getElementById('prospectLink').textContent = cleanLink;
+        
+        function copyLink() {
+            navigator.clipboard.writeText(cleanLink).then(function() {
+                var btn = document.querySelector('.btn-copy');
+                btn.textContent = '✅ Copied!';
+                btn.style.background = '#4caf50';
+                setTimeout(function() {
+                    btn.textContent = '📋 Copy Link';
+                    btn.style.background = '#f8c400';
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+</html>
