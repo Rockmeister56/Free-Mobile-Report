@@ -372,7 +372,7 @@ PPC Audit Specialist`;
                         <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/your-report.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvcy95b3VyLXJlcG9ydC5wbmciLCJpYXQiOjE3Nzg5NTMyODEsImV4cCI6MTgxMDQ4OTI4MX0.dLraOnzrfNIpcTF_YhRFN7pGwetT4WLqdvXXkugzPSc" alt="Your PPC Audit Report" style="height:40px;">
                     </div>
                     <div style="padding:30px; background:white; border-radius:0 0 10px 10px;">
-                        <h1 style="color:#1a3a5c; font-size:1.4rem;">Your Free PPC Audit Report for ${data.websiteURL} is Ready</h1>
+                        <h1 style="color:#1a3a5c; font-size:1.4rem;">Your Free Ad-Spend Audit Report for ${data.websiteURL} is ready to view below</h1>
                         <p style="font-weight:normal;">Hi ${data.name},</p>
                         <p>${document.getElementById('dynamicLetter').value || 'I ran your website through our PPC audit system and the results are ready for you to view.'}</p>
                         <h2 style="font-size:1.1rem; color:#1a3a5c; margin:20px 0 12px 0;">Your Personalized Audit Includes:</h2>
@@ -405,7 +405,7 @@ PPC Audit Specialist`;
                         <img src="https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/your-report.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvcy95b3VyLXJlcG9ydC5wbmciLCJpYXQiOjE3Nzg5NTMyODEsImV4cCI6MTgxMDQ4OTI4MX0.dLraOnzrfNIpcTF_YhRFN7pGwetT4WLqdvXXkugzPSc" alt="Your PPC Audit Report" style="height:40px;">
                     </div>
                     <div style="padding:30px; color:#333; line-height:1.7;">
-                        <h1 style="color:#1a3a5c; font-size:1.4rem; margin-bottom:15px;">Your Free PPC Audit Report for ${data.websiteURL} is Ready</h1>
+                        <h1 style="color:#1a3a5c; font-size:1.4rem; margin-bottom:15px;">YourAd-Spend Audit Report for ${data.websiteURL} is ready to view below</h1>
                         <p style="font-weight:normal;">Hi ${data.name},</p>
                         <p>${document.getElementById('dynamicLetter').value || 'I ran your website through our PPC audit system and the results are ready for you to view.'}</p>
                         ${teaserImg}
@@ -430,7 +430,7 @@ PPC Audit Specialist`;
     name: data.name,
     website_url: data.websiteURL,
     email_header: data.websiteURL && data.websiteURL !== 'your website' 
-        ? `Your Free PPC Audit Report for ${data.websiteURL} is Ready`
+        ? `Your Ad-Spend Audit Report for ${data.websiteURL} is Ready to View Below`
         : 'Your Free PPC Audit Report is Ready',
     teaser_image: data.teaser_image,    // ← ADD THIS LINE
     dynamic_letter: document.getElementById('dynamicLetter').value || 'I ran your website through our PPC audit system and the results are ready for you to view.',
