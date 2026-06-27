@@ -1,524 +1,1101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Conversion Calculator – MobileWise AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
-    <!-- jsPDF library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Conversion Calculator – MobileWise AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(145deg, #0b1120 0%, #0f1a2f 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            color: #ffffff;
-        }
-
-        .calculator-card {
-            max-width: 1100px;
-            width: 100%;
-            background: rgba(18, 30, 50, 0.75);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 48px;
-            padding: 48px 40px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.7);
-        }
-
-        .logo-area {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .logo-placeholder {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #f8c400;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .logo-placeholder i {
-            font-size: 2.2rem;
-            color: #f8c400;
-        }
-        .badge-version {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.4);
-        }
-
-        .title-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .title-section h1 {
-            font-size: 2.4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffffff 40%, #a0c8ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .title-section p {
-            color: rgba(255,255,255,0.55);
-            margin-top: 8px;
-            font-size: 1.1rem;
-        }
-
-        .input-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 24px;
-            padding: 28px 24px;
-            border: 1px solid rgba(255,255,255,0.04);
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .input-group label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #a0c8ff;
-        }
-        .input-group input {
-            background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 14px;
-            padding: 14px 18px;
-            color: #ffffff;
-            font-size: 1.1rem;
-            font-weight: 600;
-            width: 100%;
-            transition: border-color 0.2s;
-        }
-        .input-group input:focus {
-            outline: none;
-            border-color: #f8c400;
-            box-shadow: 0 0 0 3px rgba(248,196,0,0.15);
-        }
-        css
-.input-group input[type="number"] {
-    appearance: none;
-    -moz-appearance: textfield;
+:root{
+  --navy:#08101e;
+  --navy2:#0d1b30;
+  --navy3:#122040;
+  --gold:#f8c400;
+  --gold2:#e0ad00;
+  --gold-glow:rgba(248,196,0,0.18);
+  --teal:#3fd6cc;
+  --red:#ff6b6b;
+  --white:#ffffff;
+  --muted:rgba(255,255,255,0.55);
+  --border:rgba(255,255,255,0.07);
+  --card:rgba(255,255,255,0.04);
 }
-        .input-group input[type="number"]::-webkit-outer-spin-button,
-        .input-group input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-        }
 
-        .results-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 28px;
-            margin-bottom: 30px;
-        }
-        .result-card {
-            background: rgba(0,0,0,0.25);
-            border-radius: 28px;
-            padding: 28px 24px;
-            border: 1px solid rgba(255,255,255,0.04);
-        }
-        .result-card h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .result-card .current-icon { color: #ff6b6b; }
-        .result-card .ai-icon { color: #4ecdc4; }
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--navy);
+  min-height:100vh;
+  color:var(--white);
+  overflow-x:hidden;
+}
 
-        .stat-block {
-            display: flex;
-            justify-content: space-between;
-            padding: 14px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-        }
-        .stat-block:last-child { border-bottom: none; }
-        .stat-label { color: rgba(255,255,255,0.65); }
-        .stat-value { font-weight: 700; font-size: 1.2rem; }
-        .stat-value.red { color: #ff6b6b; }
-        .stat-value.green { color: #4ecdc4; }
-        .stat-value.gold { color: #f8c400; }
+/* ── HEADER ── */
+.header{
+  background:linear-gradient(180deg,var(--navy2) 0%,transparent 100%);
+  padding:28px 40px 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:16px;
+}
+.logo{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.logo-icon{
+  width:48px;height:48px;
+  background:var(--gold);
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;color:var(--navy);
+}
+.logo-text{
+  font-family:'Syne',sans-serif;
+  font-size:1.3rem;font-weight:800;
+  color:var(--white);
+  letter-spacing:-0.5px;
+}
+.logo-text span{color:var(--gold);}
+.header-badge{
+  background:rgba(248,196,0,0.1);
+  border:1px solid rgba(248,196,0,0.3);
+  color:var(--gold);
+  padding:6px 18px;
+  border-radius:40px;
+  font-size:0.75rem;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
 
-        .difference-banner {
-            background: linear-gradient(145deg, rgba(248,196,0,0.08), rgba(248,196,0,0.02));
-            border: 1px solid rgba(248,196,0,0.25);
-            border-radius: 28px;
-            padding: 24px 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .difference-banner .label {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: rgba(255,255,255,0.8);
-        }
-        .difference-banner .number {
-            font-size: 2.6rem;
-            font-weight: 800;
-            color: #f8c400;
-        }
-        .difference-banner .sub {
-            font-size: 1rem;
-            color: rgba(255,255,255,0.5);
-            margin-left: 6px;
-        }
+/* ── HERO ── */
+.hero{
+  text-align:center;
+  padding:52px 40px 40px;
+  position:relative;
+}
+.hero::before{
+  content:'';
+  position:absolute;
+  top:0;left:50%;transform:translateX(-50%);
+  width:600px;height:300px;
+  background:radial-gradient(ellipse,rgba(248,196,0,0.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  font-size:0.75rem;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:14px;
+}
+.hero h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2rem,5vw,3.2rem);
+  font-weight:800;
+  line-height:1.1;
+  letter-spacing:-1px;
+  background:linear-gradient(135deg,#fff 30%,#a8c8ff 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:14px;
+}
+.hero p{
+  font-size:1.05rem;
+  color:var(--muted);
+  max-width:560px;
+  margin:0 auto;
+  line-height:1.65;
+}
 
-        .actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            justify-content: center;
-            margin-top: 10px;
-        }
-        .btn {
-            background: linear-gradient(145deg, #f8c400, #e0b000);
-            color: #0b1120;
-            border: none;
-            padding: 16px 40px;
-            border-radius: 60px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            box-shadow: 0 10px 25px -5px rgba(248,196,0,0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px -5px rgba(248,196,0,0.4);
-        }
+/* ── LAYOUT ── */
+.main{
+  max-width:1160px;
+  margin:0 auto;
+  padding:0 24px 60px;
+}
 
-        .btn-secondary {
-            background: rgba(255,255,255,0.06);
-            color: #ffffff;
-            border: 1px solid rgba(255,255,255,0.12);
-            box-shadow: none;
-        }
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.12);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
+/* ── GEMINI STAT STRIP ── */
+.stat-strip{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:44px;
+}
+.stat-pill{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:20px 22px;
+  position:relative;
+  overflow:hidden;
+}
+.stat-pill::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:3px;
+  border-radius:18px 18px 0 0;
+}
+.stat-pill.bounce::before{background:var(--red);}
+.stat-pill.abandon::before{background:var(--gold);}
+.stat-pill.ai::before{background:var(--teal);}
+.stat-pill-label{
+  font-size:0.7rem;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+.stat-pill-number{
+  font-family:'Syne',sans-serif;
+  font-size:2rem;
+  font-weight:800;
+  line-height:1;
+  margin-bottom:4px;
+}
+.stat-pill.bounce .stat-pill-number{color:var(--red);}
+.stat-pill.abandon .stat-pill-number{color:var(--gold);}
+.stat-pill.ai .stat-pill-number{color:var(--teal);}
+.stat-pill-desc{
+  font-size:0.8rem;
+  color:var(--muted);
+  line-height:1.4;
+}
+.stat-pill-source{
+  font-size:0.65rem;
+  color:rgba(255,255,255,0.3);
+  margin-top:8px;
+  font-style:italic;
+}
 
-        .footer-note {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.2);
-            border-top: 1px solid rgba(255,255,255,0.04);
-            padding-top: 24px;
-        }
+/* ── SECTION CARD ── */
+.section-card{
+  background:rgba(13,27,48,0.8);
+  border:1px solid var(--border);
+  border-radius:28px;
+  padding:32px;
+  margin-bottom:24px;
+}
+.section-header{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-bottom:28px;
+}
+.section-num{
+  width:40px;height:40px;min-width:40px;
+  background:var(--gold);
+  color:var(--navy);
+  font-family:'Syne',sans-serif;
+  font-size:1.1rem;
+  font-weight:800;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+}
+.section-title{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;letter-spacing:-0.3px;}
+.section-subtitle{font-size:0.85rem;color:var(--muted);margin-top:2px;}
 
-        @media (max-width: 760px) {
-            .calculator-card { padding: 28px 20px; border-radius: 28px; }
-            .results-grid { grid-template-columns: 1fr; }
-            .title-section h1 { font-size: 1.8rem; }
-            .input-grid { grid-template-columns: 1fr 1fr; }
-            .difference-banner { flex-direction: column; text-align: center; }
-            .difference-banner .number { font-size: 2.2rem; }
-        }
-        @media (max-width: 480px) {
-            .input-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+.input-row{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:20px;
+  margin-bottom:24px;
+}
+.inp-group{display:flex;flex-direction:column;gap:8px;}
+.inp-group label{
+  font-size:0.72rem;
+  font-weight:700;
+  letter-spacing:0.8px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.6);
+}
+.inp-wrap{position:relative;}
+.inp-prefix{
+  position:absolute;
+  left:14px;top:50%;transform:translateY(-50%);
+  font-weight:700;color:var(--gold);font-size:1rem;
+  pointer-events:none;
+}
+.inp-suffix{
+  position:absolute;
+  right:14px;top:50%;transform:translateY(-50%);
+  font-weight:600;color:var(--muted);font-size:0.9rem;
+  pointer-events:none;
+}
+input[type=number]{
+  background:rgba(0,0,0,0.35);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:13px 38px 13px 16px;
+  color:#fff;
+  font-size:1rem;
+  font-weight:700;
+  width:100%;
+  transition:border-color 0.2s,box-shadow 0.2s;
+  appearance:none;
+  -moz-appearance:textfield;
+  font-family:'Inter',sans-serif;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;}
+input[type=number]:focus{
+  outline:none;
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(248,196,0,0.14);
+}
+input.has-prefix{padding-left:28px;}
+
+/* result inline */
+.inline-result{
+  background:rgba(0,0,0,0.25);
+  border-radius:16px;
+  padding:18px 22px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:16px;
+}
+.ir-item{display:flex;flex-direction:column;gap:4px;}
+.ir-label{font-size:0.7rem;color:var(--muted);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;}
+.ir-val{font-size:1.3rem;font-weight:800;font-family:'Syne',sans-serif;}
+.ir-val.bad{color:var(--red);}
+.ir-val.good{color:var(--teal);}
+.ir-val.gold{color:var(--gold);}
+.ir-arrow{
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;color:var(--gold);
+  padding-top:12px;
+}
+
+/* ── AI LIFT TOGGLE ── */
+.lift-toggle{
+  display:flex;
+  gap:0;
+  background:rgba(0,0,0,0.3);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  width:fit-content;
+  margin-bottom:20px;
+}
+.lift-btn{
+  padding:10px 22px;
+  font-size:0.8rem;
+  font-weight:700;
+  background:none;
+  border:none;
+  color:var(--muted);
+  cursor:pointer;
+  letter-spacing:0.5px;
+  transition:all 0.2s;
+}
+.lift-btn.active{
+  background:var(--gold);
+  color:var(--navy);
+}
+.lift-desc{
+  font-size:0.82rem;
+  color:var(--muted);
+  margin-bottom:20px;
+  line-height:1.5;
+}
+.lift-desc strong{color:var(--gold);}
+
+/* ── GRAND TOTAL PANEL ── */
+.grand-panel{
+  background:linear-gradient(135deg,rgba(248,196,0,0.1) 0%,rgba(63,214,204,0.06) 100%);
+  border:1px solid rgba(248,196,0,0.3);
+  border-radius:28px;
+  padding:36px 40px;
+  margin-bottom:28px;
+}
+.grand-panel h2{
+  font-family:'Syne',sans-serif;
+  font-size:1.4rem;
+  font-weight:800;
+  letter-spacing:-0.3px;
+  margin-bottom:24px;
+  display:flex;align-items:center;gap:10px;
+}
+.grand-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+  margin-bottom:28px;
+}
+.grand-item{
+  background:rgba(0,0,0,0.25);
+  border-radius:18px;
+  padding:22px 20px;
+  border:1px solid var(--border);
+}
+.grand-item-label{
+  font-size:0.7rem;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+.grand-item-val{
+  font-family:'Syne',sans-serif;
+  font-size:2rem;
+  font-weight:800;
+  line-height:1;
+}
+.grand-item-sub{
+  font-size:0.8rem;
+  color:var(--muted);
+  margin-top:4px;
+}
+.grand-hero-num{
+  text-align:center;
+  padding:28px 20px;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+.grand-hero-label{
+  font-size:0.75rem;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+.grand-hero-val{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(3rem,8vw,5rem);
+  font-weight:900;
+  color:var(--gold);
+  line-height:1;
+  letter-spacing:-2px;
+}
+.grand-hero-sub{
+  font-size:1rem;
+  color:var(--muted);
+  margin-top:8px;
+}
+
+/* ── ACTIONS ── */
+.actions{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-bottom:32px;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:15px 38px;
+  border-radius:60px;
+  font-weight:700;
+  font-size:0.95rem;
+  cursor:pointer;
+  border:none;
+  transition:all 0.2s;
+  font-family:'Inter',sans-serif;
+}
+.btn-primary{
+  background:linear-gradient(145deg,var(--gold),var(--gold2));
+  color:var(--navy);
+  box-shadow:0 6px 24px rgba(248,196,0,0.3);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(248,196,0,0.4);}
+.btn-secondary{
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--muted);
+}
+.btn-secondary:hover{border-color:rgba(255,255,255,0.2);color:#fff;}
+
+/* ── FOOTER ── */
+.footer-note{
+  text-align:center;
+  font-size:0.78rem;
+  color:rgba(255,255,255,0.25);
+  padding-top:4px;
+}
+.footer-note i{color:var(--gold);margin-right:6px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .stat-strip{grid-template-columns:1fr;}
+  .header{padding:20px;}
+  .hero{padding:32px 20px 28px;}
+  .section-card{padding:22px 18px;}
+  .grand-panel{padding:24px 20px;}
+  .main{padding:0 14px 40px;}
+}
+</style>
 </head>
 <body>
-    <div class="calculator-card">
-        <div class="logo-area">
-            <div class="logo-placeholder">
-                <i class="fas fa-chart-line"></i>
-                <span>MOBILEWISE AI</span>
-            </div>
-            <div class="badge-version">
-                <i class="fas fa-calculator"></i> Conversion Calculator v2.0
-            </div>
-        </div>
 
-        <div class="title-section">
-            <h1>📊 AI Conversion Calculator</h1>
-            <p>See how an AI sales assistant multiplies your leads — powered by Google Gemini benchmarks.</p>
-        </div>
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon"><i class="fas fa-mobile-screen-button"></i></div>
+    <div class="logo-text">Mobile<span>Wise</span> AI</div>
+  </div>
+  <div class="header-badge">Conversion Calculator</div>
+</div>
 
-        <div class="input-grid">
-            <div class="input-group">
-                <label><i class="fas fa-users"></i> Monthly Visitors</label>
-                <input type="number" id="visitors" value="1000" min="0" step="100" />
-            </div>
-            <div class="input-group">
-                <label><i class="fas fa-sign-out-alt"></i> Bounce Rate (%)</label>
-                <input type="number" id="bounceRate" value="55" min="0" max="100" step="1" />
-            </div>
-            <div class="input-group">
-                <label><i class="fas fa-times-circle"></i> Form Abandonment (%)</label>
-                <input type="number" id="formAbandonment" value="75" min="0" max="100" step="1" />
-            </div>
-            <div class="input-group">
-                <label><i class="fas fa-percent"></i> Current Conv. Rate (%)</label>
-                <input type="number" id="convRate" value="2" min="0" max="100" step="0.5" />
-            </div>
-            <div class="input-group">
-                <label><i class="fas fa-dollar-sign"></i> Monthly Ad Spend (optional)</label>
-                <input type="number" id="adSpend" value="0" min="0" step="100" />
-            </div>
-        </div>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Mortgage Website Performance Analysis</div>
+  <h1>See Exactly What You're Losing<br>— And What You Could Gain</h1>
+  <p>Enter your current traffic numbers and watch the calculator show you the real cost of bounce rate, form abandonment, and missing AI conversion tools.</p>
+</div>
 
-        <div class="results-grid" id="resultsGrid">
-            <div class="result-card">
-                <h3><i class="fas fa-times-circle current-icon"></i> Without AI</h3>
-                <div class="stat-block"><span class="stat-label">Visitors who stay</span><span class="stat-value red" id="currentStay">0</span></div>
-                <div class="stat-block"><span class="stat-label">Leads captured</span><span class="stat-value red" id="currentLeads">0</span></div>
-                <div class="stat-block"><span class="stat-label">Lost leads</span><span class="stat-value red" id="currentLost">0</span></div>
-                <div class="stat-block"><span class="stat-label">Leads / Month</span><span class="stat-value red" id="currentMonthly">0</span></div>
-            </div>
-            <div class="result-card">
-                <h3><i class="fas fa-check-circle ai-icon"></i> With MobileWise AI</h3>
-                <div class="stat-block"><span class="stat-label">Visitors who stay</span><span class="stat-value green" id="aiStay">0</span></div>
-                <div class="stat-block"><span class="stat-label">Leads captured</span><span class="stat-value green" id="aiLeads">0</span></div>
-                <div class="stat-block"><span class="stat-label">Lost leads</span><span class="stat-value green" id="aiLost">0</span></div>
-                <div class="stat-block"><span class="stat-label">Leads / Month</span><span class="stat-value green" id="aiMonthly">0</span></div>
-            </div>
-        </div>
+<div class="main">
 
-        <div class="difference-banner">
-            <span class="label"><i class="fas fa-arrow-up" style="color:#f8c400;"></i> Extra validated leads per month</span>
-            <span>
-                <span class="number" id="extraLeads">+0</span>
-                <span class="sub">more than your current form</span>
-            </span>
-        </div>
+<!-- GEMINI STAT STRIP -->
+<div class="stat-strip">
+  <div class="stat-pill bounce">
+    <div class="stat-pill-label">Problem 1 · Bounce Rate</div>
+    <div class="stat-pill-number">52–63%</div>
+    <div class="stat-pill-desc">of mobile visitors bounce before viewing a single page on mortgage websites</div>
+    <div class="stat-pill-source">Source: Google Gemini Research</div>
+  </div>
+  <div class="stat-pill abandon">
+    <div class="stat-pill-label">Problem 2 · Form Abandonment</div>
+    <div class="stat-pill-number">68–75%</div>
+    <div class="stat-pill-desc">of mortgage applicants abandon forms before completing — highest in financial services</div>
+    <div class="stat-pill-source">Source: Google Gemini Research</div>
+  </div>
+  <div class="stat-pill ai">
+    <div class="stat-pill-label">Problem 3 · No AI Assistant</div>
+    <div class="stat-pill-number">50–400%</div>
+    <div class="stat-pill-desc">conversion boost when AI sales assistants are deployed to engage and qualify visitors</div>
+    <div class="stat-pill-source">Source: Google Gemini Research</div>
+  </div>
+</div>
 
-        <div class="actions">
-            <button class="btn" id="downloadPdfBtn"><i class="fas fa-download"></i> Download Full Report</button>
-            <button class="btn btn-secondary" id="resetBtn"><i class="fas fa-undo-alt"></i> Reset to Defaults</button>
-        </div>
-
-        <div class="footer-note">
-            <i class="fas fa-robot" style="color:#f8c400;"></i> Powered by MobileWise AI · Benchmarks from Google Gemini
-        </div>
+<!-- SECTION 1: INPUTS -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div>
+      <div class="section-title">Your Current Traffic</div>
+      <div class="section-subtitle">Enter what your website is doing right now</div>
     </div>
+  </div>
+  <div class="input-row">
+    <div class="inp-group">
+      <label>Monthly Visitors</label>
+      <div class="inp-wrap">
+        <input type="number" id="visitors" value="1000" min="0"/>
+      </div>
+    </div>
+    <div class="inp-group">
+      <label>Monthly Ad Spend (PPC)</label>
+      <div class="inp-wrap">
+        <span class="inp-prefix">$</span>
+        <input type="number" id="adSpend" value="0" min="0" class="has-prefix"/>
+      </div>
+    </div>
+    <div class="inp-group">
+      <label>Current Leads / 100 Visitors</label>
+      <div class="inp-wrap">
+        <input type="number" id="leadsPerHundred" value="3" min="0" max="100"/>
+        <span class="inp-suffix">/ 100</span>
+      </div>
+    </div>
+    <div class="inp-group">
+      <label>Avg. Lead Value (optional)</label>
+      <div class="inp-wrap">
+        <span class="inp-prefix">$</span>
+        <input type="number" id="leadValue" value="0" min="0" class="has-prefix" placeholder="e.g. 500"/>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <script>
-        (function() {
-            // ----- DOM refs -----
-            const inputs = {
-                visitors: document.getElementById('visitors'),
-                bounceRate: document.getElementById('bounceRate'),
-                formAbandonment: document.getElementById('formAbandonment'),
-                convRate: document.getElementById('convRate'),
-                adSpend: document.getElementById('adSpend')
-            };
+<!-- SECTION 2: BOUNCE RATE -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--red);color:#fff;">2</div>
+    <div>
+      <div class="section-title">Bounce Rate Problem</div>
+      <div class="section-subtitle">Mobile visitors lost before they ever see your offer</div>
+    </div>
+  </div>
+  <div class="input-row">
+    <div class="inp-group">
+      <label>Current Mobile Bounce Rate</label>
+      <div class="inp-wrap">
+        <input type="number" id="bounceRate" value="55" min="0" max="100"/>
+        <span class="inp-suffix">%</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:flex-end;padding-bottom:0">
+      <div style="font-size:0.82rem;color:var(--muted);line-height:1.5;padding:13px 0;">
+        <i class="fas fa-circle-info" style="color:var(--gold);margin-right:6px;"></i>
+        Gemini reports <strong style="color:var(--white);">52–63%</strong> is typical for mortgage sites.<br>
+        MobileWise anti-bounce screen reduces this by <strong style="color:var(--teal);">90%</strong>.
+      </div>
+    </div>
+  </div>
+  <div class="inline-result">
+    <div class="ir-item">
+      <div class="ir-label">Visitors Who Bounce (now)</div>
+      <div class="ir-val bad" id="b_bouncedNow">0</div>
+    </div>
+    <div class="ir-item">
+      <div class="ir-label">Visitors Who Stay (now)</div>
+      <div class="ir-val" id="b_stayNow">0</div>
+    </div>
+    <div class="ir-item" style="border-left:1px solid var(--border);padding-left:16px;">
+      <div class="ir-label">Bounce After MobileWise</div>
+      <div class="ir-val good" id="b_bouncedAI">0</div>
+    </div>
+    <div class="ir-item">
+      <div class="ir-label">Visitors Who Stay (with AI)</div>
+      <div class="ir-val good" id="b_stayAI">0</div>
+    </div>
+    <div class="ir-item">
+      <div class="ir-label">Extra Visitors Retained</div>
+      <div class="ir-val gold" id="b_extraStay">+0</div>
+    </div>
+  </div>
+</div>
 
-            const outputs = {
-                currentStay: document.getElementById('currentStay'),
-                currentLeads: document.getElementById('currentLeads'),
-                currentLost: document.getElementById('currentLost'),
-                currentMonthly: document.getElementById('currentMonthly'),
-                aiStay: document.getElementById('aiStay'),
-                aiLeads: document.getElementById('aiLeads'),
-                aiLost: document.getElementById('aiLost'),
-                aiMonthly: document.getElementById('aiMonthly'),
-                extraLeads: document.getElementById('extraLeads')
-            };
+<!-- SECTION 3: FORM ABANDONMENT -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num" style="background:rgba(248,196,0,0.2);color:var(--gold);border:1px solid rgba(248,196,0,0.4);">3</div>
+    <div>
+      <div class="section-title">Form Abandonment Problem</div>
+      <div class="section-subtitle">Interested visitors who start a form — then disappear</div>
+    </div>
+  </div>
+  <div class="input-row">
+    <div class="inp-group">
+      <label>Current Form Abandonment Rate</label>
+      <div class="inp-wrap">
+        <input type="number" id="formAbandonment" value="75" min="0" max="100"/>
+        <span class="inp-suffix">%</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:flex-end;">
+      <div style="font-size:0.82rem;color:var(--muted);line-height:1.5;padding:13px 0;">
+        <i class="fas fa-circle-info" style="color:var(--gold);margin-right:6px;"></i>
+        Gemini found <strong style="color:var(--white);">68–75%</strong> abandonment for mortgage forms.<br>
+        MobileWise AI trigger system reduces abandonment by <strong style="color:var(--teal);">95%</strong>.
+      </div>
+    </div>
+  </div>
+  <div class="inline-result">
+    <div class="ir-item">
+      <div class="ir-label">Form Starts (of those who stay)</div>
+      <div class="ir-val" id="f_formStarts">0</div>
+    </div>
+    <div class="ir-item">
+      <div class="ir-label">Abandoned (now)</div>
+      <div class="ir-val bad" id="f_abandonedNow">0</div>
+    </div>
+    <div class="ir-item">
+      <div class="ir-label">Complete Form (now)</div>
+      <div class="ir-val" id="f_completeNow">0</div>
+    </div>
+    <div class="ir-item" style="border-left:1px solid var(--border);padding-left:16px;">
+      <div class="ir-label">Abandoned (with AI)</div>
+      <div class="ir-val good" id="f_abandonedAI">0</div>
+    </div>
+    <div class="ir-item">
+      <div class="ir-label">Extra Completions Recovered</div>
+      <div class="ir-val gold" id="f_extraComplete">+0</div>
+    </div>
+  </div>
+</div>
 
-            function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
+<!-- SECTION 4: AI SALES ASSISTANT -->
+<div class="section-card">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--teal);color:var(--navy);">4</div>
+    <div>
+      <div class="section-title">AI Sales Assistant — Tess</div>
+      <div class="section-subtitle">Video testimonials · Smart screens · Pre-qual interviews · 24/7 closing</div>
+    </div>
+  </div>
 
-            function setVal(id, val) {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.textContent = typeof val === 'number' ? Math.round(val) : val;
-                }
-            }
+  <div style="margin-bottom:10px;font-size:0.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.5);">Projection Scenario</div>
+  <div class="lift-toggle" id="liftToggle">
+    <button class="lift-btn active" data-lift="50">Conservative <span style="opacity:0.7">(50%)</span></button>
+    <button class="lift-btn" data-lift="150">Moderate <span style="opacity:0.7">(150%)</span></button>
+    <button class="lift-btn" data-lift="400">Aggressive <span style="opacity:0.7">(400%)</span></button>
+  </div>
+  <div class="lift-desc" id="liftDesc">
+    <strong>Conservative (50% boost):</strong> Even at the low end of Gemini's 50–400% range, an AI sales assistant with 24/7 availability, video testimonials, and smart screens meaningfully lifts conversion over a static website.
+  </div>
 
-            // ----- Core logic -----
-            function updateCalculator() {
-                const visitors = getVal('visitors');
-                const bounce = getVal('bounceRate');
-                const abandon = getVal('formAbandonment');
-                const conv = getVal('convRate') / 100; // e.g., 0.02
+  <div class="inline-result">
+    <div class="ir-item">
+      <div class="ir-label">Leads Without Tess</div>
+      <div class="ir-val bad" id="t_leadsWithout">0</div>
+    </div>
+    <div class="ir-item">
+      <div class="ir-label">Conversion Boost Applied</div>
+      <div class="ir-val" id="t_boostLabel">50%</div>
+    </div>
+    <div class="ir-item" style="border-left:1px solid var(--border);padding-left:16px;">
+      <div class="ir-label">Leads With Tess</div>
+      <div class="ir-val good" id="t_leadsWith">0</div>
+    </div>
+    <div class="ir-item">
+      <div class="ir-label">Extra Leads From Tess</div>
+      <div class="ir-val gold" id="t_extraLeads">+0</div>
+    </div>
+  </div>
+</div>
 
-                // --- Without AI ---
-                const stayRate = (100 - bounce) / 100;
-                const visitorsWhoStay = Math.round(visitors * stayRate);
-                const leadsCaptured = Math.round(visitorsWhoStay * conv);
-                const lostLeads = visitors - leadsCaptured;
+<!-- GRAND TOTAL -->
+<div class="grand-panel">
+  <h2><i class="fas fa-chart-line" style="color:var(--gold);"></i> Your MobileWise AI Impact Summary</h2>
+  <div class="grand-grid">
+    <div class="grand-item">
+      <div class="grand-item-label">Leads / Month — Without AI</div>
+      <div class="grand-item-val" style="color:var(--red);" id="g_leadsWithout">0</div>
+      <div class="grand-item-sub">Based on 3/100 visitor avg</div>
+    </div>
+    <div class="grand-item">
+      <div class="grand-item-label">Leads / Month — With MobileWise</div>
+      <div class="grand-item-val" style="color:var(--teal);" id="g_leadsWith">0</div>
+      <div class="grand-item-sub">Anti-bounce + form rescue + Tess</div>
+    </div>
+    <div class="grand-item">
+      <div class="grand-item-label">Extra Leads / Year</div>
+      <div class="grand-item-val" style="color:var(--gold);" id="g_leadsYear">0</div>
+      <div class="grand-item-sub" id="g_leadsYearSub">Annual pipeline added</div>
+    </div>
+    <div class="grand-item" id="g_roiCard" style="display:none;">
+      <div class="grand-item-label">Ad Spend ROI Lift</div>
+      <div class="grand-item-val" style="color:var(--gold);" id="g_roi">—</div>
+      <div class="grand-item-sub">More leads from same PPC budget</div>
+    </div>
+  </div>
+  <div class="grand-hero-num">
+    <div class="grand-hero-label">Total Extra Leads Per Month With MobileWise AI</div>
+    <div class="grand-hero-val" id="g_heroNum">+0</div>
+    <div class="grand-hero-sub" id="g_heroSub">more qualified leads than you're capturing today</div>
+  </div>
+</div>
 
-                // --- With MobileWise AI ---
-                const aiBounce = bounce * 0.10; // 90% reduction
-                const aiStayRate = (100 - aiBounce) / 100;
-                const aiVisitorsWhoStay = Math.round(visitors * aiStayRate);
+<!-- ACTIONS -->
+<div class="actions">
+  <button class="btn btn-primary" id="downloadBtn"><i class="fas fa-file-arrow-down"></i> Download Full Report (PDF)</button>
+  <button class="btn btn-secondary" id="resetBtn"><i class="fas fa-rotate-left"></i> Reset</button>
+</div>
 
-                // Form abandonment nearly eliminated (95% effective)
-                const aiAbandon = abandon * 0.05;
-                const aiCaptureRate = (100 - aiAbandon) / 100;
-                const aiBaseLeads = Math.round(aiVisitorsWhoStay * aiCaptureRate);
+<div class="footer-note">
+  <i class="fas fa-robot"></i> Powered by MobileWise AI &nbsp;·&nbsp; Benchmarks sourced from Google Gemini Research
+</div>
 
-                // AI Sales Assistant lift: +60% (Gemini)
-                const aiLift = 1.60;
-                const aiLeadsCaptured = Math.round(aiBaseLeads * aiLift);
+</div><!-- /main -->
 
-                const aiLostLeads = visitors - aiLeadsCaptured;
+<script>
+(function(){
 
-                // Extra leads
-                const extra = aiLeadsCaptured - leadsCaptured;
-                const extraDisplay = extra >= 0 ? '+' + extra : '' + extra;
+  // ── State ──
+  let liftPct = 50;
 
-                // --- Update UI ---
-                setVal('currentStay', visitorsWhoStay);
-                setVal('currentLeads', leadsCaptured);
-                setVal('currentLost', lostLeads);
-                setVal('currentMonthly', leadsCaptured);
+  // ── Helpers ──
+  function v(id){return parseFloat(document.getElementById(id).value)||0;}
+  function set(id,val){
+    var el=document.getElementById(id);
+    if(el) el.textContent=val;
+  }
+  function fmt(n){return Math.round(n).toLocaleString();}
+  function fmtPlus(n){return (n>=0?'+':'')+fmt(n);}
 
-                setVal('aiStay', aiVisitorsWhoStay);
-                setVal('aiLeads', aiLeadsCaptured);
-                setVal('aiLost', aiLostLeads);
-                setVal('aiMonthly', aiLeadsCaptured);
+  // ── Core Calc ──
+  function calc(){
+    var visitors    = v('visitors');
+    var adSpend     = v('adSpend');
+    var l100        = v('leadsPerHundred');      // leads per 100 visitors (default 3)
+    var leadVal     = v('leadValue');
+    var bounce      = v('bounceRate');           // e.g. 55
+    var abandon     = v('formAbandonment');      // e.g. 75
 
-                setVal('extraLeads', extraDisplay);
-            }
+    // ── CURRENT STATE ──
+    var baseConvRate = l100 / 100;               // 0.03
+    var bouncedNow   = Math.round(visitors * bounce/100);
+    var stayNow      = visitors - bouncedNow;
 
-            // ----- Reset to defaults -----
-            function resetToDefaults() {
-                document.getElementById('visitors').value = 1000;
-                document.getElementById('bounceRate').value = 55;
-                document.getElementById('formAbandonment').value = 75;
-                document.getElementById('convRate').value = 2;
-                document.getElementById('adSpend').value = 0;
-                updateCalculator();
-            }
+    // Of those who stay, estimate how many start a form = all engaged visitors
+    var formStartsNow = stayNow;
+    var abandonedNow  = Math.round(formStartsNow * abandon/100);
+    var completedNow  = formStartsNow - abandonedNow;
 
-            // ----- PDF Download -----
-            function downloadReport() {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('p', 'mm', 'a4');
-                const pageW = 210;
+    // Current total leads = simple baseline
+    var leadsNow = Math.round(visitors * baseConvRate);
 
-                const visitors = getVal('visitors');
-                const bounce = getVal('bounceRate');
-                const abandon = getVal('formAbandonment');
-                const conv = getVal('convRate');
-                const adSpend = getVal('adSpend');
-                const leadsWithoutAI = parseInt(outputs.currentMonthly.textContent);
-                const leadsWithAI = parseInt(outputs.aiMonthly.textContent);
-                const extra = leadsWithAI - leadsWithoutAI;
+    // ── WITH MOBILEWISE AI ──
+    // 1. Bounce: 90% reduction
+    var aiBounceRate = bounce * 0.10;
+    var bouncedAI    = Math.round(visitors * aiBounceRate/100);
+    var stayAI       = visitors - bouncedAI;
+    var extraStay    = stayAI - stayNow;
 
-                // Header
-                doc.setFillColor(11, 17, 32);
-                doc.rect(0, 0, pageW, 45, 'F');
-                doc.setTextColor(248, 196, 0);
-                doc.setFontSize(22);
-                doc.setFont('helvetica', 'bold');
-                doc.text('MobileWise AI', 20, 28);
+    // 2. Form abandonment: 95% reduction
+    var aiAbandonRate  = abandon * 0.05;
+    var aiAbandoned    = Math.round(stayAI * aiAbandonRate/100);
+    var aiCompleted    = stayAI - aiAbandoned;
+    var extraComplete  = aiCompleted - completedNow;
 
-                // Title
-                doc.setTextColor(255, 255, 255);
-                doc.setFontSize(18);
-                doc.setFont('helvetica', 'bold');
-                doc.text('Conversion Report', 20, 55);
+    // Pre-AI-lift leads (bounce+form fixed, same base conv rate applied to completed pool)
+    var leadsPreLift = Math.round(aiCompleted * baseConvRate);
 
-                // Input summary
-                doc.setFontSize(12);
-                doc.setFont('helvetica', 'normal');
-                const lines = [
-                    `Monthly Visitors: ${visitors}`,
-                    `Bounce Rate: ${bounce}%`,
-                    `Form Abandonment: ${abandon}%`,
-                    `Current Conversion Rate: ${conv}%`,
-                    `Ad Spend: $${adSpend}`
-                ];
-                let y = 75;
-                lines.forEach(line => {
-                    doc.text(line, 20, y);
-                    y += 8;
-                });
+    // 3. AI Sales Assistant lift
+    var liftMult   = 1 + (liftPct/100);
+    var leadsWith  = Math.round(leadsPreLift * liftMult);
+    var extraTess  = leadsWith - leadsPreLift;
 
-                // Results
-                y += 10;
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(255, 107, 107);
-                doc.text('Without AI', 20, y);
-                y += 8;
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(200, 200, 200);
-                doc.text(`Leads / Month: ${leadsWithoutAI}`, 20, y);
-                y += 8;
+    // Grand totals
+    var totalExtra = leadsWith - leadsNow;
+    var extraYear  = totalExtra * 12;
 
-                y += 4;
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(78, 205, 196);
-                doc.text('With MobileWise AI', 20, y);
-                y += 8;
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(200, 200, 200);
-                doc.text(`Leads / Month: ${leadsWithAI}`, 20, y);
-                y += 8;
+    // ── Section 2: Bounce ──
+    set('b_bouncedNow', fmt(bouncedNow));
+    set('b_stayNow',    fmt(stayNow));
+    set('b_bouncedAI',  fmt(bouncedAI));
+    set('b_stayAI',     fmt(stayAI));
+    set('b_extraStay',  fmtPlus(extraStay));
 
-                // Extra leads
-                y += 8;
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(248, 196, 0);
-                doc.setFontSize(16);
-                doc.text(`Extra Leads / Month: +${extra}`, 20, y);
-                y += 10;
-                doc.setFontSize(12);
-                doc.text(`Extra Leads / Year: ${extra * 12}`, 20, y);
+    // ── Section 3: Form ──
+    set('f_formStarts',    fmt(formStartsNow));
+    set('f_abandonedNow',  fmt(abandonedNow));
+    set('f_completeNow',   fmt(completedNow));
+    set('f_abandonedAI',   fmt(aiAbandoned));
+    set('f_extraComplete', fmtPlus(extraComplete));
 
-                // Footer
-                y = 270;
-                doc.setFontSize(10);
-                doc.setTextColor(150);
-                doc.setFont('helvetica', 'italic');
-                doc.text('Powered by MobileWise AI · Benchmarks from Google Gemini', 20, y);
+    // ── Section 4: Tess ──
+    set('t_leadsWithout', fmt(leadsPreLift));
+    set('t_boostLabel',   liftPct+'%');
+    set('t_leadsWith',    fmt(leadsWith));
+    set('t_extraLeads',   fmtPlus(extraTess));
 
-                // Save
-                doc.save('MobileWise_AI_Conversion_Report.pdf');
-            }
+    // ── Grand ──
+    set('g_leadsWithout', fmt(leadsNow));
+    set('g_leadsWith',    fmt(leadsWith));
+    set('g_leadsYear',    fmt(extraYear));
+    set('g_heroNum',      fmtPlus(totalExtra));
 
-            // ----- Attach events -----
-            Object.values(inputs).forEach(inp => {
-                inp.addEventListener('input', updateCalculator);
-                inp.addEventListener('change', updateCalculator);
-            });
+    // Revenue line
+    if(leadVal>0){
+      set('g_leadsYearSub','= $'+fmt(extraYear*leadVal)+' in potential annual revenue');
+    } else {
+      set('g_leadsYearSub','Annual pipeline added');
+    }
 
-            document.getElementById('resetBtn').addEventListener('click', resetToDefaults);
-            document.getElementById('downloadPdfBtn').addEventListener('click', downloadReport);
+    // ROI card
+    var roiCard = document.getElementById('g_roiCard');
+    if(adSpend>0 && leadsNow>0){
+      roiCard.style.display='block';
+      var costPerLeadNow = adSpend/leadsNow;
+      var costPerLeadAI  = adSpend/leadsWith;
+      var roiImprove     = Math.round(((leadsWith-leadsNow)/leadsNow)*100);
+      set('g_roi','+'+roiImprove+'%');
+    } else {
+      roiCard.style.display='none';
+    }
 
-            // Initial calculation
-            updateCalculator();
-        })();
-    </script>
+    // hero sub
+    var heroSub = document.getElementById('g_heroSub');
+    heroSub.textContent = 'more qualified leads per month than you\'re capturing today ('+liftPct+'% scenario)';
+  }
+
+  // ── Lift Toggle ──
+  var liftDescs = {
+    50:  '<strong>Conservative (50% boost):</strong> Even at the low end of Gemini\'s 50–400% range, an AI sales assistant with 24/7 availability, video testimonials, and smart screens meaningfully lifts conversion over a static website.',
+    150: '<strong>Moderate (150% boost):</strong> A realistic mid-range result when Tess handles pre-qualification interviews, surfaces video testimonials on demand, and engages leads outside business hours.',
+    400: '<strong>Aggressive (400% boost):</strong> The top end of Gemini\'s research — achieved when Tess is fully deployed with the complete MobileWise toolkit: smart screens, web info panels, video, and a trained pre-qual flow.'
+  };
+
+  document.getElementById('liftToggle').addEventListener('click',function(e){
+    var btn = e.target.closest('.lift-btn');
+    if(!btn) return;
+    document.querySelectorAll('.lift-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    liftPct = parseInt(btn.dataset.lift);
+    document.getElementById('liftDesc').innerHTML = liftDescs[liftPct];
+    calc();
+  });
+
+  // ── Input Listeners ──
+  ['visitors','adSpend','leadsPerHundred','leadValue','bounceRate','formAbandonment'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el){
+      el.addEventListener('input', calc);
+      el.addEventListener('change', calc);
+    }
+  });
+
+  // ── Reset ──
+  document.getElementById('resetBtn').addEventListener('click',function(){
+    document.getElementById('visitors').value       = 1000;
+    document.getElementById('adSpend').value        = 0;
+    document.getElementById('leadsPerHundred').value= 3;
+    document.getElementById('leadValue').value      = 0;
+    document.getElementById('bounceRate').value     = 55;
+    document.getElementById('formAbandonment').value= 75;
+    liftPct = 50;
+    document.querySelectorAll('.lift-btn').forEach(function(b,i){
+      b.classList.toggle('active', i===0);
+    });
+    document.getElementById('liftDesc').innerHTML = liftDescs[50];
+    calc();
+  });
+
+  // ── PDF Report ──
+  document.getElementById('downloadBtn').addEventListener('click', function(){
+    var jspdf = window.jspdf;
+    if(!jspdf){alert('PDF library not loaded. Please check your connection and try again.');return;}
+    var doc = new jspdf.jsPDF('p','mm','a4');
+    var pw = 210; var ph = 297;
+
+    var visitors     = v('visitors');
+    var adSpend      = v('adSpend');
+    var l100         = v('leadsPerHundred');
+    var leadVal      = v('leadValue');
+    var bounce       = v('bounceRate');
+    var abandon      = v('formAbandonment');
+
+    var baseConvRate = l100/100;
+    var bouncedNow   = Math.round(visitors*bounce/100);
+    var stayNow      = visitors-bouncedNow;
+    var formStarts   = stayNow;
+    var abandonedNow = Math.round(formStarts*abandon/100);
+    var completedNow = formStarts-abandonedNow;
+    var leadsNow     = Math.round(visitors*baseConvRate);
+
+    var aiBounceRate = bounce*0.10;
+    var bouncedAI    = Math.round(visitors*aiBounceRate/100);
+    var stayAI       = visitors-bouncedAI;
+    var aiAbandoned  = Math.round(stayAI*(abandon*0.05)/100);
+    var aiCompleted  = stayAI-aiAbandoned;
+    var leadsPreLift = Math.round(aiCompleted*baseConvRate);
+    var liftMult     = 1+(liftPct/100);
+    var leadsWith    = Math.round(leadsPreLift*liftMult);
+    var totalExtra   = leadsWith-leadsNow;
+    var extraYear    = totalExtra*12;
+
+    var today = new Date();
+    var dateStr = today.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+    // ── Color helpers ──
+    function rgb(r,g,b){return [r,g,b];}
+    var NAVY  = rgb(8,16,30);
+    var NAVY2 = rgb(13,27,48);
+    var GOLD  = rgb(248,196,0);
+    var TEAL  = rgb(63,214,204);
+    var RED   = rgb(255,107,107);
+    var WHITE = rgb(255,255,255);
+    var GRAY  = rgb(150,160,175);
+    var LGRAY = rgb(200,210,220);
+
+    function fill(c){doc.setFillColor(c[0],c[1],c[2]);}
+    function stroke(c){doc.setDrawColor(c[0],c[1],c[2]);}
+    function tc(c){doc.setTextColor(c[0],c[1],c[2]);}
+
+    // ── PAGE 1 HEADER ──
+    fill(NAVY); doc.rect(0,0,pw,50,'F');
+    fill(GOLD); doc.rect(0,48,pw,4,'F');
+
+    tc(GOLD); doc.setFontSize(22); doc.setFont('helvetica','bold');
+    doc.text('MobileWise AI',16,22);
+    tc(WHITE); doc.setFontSize(11); doc.setFont('helvetica','normal');
+    doc.text('Conversion Impact Report',16,31);
+    tc(GRAY); doc.setFontSize(9);
+    doc.text('Generated: '+dateStr+'  |  Scenario: '+liftPct+'% AI Lift ('+
+      (liftPct===50?'Conservative':liftPct===150?'Moderate':'Aggressive')+')',16,40);
+    tc(WHITE); doc.setFontSize(9);
+    doc.text('CONFIDENTIAL',pw-16,40,'right');
+
+    // ── INPUT SUMMARY BOX ──
+    var y=62;
+    fill(NAVY2); stroke(rgb(30,50,80)); doc.setLineWidth(0.4);
+    doc.roundedRect(14,y,pw-28,48,4,4,'FD');
+    tc(GOLD); doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text('YOUR CURRENT WEBSITE INPUTS',20,y+8);
+    tc(LGRAY); doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+    var inputs=[
+      ['Monthly Visitors',visitors.toLocaleString()],
+      ['Ad Spend (PPC)','$'+(adSpend?adSpend.toLocaleString():'0')],
+      ['Leads Per 100 Visitors',l100],
+      ['Avg Lead Value',leadVal?'$'+leadVal.toLocaleString():'Not set'],
+      ['Mobile Bounce Rate',bounce+'%'],
+      ['Form Abandonment Rate',abandon+'%']
+    ];
+    var col=0; var rowY=y+18;
+    inputs.forEach(function(inp,i){
+      var cx = col===0?20:pw/2;
+      tc(GRAY); doc.text(inp[0],cx,rowY);
+      tc(WHITE); doc.setFont('helvetica','bold');
+      doc.text(String(inp[1]),cx+80,rowY,'right');
+      doc.setFont('helvetica','normal');
+      if(col===1){rowY+=9;col=0;}else{col=1;}
+    });
+
+    // ── 3 PROBLEM SECTIONS ──
+    var problems=[
+      {
+        num:'01', label:'BOUNCE RATE PROBLEM', color:RED,
+        gemini:'Gemini Research: 52–63% mobile bounce rate for mortgage websites.',
+        claim:'MobileWise anti-bounce screen reduces bounce by 90% in the first 2 seconds.',
+        rows:[
+          ['Mobile visitors who bounce (current)',fmt(bouncedNow),'BAD'],
+          ['Visitors who stay (current)',fmt(stayNow),'NEU'],
+          ['Bounce after MobileWise anti-bounce screen',fmt(bouncedAI),'GOOD'],
+          ['Visitors retained (with MobileWise)',fmt(stayAI),'GOOD'],
+          ['EXTRA VISITORS RETAINED',fmtPlus(stayAI-stayNow),'GOLD']
+        ]
+      },
+      {
+        num:'02', label:'FORM ABANDONMENT PROBLEM', color:GOLD,
+        gemini:'Gemini Research: 68–75% of mortgage applicants abandon forms — highest in financial services.',
+        claim:'MobileWise AI trigger system reduces form abandonment by 95%.',
+        rows:[
+          ['Form starts (of retained visitors)',fmt(formStarts),'NEU'],
+          ['Abandoned before completion (current)',fmt(abandonedNow),'BAD'],
+          ['Completed forms (current)',fmt(completedNow),'NEU'],
+          ['Abandoned after MobileWise AI triggers',fmt(aiAbandoned),'GOOD'],
+          ['EXTRA COMPLETIONS RECOVERED',fmtPlus(aiCompleted-completedNow),'GOLD']
+        ]
+      },
+      {
+        num:'03', label:'NO AI SALES ASSISTANT — TESS', color:TEAL,
+        gemini:'Gemini Research: AI sales assistants drive 50–400% conversion improvement.',
+        claim:'Tess: 24/7 video testimonials, smart screens, pre-qual interviews, and trained closing scripts.',
+        rows:[
+          ['Leads without Tess (post bounce+form fix)',fmt(leadsPreLift),'NEU'],
+          ['AI lift scenario applied',liftPct+'%','NEU'],
+          ['Leads with Tess',fmt(leadsWith),'GOOD'],
+          ['EXTRA LEADS FROM TESS',fmtPlus(leadsWith-leadsPreLift),'GOLD']
+        ]
+      }
+    ];
+
+    y=118;
+    problems.forEach(function(prob){
+      if(y>240){doc.addPage();y=20;}
+      // Section header
+      fill(prob.color); doc.rect(14,y,4,32,'F');
+      fill(NAVY2); doc.rect(18,y,pw-32,32,'F');
+      tc(prob.color); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+      doc.text('PROBLEM '+prob.num+' · '+prob.label,22,y+8);
+      tc(LGRAY); doc.setFont('helvetica','normal'); doc.setFontSize(8);
+      doc.text(prob.gemini,22,y+15,{maxWidth:pw-42});
+      tc(TEAL); doc.setFont('helvetica','italic');
+      doc.text('→ '+prob.claim,22,y+24,{maxWidth:pw-42});
+      y+=38;
+
+      prob.rows.forEach(function(row){
+        var valColor = row[2]==='BAD'?RED : row[2]==='GOOD'?TEAL : row[2]==='GOLD'?GOLD : LGRAY;
+        tc(GRAY); doc.setFont('helvetica','normal'); doc.setFontSize(9);
+        doc.text(row[0],22,y);
+        tc(valColor); doc.setFont('helvetica','bold');
+        doc.text(String(row[1]),pw-16,y,'right');
+        y+=8;
+      });
+      y+=10;
+    });
+
+    // ── PAGE 2: SUMMARY ──
+    doc.addPage();
+    fill(NAVY); doc.rect(0,0,pw,50,'F');
+    fill(GOLD); doc.rect(0,48,pw,4,'F');
+    tc(GOLD); doc.setFontSize(20); doc.setFont('helvetica','bold');
+    doc.text('Your MobileWise AI Impact Summary',16,28);
+    tc(GRAY); doc.setFontSize(9); doc.setFont('helvetica','normal');
+    doc.text('All three problems solved together:',16,38);
+
+    // Big number box
+    y=62;
+    fill(rgb(18,30,50)); stroke(GOLD); doc.setLineWidth(0.8);
+    doc.roundedRect(14,y,pw-28,52,5,5,'FD');
+    tc(GRAY); doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text('TOTAL EXTRA LEADS PER MONTH WITH MOBILEWISE AI',pw/2,y+11,'center');
+    tc(GOLD); doc.setFont('helvetica','bold');
+    doc.setFontSize(48);
+    doc.text(fmtPlus(totalExtra),pw/2,y+36,'center');
+    tc(LGRAY); doc.setFontSize(10); doc.setFont('helvetica','normal');
+    doc.text('more qualified leads than you are capturing today',pw/2,y+46,'center');
+
+    // Comparison table
+    y+=64;
+    var summaryRows=[
+      ['Leads / Month — Without MobileWise AI',fmt(leadsNow),RED],
+      ['Leads / Month — With MobileWise AI ('+liftPct+'% scenario)',fmt(leadsWith),TEAL],
+      ['Extra Leads / Month',fmtPlus(totalExtra),GOLD],
+      ['Extra Leads / Year',fmt(extraYear),GOLD]
+    ];
+    if(leadVal>0){
+      summaryRows.push(['Annual Revenue Potential (@ $'+leadVal.toLocaleString()+'/lead)','$'+fmt(extraYear*leadVal),GOLD]);
+    }
+    if(adSpend>0 && leadsNow>0){
+      var roi=Math.round(((leadsWith-leadsNow)/leadsNow)*100);
+      summaryRows.push(['Ad Spend ROI Improvement','+'+roi+'%',GOLD]);
+    }
+
+    summaryRows.forEach(function(row){
+      fill(NAVY2); doc.rect(14,y-5,pw-28,11,'F');
+      tc(LGRAY); doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+      doc.text(row[0],20,y+1);
+      tc(row[2]); doc.setFont('helvetica','bold');
+      doc.text(String(row[1]),pw-16,y+1,'right');
+      y+=13;
+    });
+
+    // Gemini source box
+    y+=8;
+    fill(rgb(15,25,45)); stroke(rgb(30,50,80)); doc.setLineWidth(0.4);
+    doc.roundedRect(14,y,pw-28,58,4,4,'FD');
+    tc(GOLD); doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+    doc.text('RESEARCH BENCHMARKS — GOOGLE GEMINI',20,y+10);
+    tc(LGRAY); doc.setFont('helvetica','normal'); doc.setFontSize(8.5);
+    var geminiLines=[
+      '• Mobile Bounce Rate for mortgage websites: 52–63% (avg 55%). MobileWise reduces by 90%.',
+      '• Form abandonment for mortgage applications: 68–75%. MobileWise AI triggers reduce by 95%.',
+      '• AI sales assistant conversion impact: 50–400% boost across financial services verticals.',
+      '  Factors: immediate 24/7 response, guided decision-making, lead qualification, personalization.',
+      '• Mortgage websites average only 3 leads per 100 visitors — the core problem MobileWise solves.'
+    ];
+    var gy=y+20;
+    geminiLines.forEach(function(line){
+      doc.text(line,20,gy,{maxWidth:pw-36}); gy+=9;
+    });
+
+    // Footer
+    fill(NAVY2); doc.rect(0,ph-18,pw,18,'F');
+    tc(GOLD); doc.setFont('helvetica','bold'); doc.setFontSize(8);
+    doc.text('MobileWise AI',16,ph-8);
+    tc(GRAY); doc.setFont('helvetica','normal');
+    doc.text('Conversion Impact Report  |  Benchmarks: Google Gemini  |  mobilewiseai.com',pw/2,ph-8,'center');
+    tc(GRAY);
+    doc.text('Page 2 of 2',pw-16,ph-8,'right');
+
+    // page 1 footer
+    doc.setPage(1);
+    fill(NAVY2); doc.rect(0,ph-18,pw,18,'F');
+    tc(GOLD); doc.setFont('helvetica','bold'); doc.setFontSize(8);
+    doc.text('MobileWise AI',16,ph-8);
+    tc(GRAY); doc.setFont('helvetica','normal');
+    doc.text('Conversion Impact Report  |  Benchmarks: Google Gemini  |  mobilewiseai.com',pw/2,ph-8,'center');
+    doc.text('Page 1 of 2',pw-16,ph-8,'right');
+
+    doc.save('MobileWise_AI_Conversion_Report.pdf');
+  });
+
+  // ── Init ──
+  calc();
+
+})();
+</script>
 </body>
 </html>
