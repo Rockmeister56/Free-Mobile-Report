@@ -791,59 +791,69 @@ input.has-pfx{padding-left:26px;}
     tc(WHT);doc.setFont('helvetica','normal');doc.setFontSize(9);doc.text('What Mortgage Professionals Are Saying',14,27);
     tc(GRY);doc.setFontSize(8);doc.text(today,14,35);
 
-    // Just Ask AI intro
+    // Just Ask AI intro box
     y=50;
     fc(N(11,18,32));dc(N(30,50,80));doc.setLineWidth(0.3);
-    doc.roundedRect(14,y,pw-28,44,3,3,'FD');
+    doc.roundedRect(14,y,pw-28,52,3,3,'FD');
     tc(GOLD);doc.setFont('helvetica','bold');doc.setFontSize(8.5);
     doc.text('JUST ASK AI — LIVE MORTGAGE INDUSTRY PODCAST',18,y+9);
-    tc(LGRY);doc.setFont('helvetica','normal');doc.setFontSize(8.8);
-    var intro='On the Just Ask AI podcast, mortgage professionals Sarah from Hometown Mortgage and Mark from Today\'s Lending discovered exactly how much business they were losing to bounce rate, form abandonment, and the absence of an AI sales assistant. After seeing the numbers and watching Tess in action, both booked a MobileWise AI strategy session to implement the full solution on their websites.';
+    tc(LGRY);doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+    var intro='On the Just Ask AI podcast, mortgage professionals Sarah from Hometown Mortgage and Mark from Todays Lending discovered exactly how much business they were losing to bounce rate, form abandonment, and the absence of an AI sales assistant. After seeing the numbers and watching Tess in action, both booked a MobileWise AI strategy session to fix the leaks in their websites.';
     var ilines=doc.splitTextToSize(intro,pw-38);
     doc.text(ilines,18,y+18);
+
+    // ── TWO CLICKABLE BUTTONS ──
+    // Button 1: Book Zoom (gold filled)
+    var b1x=18, b1y=y+38, b1w=86, b1h=11;
+    fc(GOLD);doc.roundedRect(b1x,b1y,b1w,b1h,2,2,'F');
+    tc(N(10,18,32));doc.setFont('helvetica','bold');doc.setFontSize(8);
+    doc.text('Book Your Free Strategy Session',b1x+b1w/2,b1y+7,'center');
+    doc.link(b1x,b1y,b1w,b1h,{url:'https://zoom4ai.us'});
+
+    // Button 2: Watch Podcast (teal outline)
+    var b2x=110, b2y=y+38, b2w=86, b2h=11;
+    dc(TEAL);doc.setLineWidth(0.6);
+    doc.roundedRect(b2x,b2y,b2w,b2h,2,2,'S');
     tc(TEAL);doc.setFont('helvetica','bold');doc.setFontSize(8);
-    doc.text('Watch the podcast: justaskai.live',18,y+38);
+    doc.text('Watch the Just Ask AI Podcast',b2x+b2w/2,b2y+7,'center');
+    doc.link(b2x,b2y,b2w,b2h,{url:'https://justaskai.live'});
 
     // Sarah testimonial
-    y=102;
-    fc(N(11,18,32));dc(N(30,50,80));
-    doc.roundedRect(14,y,pw-28,72,3,3,'FD');
-    // Photo
-    try{
-      doc.addImage(SARAH_IMG,'PNG',18,y+6,22,26);
-    }catch(e){}
+    y=110;
+    fc(N(11,18,32));dc(N(30,50,80));doc.setLineWidth(0.3);
+    doc.roundedRect(14,y,pw-28,68,3,3,'FD');
+    try{ doc.addImage(SARAH_IMG,'PNG',18,y+8,22,24); }catch(e){}
     tc(WHT);doc.setFont('helvetica','bold');doc.setFontSize(9.5);
-    doc.text('Sarah',44,y+12);
+    doc.text('Sarah',44,y+14);
     tc(GRY);doc.setFont('helvetica','normal');doc.setFontSize(8);
-    doc.text('Hometown Mortgage',44,y+19);
-    tc(LGRY);doc.setFont('helvetica','italic');doc.setFontSize(8.5);
-    var sarahQ='Honestly, I came into this podcast thinking I knew where our leads were falling off. But hearing the numbers — the 75% form abandonment, the 55% bounce rate — it was like looking at our website for the first time. The breakdown of how an AI sales assistant actually handles objections and guides visitors through pre-qualification changed the way I think about our site. It\'s not about replacing my team — it\'s about giving them better prospects to work with. I feel like we finally have a plan to actually fix the leak.';
+    doc.text('Hometown Mortgage',44,y+21);
+    tc(LGRY);doc.setFont('helvetica','italic');doc.setFontSize(8.3);
+    var sarahQ='Honestly, I came into this podcast thinking I knew where our leads were falling off. But hearing the numbers — the 75% form abandonment, the 55% bounce rate — it was like looking at our website for the first time. The breakdown of how an AI sales assistant actually handles objections and guides visitors through pre-qualification changed the way I think about our site. Its not about replacing my team — its about giving them better prospects to work with. I feel like we finally have a plan to actually fix the leak.';
     var slines=doc.splitTextToSize(sarahQ,pw-44);
-    doc.text(slines,18,y+38);
+    doc.text(slines,18,y+36);
 
     // Mark testimonial
-    y=182;
+    y=186;
     fc(N(11,18,32));dc(N(30,50,80));
-    doc.roundedRect(14,y,pw-28,72,3,3,'FD');
-    try{
-      doc.addImage(MARK_IMG,'PNG',18,y+6,22,26);
-    }catch(e){}
+    doc.roundedRect(14,y,pw-28,68,3,3,'FD');
+    try{ doc.addImage(MARK_IMG,'PNG',18,y+8,22,24); }catch(e){}
     tc(WHT);doc.setFont('helvetica','bold');doc.setFontSize(9.5);
-    doc.text('Mark',44,y+12);
+    doc.text('Mark',44,y+14);
     tc(GRY);doc.setFont('helvetica','normal');doc.setFontSize(8);
-    doc.text("Today's Lending",44,y+19);
-    tc(LGRY);doc.setFont('helvetica','italic');doc.setFontSize(8.5);
+    doc.text("Today's Lending",44,y+21);
+    tc(LGRY);doc.setFont('helvetica','italic');doc.setFontSize(8.3);
     var markQ="I'll be honest — I was skeptical at first. But watching Tess in action during the podcast, and seeing how she engages visitors before they bounce, completely changed my perspective. The anti-bounce screen alone makes so much sense. We're losing over half our visitors in the first few seconds, and we didn't even have a way to catch them. Now I see how we can recover those visitors and actually pre-qualify them — not just collect data, but build trust. I walked away feeling like we finally have a solution that works with our business, not against it.";
     var mlines=doc.splitTextToSize(markQ,pw-44);
-    doc.text(mlines,18,y+38);
+    doc.text(mlines,18,y+36);
 
-    // CTA Box
+    // CTA Banner — clickable
     y=262;
-    fc(GOLD);F(14,y,pw-28,22);
-    tc(DNAV);doc.setFont('helvetica','bold');doc.setFontSize(10);
+    fc(GOLD);doc.roundedRect(14,y,pw-28,22,2,2,'F');
+    tc(N(10,18,32));doc.setFont('helvetica','bold');doc.setFontSize(10);
     doc.text('Ready to Fix the Leaks in Your Mortgage Website?',pw/2,y+8,'center');
-    tc(N(20,35,60));doc.setFont('helvetica','normal');doc.setFontSize(8.5);
-    doc.text('Book your free MobileWise AI Conversion Strategy Session: zoom4ai.us',pw/2,y+16,'center');
+    tc(N(20,40,70));doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+    doc.text('Book your free MobileWise AI Conversion Strategy Session  ▶  zoom4ai.us',pw/2,y+16,'center');
+    doc.link(14,y,pw-28,22,{url:'https://zoom4ai.us'});
 
     fc(N(14,24,42));F(0,ph-14,pw,14);
     tc(GOLD);doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.text('MobileWise AI',14,ph-5);
