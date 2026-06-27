@@ -2,17 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Conversion Calculator – Ad Spend Audit Group</title>
-    
-    <!-- Google Font (Inter) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conversion Calculator – MobileWise AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
+    <!-- jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -43,7 +37,6 @@
             box-shadow: 0 30px 60px rgba(0,0,0,0.7);
         }
 
-        /* --- Logo area --- */
         .logo-area {
             display: flex;
             justify-content: space-between;
@@ -57,27 +50,14 @@
             font-size: 1.4rem;
             font-weight: 700;
             color: #f8c400;
-            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
             gap: 12px;
         }
-
         .logo-placeholder i {
             font-size: 2.2rem;
             color: #f8c400;
         }
-
-        .logo-placeholder span {
-            background: rgba(248,196,0,0.12);
-            padding: 6px 18px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #f8c400;
-            border: 1px solid rgba(248,196,0,0.2);
-        }
-
         .badge-version {
             background: rgba(255,255,255,0.04);
             border: 1px solid rgba(255,255,255,0.06);
@@ -85,15 +65,12 @@
             border-radius: 40px;
             font-size: 0.75rem;
             color: rgba(255,255,255,0.4);
-            letter-spacing: 0.4px;
         }
 
-        /* --- Title --- */
         .title-section {
             text-align: center;
             margin-bottom: 40px;
         }
-
         .title-section h1 {
             font-size: 2.4rem;
             font-weight: 800;
@@ -102,15 +79,12 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
         .title-section p {
             color: rgba(255,255,255,0.55);
             margin-top: 8px;
             font-size: 1.1rem;
-            font-weight: 400;
         }
 
-        /* --- Input Grid --- */
         .input-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -127,7 +101,6 @@
             flex-direction: column;
             gap: 8px;
         }
-
         .input-group label {
             font-size: 0.8rem;
             font-weight: 600;
@@ -135,7 +108,6 @@
             letter-spacing: 0.5px;
             color: #a0c8ff;
         }
-
         .input-group input {
             background: rgba(0,0,0,0.4);
             border: 1px solid rgba(255,255,255,0.08);
@@ -147,42 +119,31 @@
             width: 100%;
             transition: border-color 0.2s;
         }
-
         .input-group input:focus {
             outline: none;
             border-color: #f8c400;
             box-shadow: 0 0 0 3px rgba(248,196,0,0.15);
         }
-
         .input-group input[type="number"] {
             -moz-appearance: textfield;
         }
-
         .input-group input[type="number"]::-webkit-outer-spin-button,
         .input-group input[type="number"]::-webkit-inner-spin-button {
             -webkit-appearance: none;
         }
 
-        /* --- Results Grid --- */
         .results-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 28px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
-
         .result-card {
             background: rgba(0,0,0,0.25);
             border-radius: 28px;
             padding: 28px 24px;
             border: 1px solid rgba(255,255,255,0.04);
-            transition: transform 0.15s ease;
         }
-
-        .result-card:hover {
-            transform: translateY(-2px);
-        }
-
         .result-card h3 {
             font-size: 1.1rem;
             font-weight: 700;
@@ -191,17 +152,8 @@
             align-items: center;
             gap: 12px;
         }
-
-        .result-card h3 i {
-            font-size: 1.4rem;
-        }
-
-        .result-card .current-icon {
-            color: #ff6b6b;
-        }
-        .result-card .ai-icon {
-            color: #4ecdc4;
-        }
+        .result-card .current-icon { color: #ff6b6b; }
+        .result-card .ai-icon { color: #4ecdc4; }
 
         .stat-block {
             display: flex;
@@ -209,38 +161,13 @@
             padding: 14px 0;
             border-bottom: 1px solid rgba(255,255,255,0.04);
         }
+        .stat-block:last-child { border-bottom: none; }
+        .stat-label { color: rgba(255,255,255,0.65); }
+        .stat-value { font-weight: 700; font-size: 1.2rem; }
+        .stat-value.red { color: #ff6b6b; }
+        .stat-value.green { color: #4ecdc4; }
+        .stat-value.gold { color: #f8c400; }
 
-        .stat-block:last-child {
-            border-bottom: none;
-        }
-
-        .stat-label {
-            color: rgba(255,255,255,0.65);
-            font-weight: 400;
-        }
-
-        .stat-value {
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-
-        .stat-value.red {
-            color: #ff6b6b;
-        }
-        .stat-value.green {
-            color: #4ecdc4;
-        }
-        .stat-value.gold {
-            color: #f8c400;
-        }
-
-        .stat-value .small-unit {
-            font-weight: 400;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.4);
-        }
-
-        /* --- Difference Banner --- */
         .difference-banner {
             background: linear-gradient(145deg, rgba(248,196,0,0.08), rgba(248,196,0,0.02));
             border: 1px solid rgba(248,196,0,0.25);
@@ -251,115 +178,106 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 20px;
-            margin-bottom: 8px;
+            margin-bottom: 30px;
         }
-
         .difference-banner .label {
             font-size: 1.1rem;
             font-weight: 600;
             color: rgba(255,255,255,0.8);
         }
-
         .difference-banner .number {
             font-size: 2.6rem;
             font-weight: 800;
             color: #f8c400;
-            line-height: 1.2;
         }
-
         .difference-banner .sub {
             font-size: 1rem;
-            font-weight: 400;
             color: rgba(255,255,255,0.5);
             margin-left: 6px;
         }
 
-        /* --- Footer --- */
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .btn {
+            background: linear-gradient(145deg, #f8c400, #e0b000);
+            color: #0b1120;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 10px 25px -5px rgba(248,196,0,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px -5px rgba(248,196,0,0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.06);
+            color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: none;
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
         .footer-note {
             text-align: center;
-            margin-top: 32px;
+            margin-top: 30px;
             font-size: 0.85rem;
-            color: rgba(255,255,255,0.25);
+            color: rgba(255,255,255,0.2);
             border-top: 1px solid rgba(255,255,255,0.04);
             padding-top: 24px;
-            letter-spacing: 0.3px;
         }
 
-        .footer-note a {
-            color: #f8c400;
-            text-decoration: none;
-        }
-
-        /* --- Responsive --- */
         @media (max-width: 760px) {
-            .calculator-card {
-                padding: 28px 20px;
-                border-radius: 28px;
-            }
-
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .title-section h1 {
-                font-size: 1.8rem;
-            }
-
-            .input-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .difference-banner {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .difference-banner .number {
-                font-size: 2.2rem;
-            }
-
-            .logo-area {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            .calculator-card { padding: 28px 20px; border-radius: 28px; }
+            .results-grid { grid-template-columns: 1fr; }
+            .title-section h1 { font-size: 1.8rem; }
+            .input-grid { grid-template-columns: 1fr 1fr; }
+            .difference-banner { flex-direction: column; text-align: center; }
+            .difference-banner .number { font-size: 2.2rem; }
         }
-
         @media (max-width: 480px) {
-            .input-grid {
-                grid-template-columns: 1fr;
-            }
+            .input-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-
     <div class="calculator-card">
-
-        <!-- ===== LOGO AREA ===== -->
         <div class="logo-area">
             <div class="logo-placeholder">
                 <i class="fas fa-chart-line"></i>
-                <span>AD SPEND AUDIT GROUP</span>
+                <span>MOBILEWISE AI</span>
             </div>
             <div class="badge-version">
-                <i class="fas fa-calculator"></i> &nbsp; Conversion Calculator v2.0
+                <i class="fas fa-calculator"></i> Conversion Calculator v2.0
             </div>
         </div>
 
-        <!-- ===== TITLE ===== -->
         <div class="title-section">
-            <h1>📊 Conversion Calculator</h1>
-            <p>See exactly how many leads you're losing — and how many you could gain with AI.</p>
+            <h1>📊 AI Conversion Calculator</h1>
+            <p>See how an AI sales assistant multiplies your leads — powered by Google Gemini benchmarks.</p>
         </div>
 
-        <!-- ===== INPUTS ===== -->
         <div class="input-grid">
             <div class="input-group">
-                <label><i class="fas fa-users"></i> Monthly Web Visitors</label>
+                <label><i class="fas fa-users"></i> Monthly Visitors</label>
                 <input type="number" id="visitors" value="1000" min="0" step="100" />
             </div>
             <div class="input-group">
-                <label><i class="fas fa-sign-out-alt"></i> Current Bounce Rate (%)</label>
+                <label><i class="fas fa-sign-out-alt"></i> Bounce Rate (%)</label>
                 <input type="number" id="bounceRate" value="55" min="0" max="100" step="1" />
             </div>
             <div class="input-group">
@@ -367,129 +285,112 @@
                 <input type="number" id="formAbandonment" value="75" min="0" max="100" step="1" />
             </div>
             <div class="input-group">
-                <label><i class="fas fa-robot"></i> AI Bounce Reduction (%)</label>
-                <input type="number" id="aiBounceRate" value="7" min="0" max="100" step="1" />
+                <label><i class="fas fa-percent"></i> Current Conv. Rate (%)</label>
+                <input type="number" id="convRate" value="2" min="0" max="100" step="0.5" />
             </div>
             <div class="input-group">
-                <label><i class="fas fa-check-circle"></i> AI Abandonment Rate (%)</label>
-                <input type="number" id="aiAbandonment" value="10" min="0" max="100" step="1" />
-            </div>
-            <div class="input-group">
-                <label><i class="fas fa-rocket"></i> Pre‑Qual Uplift (%)</label>
-                <input type="number" id="uplift" value="60" min="0" max="300" step="5" />
+                <label><i class="fas fa-dollar-sign"></i> Monthly Ad Spend (optional)</label>
+                <input type="number" id="adSpend" value="0" min="0" step="100" />
             </div>
         </div>
 
-        <!-- ===== RESULTS ===== -->
         <div class="results-grid" id="resultsGrid">
-            <!-- Current (Without AI) -->
             <div class="result-card">
                 <h3><i class="fas fa-times-circle current-icon"></i> Without AI</h3>
-                <div class="stat-block">
-                    <span class="stat-label">Visitors who stay</span>
-                    <span class="stat-value red" id="currentStay">450</span>
-                </div>
-                <div class="stat-block">
-                    <span class="stat-label">Leads captured</span>
-                    <span class="stat-value red" id="currentLeads">112</span>
-                </div>
-                <div class="stat-block">
-                    <span class="stat-label">Lost leads</span>
-                    <span class="stat-value red" id="currentLost">888</span>
-                </div>
+                <div class="stat-block"><span class="stat-label">Visitors who stay</span><span class="stat-value red" id="currentStay">0</span></div>
+                <div class="stat-block"><span class="stat-label">Leads captured</span><span class="stat-value red" id="currentLeads">0</span></div>
+                <div class="stat-block"><span class="stat-label">Lost leads</span><span class="stat-value red" id="currentLost">0</span></div>
+                <div class="stat-block"><span class="stat-label">Leads / Month</span><span class="stat-value red" id="currentMonthly">0</span></div>
             </div>
-
-            <!-- With AI -->
             <div class="result-card">
                 <h3><i class="fas fa-check-circle ai-icon"></i> With MobileWise AI</h3>
-                <div class="stat-block">
-                    <span class="stat-label">Visitors who stay</span>
-                    <span class="stat-value green" id="aiStay">930</span>
-                </div>
-                <div class="stat-block">
-                    <span class="stat-label">Leads captured</span>
-                    <span class="stat-value green" id="aiLeads">837</span>
-                </div>
-                <div class="stat-block">
-                    <span class="stat-label">Lost leads</span>
-                    <span class="stat-value green" id="aiLost">163</span>
-                </div>
+                <div class="stat-block"><span class="stat-label">Visitors who stay</span><span class="stat-value green" id="aiStay">0</span></div>
+                <div class="stat-block"><span class="stat-label">Leads captured</span><span class="stat-value green" id="aiLeads">0</span></div>
+                <div class="stat-block"><span class="stat-label">Lost leads</span><span class="stat-value green" id="aiLost">0</span></div>
+                <div class="stat-block"><span class="stat-label">Leads / Month</span><span class="stat-value green" id="aiMonthly">0</span></div>
             </div>
         </div>
 
-        <!-- ===== DIFFERENCE BANNER ===== -->
         <div class="difference-banner">
-            <span class="label"><i class="fas fa-arrow-up" style="color:#f8c400;"></i> Extra qualified leads per month</span>
+            <span class="label"><i class="fas fa-arrow-up" style="color:#f8c400;"></i> Extra validated leads per month</span>
             <span>
-                <span class="number" id="extraLeads">+725</span>
+                <span class="number" id="extraLeads">+0</span>
                 <span class="sub">more than your current form</span>
             </span>
         </div>
 
-        <!-- ===== FOOTER ===== -->
-        <div class="footer-note">
-            <i class="fas fa-robot" style="color:#f8c400;"></i> &nbsp; Powered by <a href="#">MobileWise AI</a> &nbsp;·&nbsp; Results based on your input data
+        <div class="actions">
+            <button class="btn" id="downloadPdfBtn"><i class="fas fa-download"></i> Download Full Report</button>
+            <button class="btn btn-secondary" id="resetBtn"><i class="fas fa-undo-alt"></i> Reset to Defaults</button>
         </div>
 
+        <div class="footer-note">
+            <i class="fas fa-robot" style="color:#f8c400;"></i> Powered by MobileWise AI · Benchmarks from Google Gemini
+        </div>
     </div>
 
-    <!-- ===== JAVASCRIPT ===== -->
     <script>
         (function() {
+            // ----- DOM refs -----
             const inputs = {
                 visitors: document.getElementById('visitors'),
                 bounceRate: document.getElementById('bounceRate'),
                 formAbandonment: document.getElementById('formAbandonment'),
-                aiBounceRate: document.getElementById('aiBounceRate'),
-                aiAbandonment: document.getElementById('aiAbandonment'),
-                uplift: document.getElementById('uplift')
+                convRate: document.getElementById('convRate'),
+                adSpend: document.getElementById('adSpend')
             };
 
             const outputs = {
                 currentStay: document.getElementById('currentStay'),
                 currentLeads: document.getElementById('currentLeads'),
                 currentLost: document.getElementById('currentLost'),
+                currentMonthly: document.getElementById('currentMonthly'),
                 aiStay: document.getElementById('aiStay'),
                 aiLeads: document.getElementById('aiLeads'),
                 aiLost: document.getElementById('aiLost'),
+                aiMonthly: document.getElementById('aiMonthly'),
                 extraLeads: document.getElementById('extraLeads')
             };
 
-            function getVal(id) {
-                return parseFloat(document.getElementById(id).value) || 0;
-            }
+            function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
 
-            function setVal(id, value) {
+            function setVal(id, val) {
                 const el = document.getElementById(id);
-                if (el) el.textContent = value;
+                if (el) {
+                    el.textContent = typeof val === 'number' ? Math.round(val) : val;
+                }
             }
 
+            // ----- Core logic -----
             function updateCalculator() {
-                // Read inputs
                 const visitors = getVal('visitors');
                 const bounce = getVal('bounceRate');
                 const abandon = getVal('formAbandonment');
-                const aiBounce = getVal('aiBounceRate');
-                const aiAbandon = getVal('aiAbandonment');
-                const upliftPct = getVal('uplift');
+                const conv = getVal('convRate') / 100; // e.g., 0.02
 
                 // --- Without AI ---
                 const stayRate = (100 - bounce) / 100;
                 const visitorsWhoStay = Math.round(visitors * stayRate);
-                const captureRate = (100 - abandon) / 100;
-                const leadsCaptured = Math.round(visitorsWhoStay * captureRate);
+                const leadsCaptured = Math.round(visitorsWhoStay * conv);
                 const lostLeads = visitors - leadsCaptured;
 
-                // --- With AI ---
+                // --- With MobileWise AI ---
+                const aiBounce = bounce * 0.10; // 90% reduction
                 const aiStayRate = (100 - aiBounce) / 100;
                 const aiVisitorsWhoStay = Math.round(visitors * aiStayRate);
+
+                // Form abandonment nearly eliminated (95% effective)
+                const aiAbandon = abandon * 0.05;
                 const aiCaptureRate = (100 - aiAbandon) / 100;
-                let aiLeadsCaptured = Math.round(aiVisitorsWhoStay * aiCaptureRate);
-                const upliftMultiplier = 1 + (upliftPct / 100);
-                aiLeadsCaptured = Math.round(aiLeadsCaptured * upliftMultiplier);
+                const aiBaseLeads = Math.round(aiVisitorsWhoStay * aiCaptureRate);
+
+                // AI Sales Assistant lift: +60% (Gemini)
+                const aiLift = 1.60;
+                const aiLeadsCaptured = Math.round(aiBaseLeads * aiLift);
+
                 const aiLostLeads = visitors - aiLeadsCaptured;
 
-                // --- Extra Leads ---
+                // Extra leads
                 const extra = aiLeadsCaptured - leadsCaptured;
                 const extraDisplay = extra >= 0 ? '+' + extra : '' + extra;
 
@@ -497,24 +398,125 @@
                 setVal('currentStay', visitorsWhoStay);
                 setVal('currentLeads', leadsCaptured);
                 setVal('currentLost', lostLeads);
+                setVal('currentMonthly', leadsCaptured);
 
                 setVal('aiStay', aiVisitorsWhoStay);
                 setVal('aiLeads', aiLeadsCaptured);
                 setVal('aiLost', aiLostLeads);
+                setVal('aiMonthly', aiLeadsCaptured);
 
                 setVal('extraLeads', extraDisplay);
             }
 
-            // Attach event listeners to all inputs
-            Object.values(inputs).forEach(input => {
-                input.addEventListener('input', updateCalculator);
-                input.addEventListener('change', updateCalculator);
+            // ----- Reset to defaults -----
+            function resetToDefaults() {
+                document.getElementById('visitors').value = 1000;
+                document.getElementById('bounceRate').value = 55;
+                document.getElementById('formAbandonment').value = 75;
+                document.getElementById('convRate').value = 2;
+                document.getElementById('adSpend').value = 0;
+                updateCalculator();
+            }
+
+            // ----- PDF Download -----
+            function downloadReport() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const pageW = 210;
+
+                const visitors = getVal('visitors');
+                const bounce = getVal('bounceRate');
+                const abandon = getVal('formAbandonment');
+                const conv = getVal('convRate');
+                const adSpend = getVal('adSpend');
+                const leadsWithoutAI = parseInt(outputs.currentMonthly.textContent);
+                const leadsWithAI = parseInt(outputs.aiMonthly.textContent);
+                const extra = leadsWithAI - leadsWithoutAI;
+
+                // Header
+                doc.setFillColor(11, 17, 32);
+                doc.rect(0, 0, pageW, 45, 'F');
+                doc.setTextColor(248, 196, 0);
+                doc.setFontSize(22);
+                doc.setFont('helvetica', 'bold');
+                doc.text('MobileWise AI', 20, 28);
+
+                // Title
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(18);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Conversion Report', 20, 55);
+
+                // Input summary
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'normal');
+                const lines = [
+                    `Monthly Visitors: ${visitors}`,
+                    `Bounce Rate: ${bounce}%`,
+                    `Form Abandonment: ${abandon}%`,
+                    `Current Conversion Rate: ${conv}%`,
+                    `Ad Spend: $${adSpend}`
+                ];
+                let y = 75;
+                lines.forEach(line => {
+                    doc.text(line, 20, y);
+                    y += 8;
+                });
+
+                // Results
+                y += 10;
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(255, 107, 107);
+                doc.text('Without AI', 20, y);
+                y += 8;
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(200, 200, 200);
+                doc.text(`Leads / Month: ${leadsWithoutAI}`, 20, y);
+                y += 8;
+
+                y += 4;
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(78, 205, 196);
+                doc.text('With MobileWise AI', 20, y);
+                y += 8;
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(200, 200, 200);
+                doc.text(`Leads / Month: ${leadsWithAI}`, 20, y);
+                y += 8;
+
+                // Extra leads
+                y += 8;
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(248, 196, 0);
+                doc.setFontSize(16);
+                doc.text(`Extra Leads / Month: +${extra}`, 20, y);
+                y += 10;
+                doc.setFontSize(12);
+                doc.text(`Extra Leads / Year: ${extra * 12}`, 20, y);
+
+                // Footer
+                y = 270;
+                doc.setFontSize(10);
+                doc.setTextColor(150);
+                doc.setFont('helvetica', 'italic');
+                doc.text('Powered by MobileWise AI · Benchmarks from Google Gemini', 20, y);
+
+                // Save
+                doc.save('MobileWise_AI_Conversion_Report.pdf');
+            }
+
+            // ----- Attach events -----
+            Object.values(inputs).forEach(inp => {
+                inp.addEventListener('input', updateCalculator);
+                inp.addEventListener('change', updateCalculator);
             });
+
+            document.getElementById('resetBtn').addEventListener('click', resetToDefaults);
+            document.getElementById('downloadPdfBtn').addEventListener('click', downloadReport);
 
             // Initial calculation
             updateCalculator();
         })();
     </script>
-
 </body>
 </html>
